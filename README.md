@@ -12,26 +12,26 @@ So the goal is to make every line of PASM code the exact same amount of time.
 ##### How do I run a PASM script?
 PASM (Opposed to other scripting languages) is very easy setup and run
 ###### Import PASM
-```
+```C#
 using PASM;
 ```
 ###### Create an Engine
-```
+```C#
 Engine engine = new engine();
 ```
 ###### Import a Standard library
 Note that the Standard library is a seperate class and the methods inside of it are ```public static```
-```
+```C#
 engine.ReferenceLibrary(typeof(Standard));
 ```
 ###### Load the code
-```PASMCode``` is a string array
-```
+```PASMCode```is a string array
+```C#
 engine.Load(PASMCode);
 ```
 
 ###### Execute the code
-```
+```C#
 engine.Execute();
 ```
 
