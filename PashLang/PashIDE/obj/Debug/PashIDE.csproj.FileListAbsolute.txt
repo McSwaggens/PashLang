@@ -1,0 +1,33 @@
+C:\Users\xxdjo\Documents\Visual Studio 2015\Projects\PashLang\PashLang\PashIDE\bin\Debug\PashIDE.exe.config
+C:\Users\xxdjo\Documents\Visual Studio 2015\Projects\PashLang\PashLang\PashIDE\obj\Debug\PashIDE.Main.resources
+C:\Users\xxdjo\Documents\Visual Studio 2015\Projects\PashLang\PashLang\PashIDE\obj\Debug\PashIDE.Properties.Resources.resources
+C:\Users\xxdjo\Documents\Visual Studio 2015\Projects\PashLang\PashLang\PashIDE\obj\Debug\PashIDE.csproj.GenerateResource.Cache
+C:\Users\xxdjo\Documents\Visual Studio 2015\Projects\PashLang\PashLang\PashIDE\bin\Debug\PashIDE.exe
+C:\Users\xxdjo\Documents\Visual Studio 2015\Projects\PashLang\PashLang\PashIDE\bin\Debug\PashIDE.pdb
+C:\Users\xxdjo\Documents\Visual Studio 2015\Projects\PashLang\PashLang\PashIDE\obj\Debug\PashIDE.exe
+C:\Users\xxdjo\Documents\Visual Studio 2015\Projects\PashLang\PashLang\PashIDE\obj\Debug\PashIDE.pdb
+C:\Users\xxdjo\Documents\Visual Studio 2015\Projects\PashLang\PashLang\PashIDE\obj\Debug\PashIDE.Home.resources
+C:\Users\xxdjo\Documents\Visual Studio 2015\Projects\PashLang\PashLang\PashIDE\obj\Debug\PashIDE.CreateProjectWindow.resources
+C:\Users\Myvar\Documents\GitHub\PashLang\PashLang\PashIDE\obj\Debug\PashIDE.csprojResolveAssemblyReference.cache
+C:\Users\Myvar\Documents\GitHub\PashLang\PashLang\PashIDE\obj\Debug\PashIDE.CreateProjectWindow.resources
+C:\Users\Myvar\Documents\GitHub\PashLang\PashLang\PashIDE\obj\Debug\PashIDE.Home.resources
+C:\Users\Myvar\Documents\GitHub\PashLang\PashLang\PashIDE\obj\Debug\PashIDE.Main.resources
+C:\Users\Myvar\Documents\GitHub\PashLang\PashLang\PashIDE\obj\Debug\PashIDE.Properties.Resources.resources
+C:\Users\Myvar\Documents\GitHub\PashLang\PashLang\PashIDE\obj\Debug\PashIDE.csproj.GenerateResource.Cache
+C:\Users\Myvar\Documents\GitHub\PashLang\PashLang\PashIDE\obj\Debug\PashIDE.exe
+C:\Users\Myvar\Documents\GitHub\PashLang\PashLang\PashIDE\obj\Debug\PashIDE.pdb
+C:\Users\Myvar\Documents\GitHub\PashLang\PashLang\PashIDE\bin\Debug\PashIDE.exe.config
+C:\Users\Myvar\Documents\GitHub\PashLang\PashLang\PashIDE\bin\Debug\PashIDE.exe
+C:\Users\Myvar\Documents\GitHub\PashLang\PashLang\PashIDE\bin\Debug\PashIDE.pdb
+C:\Users\Myvar\Documents\GitHub\PashLang\PashLang\PashIDE\bin\Debug\FastColoredTextBox.dll
+C:\Users\xxdjo\Documents\Visual Studio 2015\Projects\PashLang\PashLang\PashIDE\bin\Debug\PASM.dll
+C:\Users\xxdjo\Documents\Visual Studio 2015\Projects\PashLang\PashLang\PashIDE\bin\Debug\PASM.pdb
+C:\Users\xxdjo\Documents\Visual Studio 2015\Projects\PashLang\PashLang\PashIDE\obj\Debug\PashIDE.csprojResolveAssemblyReference.cache
+C:\Users\xxdjo\Documents\Visual Studio 2015\Projects\PashLang\PashLang\PashIDE\bin\Debug\Irony.dll
+C:\Users\xxdjo\Documents\Visual Studio 2015\Projects\PashLang\PashLang\PashIDE\bin\Debug\Irony.pdb
+C:\Users\xxdjo\Documents\Visual Studio 2015\Projects\PashLang\PashLang\PashIDE\bin\Debug\Irony.xml
+C:\Users\xxdjo\Documents\Visual Studio 2015\Projects\PashLang\PashLang\PashIDE\bin\Debug\FastColoredTextBox.dll
+C:\Users\xxdjo\Documents\Visual Studio 2015\Projects\PashLang\PashLang\PashIDE\bin\Debug\FastColoredTextBox.pdb
+C:\Users\xxdjo\Documents\Visual Studio 2015\Projects\PashLang\PashLang\PashIDE\bin\Debug\FastColoredTextBox.xml
+C:\Users\xxdjo\Documents\Visual Studio 2015\Projects\PashLang\PashLang\PashIDE\bin\Debug\BASIC Compiler.exe
+C:\Users\xxdjo\Documents\Visual Studio 2015\Projects\PashLang\PashLang\PashIDE\bin\Debug\BASIC Compiler.pdb

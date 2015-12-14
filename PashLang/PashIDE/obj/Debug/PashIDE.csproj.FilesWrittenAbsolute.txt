@@ -1,0 +1,8 @@
+/home/daniel/Documents/Projects/PashLang-master/PashLang/PashIDE/obj/Debug/.NETFramework,Version=v4.5.AssemblyAttribute.cs
+/home/daniel/Documents/Projects/PashLang-master/PashLang/PashIDE/obj/Debug/PashIDE.CreateProjectWindow.resources
+/home/daniel/Documents/Projects/PashLang-master/PashLang/PashIDE/obj/Debug/PashIDE.Home.resources
+/home/daniel/Documents/Projects/PashLang-master/PashLang/PashIDE/obj/Debug/PashIDE.Main.resources
+/home/daniel/Documents/Projects/PashLang-master/PashLang/PashIDE/obj/Debug/PashIDE.Properties.Resources.resources
+/home/daniel/Documents/Projects/PashLang-master/PashLang/PashIDE/obj/Debug/PashIDE.exe
+/home/daniel/Documents/Projects/PashLang-master/PashLang/PashIDE/bin/Debug/FastColoredTextBox.dll
+/home/daniel/Documents/Projects/PashLang-master/PashLang/PashIDE/bin/Debug/Irony.dll

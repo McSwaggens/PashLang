@@ -1,0 +1,5 @@
+/home/daniel/Documents/Projects/PashLang-master/PashLang/CrocodileScript/obj/Debug/.NETFramework,Version=v4.5.AssemblyAttribute.cs
+/home/daniel/Documents/Projects/PashLang-master/PashLang/CrocodileScript/bin/Debug/CrocodileScript.dll.mdb
+/home/daniel/Documents/Projects/PashLang-master/PashLang/CrocodileScript/bin/Debug/CrocodileScript.dll
+/home/daniel/Documents/Projects/PashLang-master/PashLang/CrocodileScript/obj/Debug/CrocodileScript.dll
+/home/daniel/Documents/Projects/PashLang-master/PashLang/CrocodileScript/obj/Debug/CrocodileScript.dll.mdb

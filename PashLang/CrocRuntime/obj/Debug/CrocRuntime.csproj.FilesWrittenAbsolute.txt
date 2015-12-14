@@ -1,0 +1,9 @@
+/home/daniel/Documents/Projects/PashLang-master/PashLang/CrocRuntime/obj/Debug/.NETFramework,Version=v4.5.AssemblyAttribute.cs
+/home/daniel/Documents/Projects/PashLang-master/PashLang/CrocRuntime/bin/Debug/CrocRuntime.exe.mdb
+/home/daniel/Documents/Projects/PashLang-master/PashLang/CrocRuntime/bin/Debug/CrocRuntime.exe
+/home/daniel/Documents/Projects/PashLang-master/PashLang/CrocRuntime/obj/Debug/CrocRuntime.exe
+/home/daniel/Documents/Projects/PashLang-master/PashLang/CrocRuntime/obj/Debug/CrocRuntime.exe.mdb
+/home/daniel/Documents/Projects/PashLang-master/PashLang/CrocRuntime/bin/Debug/CrocodileScript.dll
+/home/daniel/Documents/Projects/PashLang-master/PashLang/CrocRuntime/bin/Debug/CrocodileScript.dll.mdb
+/home/daniel/Documents/Projects/PashLang-master/PashLang/CrocRuntime/bin/Debug/PASM.dll
+/home/daniel/Documents/Projects/PashLang-master/PashLang/CrocRuntime/bin/Debug/PASM.dll.mdb
