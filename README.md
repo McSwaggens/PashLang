@@ -35,6 +35,11 @@ engine.Load(PASMCode);
 engine.Execute();
 ```
 
+##### Why use PASM opposed to another language like JavaScript or LUA?
+###### You're in full control.
+PASM is designed from the ground up ready for low, medium and hight trust environments.
+Whether you want to limit the amount of RAM it can use, do threading on low specs or use your own standard library, everything is up to you.
+
 
 # Croc Script
 'Croc Script' or 'Crocodile Script' is a C/# like language, and compiles into PASM code
