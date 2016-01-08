@@ -10,13 +10,13 @@ namespace PASM
 {
     public class Engine
     {
-        public object[] MEM = new object[100];
-        public Function[] Functions = new Function[101];
-
+        private Function[] Functions = new Function[101];
+        public Memory memory;
+        public Register register;
         private List<FunctionInstance> Returns = new List<FunctionInstance>();
 		private List<Type> ReferencedLibraries = new List<Type> ();
 
-		public Handler[] Code;
+		private Handler[] Code; 
         public void Load(string[] Code)
         {
             List<string> s = Code.ToList(); s.RemoveAll(str => String.IsNullOrEmpty(str));
@@ -46,10 +46,6 @@ namespace PASM
                 {
                     this.Code[i] = st_Parser(st.Split(' '), st);
                 }
-                else if (st.StartsWith("if"))
-                {
-                    this.Code[i] = new If(st.Split(' '), this);
-                }
                 else {
                     string[] args = st.Split(' ');
                     string g = args[0];
@@ -67,6 +63,29 @@ namespace PASM
         public bool Loaded
         {
             get { return Code != null; }
+        }
+
+        public void createSetMemory()
+        {
+            Memory memory = new Memory(1024);
+            this.memory = memory;
+        }
+
+        public void createSetMemory(int sizemb)
+        {
+            short size = ((short)((sizemb / 1024) / 1024));
+            memory = new Memory(size);
+        }
+
+        public void setMemory(Memory memory)
+        {
+            this.memory = memory;
+        }
+
+        public void malloc(int register, int size)
+        {
+            this.register[register].address = memory.Allocate(size);
+            this.register[register].size = size;
         }
 
         public int CurrentLine = 0;
@@ -92,33 +111,65 @@ namespace PASM
             }
         }
 
-        public bool isMethodVariable(string var)
+        public void set(int ptr, bool isMethodPtr, short set) //INT16
         {
-            return var.ToCharArray()[0] == ':';
-        }
-
-        public void set(int ptr, bool isMethodPtr, object set)
-        {
-            if (isMethodPtr)
+            if (register[ptr] == null)
             {
-                Returns.Last().MEM[ptr] = set;
+                malloc(ptr, 2);
+                memory.write(Converter.int16(set), (isMethodPtr ? Returns.Last().register[ptr].address : register[ptr].address));
             }
-            else MEM[ptr] = set;
-        }
-
-        public void set(string ptr, object set)
-        {
-            char c = ptr.ToCharArray()[0];
-            bool isMethodPtr = c == ':';
-
-            if (isMethodPtr)
+            else
             {
-                Returns.Last().MEM[int.Parse(ptr.Substring(1))] = set;
+                memory.write(Converter.int16(set), (isMethodPtr ? Returns.Last().register[ptr].address : register[ptr].address));
             }
-            else MEM[int.Parse(ptr)] = set;
         }
 
-        private Dictionary<string, Type> DotNetCash = new Dictionary<string, Type>();
+        public void set(int ptr, bool isMethodPtr, int set) //INT32
+        {
+            if (register[ptr] == null)
+            {
+                malloc(ptr, 4);
+                memory.write(Converter.int32(set), (isMethodPtr ? Returns.Last().register[ptr].address : register[ptr].address));
+            }
+            else
+            {
+                memory.write(Converter.int32(set), (isMethodPtr ? Returns.Last().register[ptr].address : register[ptr].address));
+            }
+        }
+
+        public void set(int ptr, bool isMethodPtr, long set) //INT64
+        {
+            if (register[ptr] == null)
+            {
+                malloc(ptr, 8);
+                memory.write(Converter.int64(set), (isMethodPtr ? Returns.Last().register[ptr].address : register[ptr].address));
+            }
+            else
+            {
+                memory.write(Converter.int64(set), (isMethodPtr ? Returns.Last().register[ptr].address : register[ptr].address));
+            }
+        }
+
+        public void set(int ptr, bool isMethodPtr, byte[] set)
+        {
+            
+        }
+
+        private static bool isMethodPointer(string sptr, out int ptr)
+        {
+            if (sptr.ToCharArray()[0] == ':')
+            {
+                ptr = int.Parse(sptr.Remove(0, 1));
+                return true;
+            }
+            else
+            {
+                ptr = int.Parse(sptr);
+                return false;
+            }
+        }
+
+        private Dictionary<string, Type> StaticCache = new Dictionary<string, Type>();
         
         public void ReferenceLibrary(Type t)
         {
@@ -127,46 +178,74 @@ namespace PASM
 
 		public void ImportLibrary(Type t)
 		{
-			DotNetCash.Add(t.Name, t);
+			StaticCache.Add(t.Name, t);
 		}
 
-        private object ResolveValue(string val)
+        private short ResolveINT16(string sptr)
         {
-            char c = val.ToCharArray()[0];
-            if (c == ':')
-            {
-                return Returns.Last().MEM[int.Parse(val.Remove(0, 1))];
-            }
-            else return MEM[int.Parse(val)];
+            int reg;
+            bool isMethod = isMethodPointer(sptr, out reg);
+            byte[] data = memory.read(register[reg].address, 2);
+            return BitConverter.ToInt16(data, 0);
         }
 
-        public object CallDotNet(string myclass1, string mymethod, object[] perams)
+        private short ResolveINT32(string sptr)
         {
-            foreach (var i in DotNetCash)
+            int reg;
+            bool isMethod = isMethodPointer(sptr, out reg);
+            byte[] data = memory.read(register[reg].address, 4);
+            return BitConverter.ToInt16(data, 0);
+        }
+
+        private short ResolveINT64(string sptr)
+        {
+            int reg;
+            bool isMethod = isMethodPointer(sptr, out reg);
+            byte[] data = memory.read(register[reg].address, 8);
+            return BitConverter.ToInt16(data, 0);
+        }
+
+        private object ResolveNumber (string sptr)
+        {
+            int reg;
+            bool isMethod = isMethodPointer(sptr, out reg);
+            byte[] data = memory.read(register[reg].address, register[reg].size);
+            switch (register[reg].size)
             {
-                if (i.Key == myclass1)
-                {
-                    object rett =
-                        i.Value.GetMethod(
-                            mymethod, BindingFlags.Static | BindingFlags.Public).Invoke(
-                                i.Value, perams);
-                    return Convert.ToString(rett);
-                }
+                case 2: return BitConverter.ToInt16(data, 0);
+                case 4: return BitConverter.ToInt32(data, 0);
+                case 8: return BitConverter.ToInt64(data, 0);
             }
+            throw new Exception("Unknown number length of " + register[reg].size + " bytes, 16bits(2bytes), 32bits(4bytes), 64bits(8bytes)");
+        }
+
+        private PASM.Register.Pointer ResolvePointer(string sptr)
+        {
+            int reg;
+            bool isMethod = isMethodPointer(sptr, out reg);
+            return isMethod ? Returns.Last().register[reg] : register[reg];
+        }
+
+        private byte[] ResolveData(string sptr)
+        {
+            int reg;
+            bool isMethod = isMethodPointer(sptr, out reg);
+            return memory.read(register[reg].address, register[reg].size);
+        }
+
+        public byte[] CallStaticMethod(string @class, string method, object[] perams)
+        {
+            foreach (var i in StaticCache)
+                if (i.Key == @class) Convert.ToString(i.Value.GetMethod(method, BindingFlags.Static | BindingFlags.Public).Invoke(i.Value, perams));
             return null;
         }
 
         private MathParser mathParser = new MathParser();
 
-        private object MATH_Parse(string expression)
-        {
-            return mathParser.Parse(expression);
-        }
-
         public class Handler
         {
 
-			public static List<Type> Handlers = new List<Type>() { typeof(mv), typeof(cl), typeof(re), typeof(ca), typeof(If), typeof(im) };
+			public static List<Type> Handlers = new List<Type>() { typeof(mv), typeof(cl), typeof(re), typeof(ca), typeof(@if), typeof(im) };
 
             public Engine inst;
             public Handler(string[] args, Engine inst)
@@ -184,49 +263,12 @@ namespace PASM
         private Handler st_Parser(string[] args, string ln)
         {
             if (args[2] == "INT") return new st_INT(args, this);
-			if (args[2] == "BOOL") return new st_BOOL(args, this);
-            if (args[2] == "STR") return new st_STR(args, this, ln);
             if (args[2] == "MATH") return new st_MATH(args, this);
-            if (args[2] == "STRAD") return new st_STRAD(args, this);
             if (args[2] == "VOR") return new st_VOR(args, this);
             if (args[2] == "VOP") return new st_VOP(args, this);
             if (args[2] == "VORL") return new st_VORL(args, this);
             return null;
         }
-
-        public class st_STR : Handler
-        {
-            public string set;
-            public string ptr;
-            public st_STR(string[] args, Engine inst, string ln) : base(args, inst)
-            {
-                ptr = args[1];
-                set = ln.Split('"')[1];
-            }
-
-            public override void Execute()
-            {
-                inst.set(ptr, set);
-            }
-        }
-
-		public class st_BOOL : Handler
-		{
-			public bool toset = false;
-			public string ptr;
-			public st_BOOL(string[] args, Engine inst) : base(args, inst)
-			{
-				ptr = args[1];
-				if (args[3] ==  "true") toset = true;
-				else if (args[3] == "false") toset = false;
-				else throw new Exception("Unknown bool set " + args[3]);
-			}
-
-			public override void Execute()
-			{
-				inst.set(ptr, toset);
-			}
-		}
 
         public class st_INT : Handler
         {
@@ -240,7 +282,9 @@ namespace PASM
 
             public override void Execute()
             {
-                inst.set(ptr, set);
+                int reg;
+                bool isMethod = isMethodPointer(ptr, out reg);
+                inst.set(reg, isMethod, set);
             }
         }
 
@@ -262,13 +306,15 @@ namespace PASM
                 string equ = Equasion;
                 for (int i = 0; i < parts.Length; i++)
                 {
-                    parts[i] = "" + inst.ResolveValue(parts[i]);
+                    parts[i] = "" + inst.ResolveNumber(parts[i]);
                 }
                 
                 equ = "";
                 for (int i = 0; i < parts.Length; i++) { equ += parts[i]; if (i < ops.Length) equ += ops[i]; }
 
-                inst.set(ptr, inst.mathParser.Parse(equ));
+                int reg;
+                bool isMethod = isMethodPointer(ptr, out reg);
+                inst.set(reg, isMethod, (int)inst.mathParser.Parse(equ));
             }
 
             public bool doesContainMathOperator(string equ)
@@ -298,29 +344,24 @@ namespace PASM
             public char[] MathCharacters = new char[] { '+', '-', '*', '/', '%' };
         }
 
-        public class st_STRAD : Handler
+        public class MAR : Handler
         {
-            string ptr;
             string[] parts;
-            public st_STRAD(string[] args, Engine inst) : base(args, inst)
+            public MAR(string[] args, Engine inst) : base(args, inst)
             {
-                parts = new string[args.Length - 3];
-                for (int i = 0; i < parts.Length; i++)
-                {
-                    parts[i] = args[3 + i];
-                }
-
-                ptr = args[1];
+                parts = args;
             }
 
             public override void Execute()
             {
-                string Const = "";
-                for (int i = 0; i < parts.Length; i++)
-                {
-                    Const += inst.ResolveValue(parts[i]);
-                }
-                inst.set(ptr, Const);
+                //if (parts[1] == "EXP")
+                //{
+                //    inst.Returns.Last().
+                //}
+                //else if (parts[2] == "SET")
+                //{
+                //    inst.Returns.Last().
+                //}
             }
         }
 
@@ -345,7 +386,7 @@ namespace PASM
                     v.RemoveRange(0, 4);
                     for (int g = 0; g < v.Count; g++)
                     {
-                        func.MEM[g] = inst.ResolveValue(v[g]);
+                        func.register[g] = inst.ResolvePointer(v[g]);
                     }
                 }
 
@@ -367,28 +408,34 @@ namespace PASM
 
         public class st_VOP : Handler
         {
-            string ptr;
+            string sptr;
             string target;
             public st_VOP(string[] args, Engine inst) : base(args, inst)
             {
-                ptr = args[1];
+                sptr = args[1];
                 target = args[3];
             }
 
             public override void Execute()
             {
-                inst.set(ptr, inst.ResolveValue(target));
+                int Optr;
+                int Tptr;
+                bool OisMethod = isMethodPointer(sptr, out Optr);
+                bool TisMethod = isMethodPointer(sptr, out Tptr);
+                if (OisMethod) inst.register[Optr] = (TisMethod ? inst.Returns.Last().register[Tptr] : inst.register[Tptr]);
+                else inst.Returns.Last().register[Optr] = (TisMethod ? inst.Returns.Last().register[Tptr] : inst.register[Tptr]);
             }
         }
 
         public class st_VORL : Handler
         {
-            string ptr;
+            int ptr;
+            bool isMethod;
             string Class, MethodName;
             string[] args;
             public st_VORL(string[] args, Engine inst) : base(args, inst)
             {
-                ptr = args[1];
+                isMethod = isMethodPointer(args[1], out ptr);
                 this.args = args;
             }
 
@@ -400,9 +447,9 @@ namespace PASM
                 Params = new object[v.Count];
                 for (int i = 0; i < v.Count; i++)
                 {
-                    Params[i] = inst.ResolveValue(v[i]);
+                    Params[i] = inst.ResolveData(v[i]);
                 }
-                inst.set(ptr, inst.CallDotNet(args[3], args[4].Trim(':'), Params));
+                inst.set(ptr, isMethod, inst.CallStaticMethod(args[3], args[4].Trim(':'), Params));
                 return;
             }
         }
@@ -423,16 +470,16 @@ namespace PASM
 
             public override void Execute()
             {
-                object[] Params;
+                byte[][] Params;
                 List<string> b = args.ToList();
                 b.RemoveRange(0, 3);
                 string[] s = b.ToArray();
-                Params = new object[s.Length];
+                Params = new byte[s.Length][];
                 for (int i = 0; i < s.Length; i++)
                 {
-                    Params[i] = inst.ResolveValue(s[i]);
+                    Params[i] = inst.ResolveData(s[i]);
                 }
-                inst.CallDotNet(Class, MethodName, Params);
+                inst.CallStaticMethod(Class, MethodName, Params);
             }
         }
 
@@ -483,8 +530,8 @@ namespace PASM
                     if (func.doesReturnValue)
                     {
                         if (func.MethodVariable)
-                            inst.Returns[inst.Returns.Count - 2].MEM[func.ReturnVariablePos] = inst.ResolveValue(args[1]);
-                        else inst.MEM[func.ReturnVariablePos] = inst.ResolveValue(args[1]);
+                            inst.Returns[inst.Returns.Count - 2].register[func.ReturnVariablePos] = inst.ResolvePointer(args[1]);
+                        else inst.register[func.ReturnVariablePos] = inst.ResolvePointer(args[1]);
                     }
                 }
                 inst.CurrentLine = inst.Returns.Last().ReturnLine;
@@ -522,19 +569,19 @@ namespace PASM
                     v.RemoveRange(0, 2);
                     for (int g = 0; g < v.Count; g++)
                     {
-                        func.MEM[g] = inst.ResolveValue(v[g]);
+                        func.register[g] = inst.ResolvePointer(v[g]);
                     }
                 }
                 inst.Returns.Add(func);
             }
         }
 
-        public class If : Handler
+        public class @if : Handler
         {
             string arg1, arg2;
             string Operator;
             int jumpln;
-            public If(string[] args, Engine inst) : base(args, inst)
+            public @if(string[] args, Engine inst) : base(args, inst)
             {
                 jumpln = inst.Functions[int.Parse(args[4])].Line;
                 Operator = args[2];
@@ -544,36 +591,18 @@ namespace PASM
 
             public override void Execute()
             {
+                //Compare the 2 arguements and jump to the next line if true...
+                dynamic a1 = (dynamic)inst.ResolveNumber(arg1); //
+                                                                //  Dynamic a1 and a2 will be resolved at runtime to be either 16, 32 or 64 bit integers.
+                dynamic a2 = (dynamic)inst.ResolveNumber(arg2); //
                 bool ReturnedValue = false;
-                if (Operator == "=")
-                {
-                    if (inst.ResolveValue(arg1).Equals(inst.ResolveValue(arg2))) ReturnedValue = true;
-                }
-                else
-                if (Operator == "!=")
-                {
-                    if (inst.ResolveValue(arg1).Equals(inst.ResolveValue(arg2))) ReturnedValue = false;
-                }
-                else
-                if (Operator == ">")
-                {
-                    if (Convert.ToInt32(inst.ResolveValue(arg1)) > (int)(inst.ResolveValue(arg2))) ReturnedValue = true;
-                }
-                else
-                if (Operator == ">=")
-                {
-                    if (Convert.ToInt32(inst.ResolveValue(arg1)) >= (int)(inst.ResolveValue(arg2))) ReturnedValue = true;
-                }
-                else
-                if (Operator == "<")
-                {
-                    if (Convert.ToInt32(inst.ResolveValue(arg1)) < (int)(inst.ResolveValue(arg2))) ReturnedValue = true;
-                }
-                else
-                if (Operator == "<=")
-                {
-                    if (Convert.ToInt32(inst.ResolveValue(arg1)) <= (int)(inst.ResolveValue(arg2))) ReturnedValue = true;
-                }
+
+                if (Operator == "=" && a1 == a2) ReturnedValue = true; else
+                if (Operator == "!=" && a1 != a2) ReturnedValue = true; else
+                if (Operator == ">" && a1 > a2) ReturnedValue = true; else
+                if (Operator == ">=" && a1 >= a2) ReturnedValue = true; else
+                if (Operator == "<" && a1 < a2) ReturnedValue = true; else
+                if (Operator == "<=" && a1 <= a2) ReturnedValue = true;
 
                 if (!ReturnedValue) inst.CurrentLine = jumpln;
             }
@@ -590,8 +619,8 @@ namespace PASM
     {
         public bool doesReturnValue = true;
         public int ReturnLine;
-        public object[] MEM = new object[100];
         public bool MethodVariable = false; // Does the pointer have a : ?
         public int ReturnVariablePos; // Variable to set Location
+        public Register register = new Register(1);
     }
 }
