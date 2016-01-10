@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using PASM;
+using System.Diagnostics;
 
 namespace PashRuntime
 {
@@ -11,12 +12,12 @@ namespace PashRuntime
 			{"d", false},
 			{"s", false},
 			{"v", false},
+            {"t", true}, //Record and print the execution time...
+            {"dr", false }, // Double run
 			{"nostdlib", false}
 		};
 		public static void Main (string[] args) {
-            int calc = 5 * 5 + 7 / 6 + 3 - 9 + 12 * 4 * 5 + 23;
-            Console.WriteLine(calc);
-            args = new string[] { "/Users/xxdjo/Documents/Code/croc.p" };
+            args = new string[] { "/Users/xxdjo/Documents/Pash Projects/test/main.p" };
 			if (args.Length == 0) {
 				WriteError ("Please parse in a file to be executed...");
 				WriteWarning ("Aborting...");
@@ -45,23 +46,33 @@ namespace PashRuntime
 					Console.WriteLine (p);
 				}
 			}
+            
 			StartRuntime (args[0]);
-            Console.WriteLine("Finished...");
+            Console.WriteLine("Finished" + (Flags["t"] ? " in " + sw.ElapsedMilliseconds + "ms, " + sw.ElapsedTicks + "ticks (" + sw.Elapsed + ")." : "..."));
             Console.ReadLine();
 		}
 
 		public static List<Type> StandardLibraries = new List<Type> () {
 			typeof(Standard)
 		};
-
-		public static void StartRuntime (string file) {
+        private static Stopwatch sw = new Stopwatch();
+        public static void StartRuntime (string file) {
 			Engine engine = new Engine ();
+            engine.createSetMemory(1024);
 			engine.Load (File.ReadAllLines (file));
 			if (!Flags ["nostdlib"]) {
 				//Reference the Standard library...
 				StandardLibraries.ForEach (t => engine.ReferenceLibrary (t));
 			}
-			engine.Execute ();
+            int runtimes = 1;
+            if (Flags["dr"]) runtimes = 2;
+            for (int i = 0; i < runtimes; i++)
+            {
+                sw.Reset();
+                sw.Start();
+                engine.Execute();
+                sw.Stop();
+            }
 		}
 
 		public static void WriteColor(string text, ConsoleColor color) {

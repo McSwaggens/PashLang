@@ -12,7 +12,7 @@ namespace PASM
     {
         private Function[] Functions = new Function[101];
         public Memory memory;
-        public Register register;
+        public Register register = new Register(10);
         private List<FunctionInstance> Returns = new List<FunctionInstance>();
 		private List<Type> ReferencedLibraries = new List<Type> ();
 
@@ -71,9 +71,8 @@ namespace PASM
             this.memory = memory;
         }
 
-        public void createSetMemory(int sizemb)
+        public void createSetMemory(int size)
         {
-            short size = ((short)((sizemb / 1024) / 1024));
             memory = new Memory(size);
         }
 
@@ -82,10 +81,10 @@ namespace PASM
             this.memory = memory;
         }
 
-        public void malloc(int register, int size)
+        public void malloc(Register register, int ptr, int size)
         {
-            this.register[register].address = memory.Allocate(size);
-            this.register[register].size = size;
+            register[ptr].address = memory.Allocate(size);
+            register[ptr].size = size;
         }
 
         public int CurrentLine = 0;
@@ -113,46 +112,77 @@ namespace PASM
 
         public void set(int ptr, bool isMethodPtr, short set) //INT16
         {
+            Register register = isMethodPtr ? Returns.Last().register : this.register;
             if (register[ptr] == null)
             {
-                malloc(ptr, 2);
-                memory.write(Converter.int16(set), (isMethodPtr ? Returns.Last().register[ptr].address : register[ptr].address));
+                register[ptr] = new Register.Pointer(2);
+                malloc(register, ptr, 2);
+                memory.write(Converter.int16(set), register[ptr].address);
             }
             else
             {
-                memory.write(Converter.int16(set), (isMethodPtr ? Returns.Last().register[ptr].address : register[ptr].address));
+                memory.write(Converter.int16(set), register[ptr].address);
             }
         }
 
         public void set(int ptr, bool isMethodPtr, int set) //INT32
         {
+            Register register = isMethodPtr ? Returns.Last().register : this.register;
             if (register[ptr] == null)
             {
-                malloc(ptr, 4);
-                memory.write(Converter.int32(set), (isMethodPtr ? Returns.Last().register[ptr].address : register[ptr].address));
+                register[ptr] = new Register.Pointer(4);
+                malloc(register, ptr, 4);
+                memory.write(Converter.int32(set), register[ptr].address);
             }
             else
             {
-                memory.write(Converter.int32(set), (isMethodPtr ? Returns.Last().register[ptr].address : register[ptr].address));
+                memory.write(Converter.int32(set), register[ptr].address);
             }
         }
 
         public void set(int ptr, bool isMethodPtr, long set) //INT64
         {
+            Register register = isMethodPtr ? Returns.Last().register : this.register;
             if (register[ptr] == null)
             {
-                malloc(ptr, 8);
-                memory.write(Converter.int64(set), (isMethodPtr ? Returns.Last().register[ptr].address : register[ptr].address));
+                register[ptr] = new Register.Pointer(8);
+                malloc(register, ptr, 8);
+                memory.write(Converter.int64(set), register[ptr].address);
             }
             else
             {
-                memory.write(Converter.int64(set), (isMethodPtr ? Returns.Last().register[ptr].address : register[ptr].address));
+                memory.write(Converter.int64(set), register[ptr].address);
+            }
+        }
+
+        public void set(int ptr, bool isMethodPtr, byte set)
+        {
+            Register register = isMethodPtr ? Returns.Last().register : this.register;
+            if (register[ptr] == null)
+            {
+                register[ptr] = new Register.Pointer(1);
+                malloc(register, ptr, 1);
+                memory.write(new byte[] { set }, register[ptr].address);
+            }
+            else
+            {
+                memory.write(new byte[] { set }, register[ptr].address);
             }
         }
 
         public void set(int ptr, bool isMethodPtr, byte[] set)
         {
-            
+            Register register = isMethodPtr ? Returns.Last().register : this.register;
+            if (register[ptr] == null)
+            {
+                register[ptr] = new Register.Pointer(set.Length);
+                malloc(register, ptr, set.Length);
+                memory.write(set, register[ptr].address);
+            }
+            else
+            {
+                memory.write(set, register[ptr].address);
+            }
         }
 
         private static bool isMethodPointer(string sptr, out int ptr)
@@ -209,6 +239,7 @@ namespace PASM
         {
             int reg;
             bool isMethod = isMethodPointer(sptr, out reg);
+            Register register = isMethod ? Returns.Last().register : this.register;
             byte[] data = memory.read(register[reg].address, register[reg].size);
             switch (register[reg].size)
             {
@@ -219,7 +250,7 @@ namespace PASM
             throw new Exception("Unknown number length of " + register[reg].size + " bytes, 16bits(2bytes), 32bits(4bytes), 64bits(8bytes)");
         }
 
-        private PASM.Register.Pointer ResolvePointer(string sptr)
+        private Register.Pointer ResolvePointer(string sptr)
         {
             int reg;
             bool isMethod = isMethodPointer(sptr, out reg);
@@ -230,6 +261,7 @@ namespace PASM
         {
             int reg;
             bool isMethod = isMethodPointer(sptr, out reg);
+            Register register = isMethod ? Returns.Last().register : this.register;
             return memory.read(register[reg].address, register[reg].size);
         }
 
@@ -262,7 +294,10 @@ namespace PASM
 
         private Handler st_Parser(string[] args, string ln)
         {
-            if (args[2] == "INT") return new st_INT(args, this);
+            if (args[2] == "BYTE") return new st_INT64(args, this);
+            if (args[2] == "INT16") return new st_INT16(args, this);
+            if (args[2] == "INT32") return new st_INT32(args, this);
+            if (args[2] == "INT64") return new st_INT64(args, this);
             if (args[2] == "MATH") return new st_MATH(args, this);
             if (args[2] == "VOR") return new st_VOR(args, this);
             if (args[2] == "VOP") return new st_VOP(args, this);
@@ -270,14 +305,68 @@ namespace PASM
             return null;
         }
 
-        public class st_INT : Handler
+        public class st_BYTE : Handler
+        {
+            byte set;
+            string ptr;
+            public st_BYTE(string[] args, Engine inst) : base(args, inst)
+            {
+                ptr = args[1];
+                set = byte.Parse(args[3]);
+            }
+
+            public override void Execute()
+            {
+                int reg;
+                bool isMethod = isMethodPointer(ptr, out reg);
+                inst.set(reg, isMethod, set);
+            }
+        }
+
+        public class st_INT16 : Handler
+        {
+            short set;
+            string ptr;
+            public st_INT16(string[] args, Engine inst) : base(args, inst)
+            {
+                ptr = args[1];
+                set = short.Parse(args[3]);
+            }
+
+            public override void Execute()
+            {
+                int reg;
+                bool isMethod = isMethodPointer(ptr, out reg);
+                inst.set(reg, isMethod, set);
+            }
+        }
+
+        public class st_INT32 : Handler
         {
             int set;
             string ptr;
-            public st_INT(string[] args, Engine inst) : base(args, inst)
+            public st_INT32(string[] args, Engine inst) : base(args, inst)
             {
                 ptr = args[1];
                 set = int.Parse(args[3]);
+            }
+
+            public override void Execute()
+            {
+                int reg;
+                bool isMethod = isMethodPointer(ptr, out reg);
+                inst.set(reg, isMethod, set);
+            }
+        }
+
+        public class st_INT64 : Handler
+        {
+            long set;
+            string ptr;
+            public st_INT64(string[] args, Engine inst) : base(args, inst)
+            {
+                ptr = args[1];
+                set = long.Parse(args[3]);
             }
 
             public override void Execute()
@@ -621,6 +710,6 @@ namespace PASM
         public int ReturnLine;
         public bool MethodVariable = false; // Does the pointer have a : ?
         public int ReturnVariablePos; // Variable to set Location
-        public Register register = new Register(1);
+        public Register register = new Register(10);
     }
 }

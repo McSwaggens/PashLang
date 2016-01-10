@@ -119,9 +119,6 @@ namespace PASM
             return data;
         }
 
-        ///Memory Register?
-        ///Get and Sets?
-
         class Part
         {
             public bool Used = false;

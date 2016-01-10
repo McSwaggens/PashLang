@@ -25,6 +25,10 @@ namespace PASM
                 this.address = address;
                 this.size = size;
             }
+            public Pointer(int size)
+            {
+                this.size = size;
+            }
         }
     }
 }
