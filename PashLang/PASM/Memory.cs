@@ -10,7 +10,7 @@ namespace PASM
     {
         private List<Part> FreeParts = new List<Part>();
         private List<Part> UsedParts = new List<Part>();
-        private Part[] PartAddressStack;
+        public Part[] PartAddressStack;
         public byte[] Data;
         public int DataLength { get { return Data.Length; } }
         public Memory(int size)
@@ -119,9 +119,10 @@ namespace PASM
             return data;
         }
 
-        class Part
+        public class Part
         {
             public bool Used = false;
+            public int ReferenceCount = 1;
             public int Address, Size;
             public Part(int Address, int Size)
             {

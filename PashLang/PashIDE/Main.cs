@@ -13,7 +13,7 @@ using PASM;
 using System.Runtime.InteropServices;
 using System.Diagnostics;
 using System.IO;
-
+using static PashIDE.Logger;
 namespace PashIDE
 {
     public partial class Main : Form
@@ -29,6 +29,13 @@ namespace PashIDE
             InitializeComponent();
             Code.KeyDown += Main_KeyDown;
             Code.TextChanged += Code_TextChanged;
+            AllocConsole();
+            Console.ForegroundColor = ConsoleColor.Green;
+            Console.WriteLine("DO NOT CLOSE THIS WINDOW!");
+            Console.ForegroundColor = ConsoleColor.DarkGreen;
+            Console.WriteLine("This window will show you in depth information on what is going on in the IDE, and will also show and get output and input from your application.");
+            Console.ForegroundColor = ConsoleColor.White;
+            ExecutionThread = new Thread(StartInstance);
         }
 
         private void Code_TextChanged(object sender, TextChangedEventArgs e)
@@ -64,8 +71,6 @@ namespace PashIDE
         protected override void OnClosing(CancelEventArgs e)
         {
         }
-        
-        public Thread ConsoleThread;
 
         FileSystemWatcher watcher;
 
@@ -87,19 +92,25 @@ namespace PashIDE
 
         private void ProjectDirectoryChanged(object sender, FileSystemEventArgs e)
         {
-            Console.WriteLine("Project Working Directory has changed... Reloading...");
+            Log("Project Working Directory has changed... Reloading...");
             Explorer.Invoke(new MethodInvoker(delegate
             {
                 Explorer.ScanRoot();
             }));
         }
 
+        private Thread ExecutionThread;
+
         public bool isRunningCode = false;
 
         public void StartProject()
         {
-            CompileProject();
-            StartInstance();
+            ExecutionThread = new Thread(() =>
+            {
+                CompileProject();
+                StartInstance();
+            });
+            ExecutionThread.Start();
         }
 
         public void CompileProject()
@@ -109,103 +120,30 @@ namespace PashIDE
                 cf.Compile();
             }
         }
-
+        [DllImport("kernel32.dll")]
+        internal static extern Boolean AllocConsole();
         private void StartInstance()
         {
             isRunningCode = true;
-
-            Standard.inst = new DebugConsole();
-            ConsoleThread = new Thread(() =>
-            {
-                Application.Run(Standard.inst);
-            });
-            ConsoleThread.Start();
+            Engine engine = new Engine();
+            engine.Load(Explorer.CodeFiles[0].Code.Split('\n'));
+            engine.setMemory(1024);
+            engine.ReferenceLibrary(typeof(Standard));
+            engine.Execute();
+            isRunningCode = false;
+            onDebugStopped();
         }
 
         public void StopInstance()
         {
-            Standard.inst.Invoke(new MethodInvoker(delegate { Standard.inst.Close(); }));
-        }
-
-        public class DebugConsole : Form
-        {
-            public Thread DebugThread;
-            public RichTextBox rtb = new RichTextBox();
-            public DebugConsole()
-            {
-                Width = 800;
-                Height = 400;
-                rtb.Location = new Point(0, 0);
-                rtb.Size = new Size(Width, Height);
-                rtb.ReadOnly = true;
-                rtb.BackColor = Color.Black;
-                rtb.ForeColor = Color.White;
-                rtb.Font = new Font("Consolas", 14f);
-                Controls.Add(rtb);
-
-                DebugThread = new Thread(() =>
-                {
-                    Engine engine = new Engine();
-
-                    string[] code = Main.inst.Explorer.CodeFiles[1].Code.Split('\n');
-                    List<string> g = new List<string>();
-                    foreach (string f in code) if (f != "\r") g.Add(f);
-
-                    engine.Load(g.ToArray());
-                    engine.ReferenceLibrary(typeof(Standard));
-                    engine.Execute();
-                    inst.isRunningCode = false;
-                    DebugThread.Abort();
-                    Close();
-                });
-            }
-
-            public CodeFile getBootCF()
-            {
-                foreach (CodeFile cf in inst.Explorer.CodeFiles)
-                {
-                    if (cf.Name == "boot.p") return cf;
-                }
-                return null;
-            }
-
-            protected override void OnLoad(EventArgs e)
-            {
-                DebugThread.Start();
-            }
-
-            protected override void OnClosing(CancelEventArgs e)
-            {
-                inst.isRunningCode = false;
-                Main.inst.Invoke(new MethodInvoker(delegate { inst.bar1.startButton.Refresh(); }));
-                Main.inst.isRunningCode = false;
-                DebugThread.Abort();
-            }
-
-            protected override void OnSizeChanged(EventArgs e)
-            {
-                rtb.Size = new Size(Width, Height);
-            }
+            ExecutionThread.Abort();
+            isRunningCode = false;
+            onDebugStopped();
         }
 
         public void onDebugStopped()
         {
-            
-            bar1.startButton.Refresh();
-            Standard.inst = null;
-        }
-
-        public class Standard
-        {
-            public static DebugConsole inst;
-            public static void println(object c)
-            {
-                inst.Invoke(new MethodInvoker(delegate { inst.rtb.Text += c + "\n"; }));
-            }
-            public static string GetString()
-            {
-                return "Ayy Lmao";
-            }
+            Invoke(new MethodInvoker(delegate { bar1.startButton.Refresh(); }));
         }
 
         public bool ChangeExpected, CE2 = false;
@@ -221,10 +159,10 @@ namespace PashIDE
             switch (cf.language)
             {
                 case Language.BASIC:
-                    Code.Language = FastColoredTextBoxNS.Language.PashBASIC;
+                    Code.Language = FastColoredTextBoxNS.Language.CrocScript;
                     break;
                 case Language.PASM:
-                    Code.Language = FastColoredTextBoxNS.Language.PashASM;
+                    Code.Language = FastColoredTextBoxNS.Language.PASM;
                     break;
                 default:
                     Code.Language = FastColoredTextBoxNS.Language.Custom;

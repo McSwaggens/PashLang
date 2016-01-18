@@ -4,7 +4,7 @@ namespace PashRuntime
 {
 	public class Standard
 	{
-		public static void printnum_ln(byte[] m)
+		public static void cout_num(byte[] m)
 		{
             object num = null;
             if (m.Length == 2) num = BitConverter.ToInt16(m, 0);

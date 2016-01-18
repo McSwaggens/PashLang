@@ -38,7 +38,7 @@ namespace CrocRuntime
             Console.WriteLine("Executing PASM code with 1024MB of memory...");
             Engine engine = new Engine();
             engine.Load(result.PASM);
-            engine.createSetMemory(1024);
+            engine.setMemory(1024);
             engine.ReferenceLibrary(typeof(Standard));
             engine.Execute();
             Console.WriteLine("PASM code has finished executing...");

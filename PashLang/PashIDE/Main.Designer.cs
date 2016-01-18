@@ -70,7 +70,7 @@
             this.Code.ForeColor = System.Drawing.Color.WhiteSmoke;
             this.Code.IndentBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(38)))), ((int)(((byte)(38)))), ((int)(((byte)(38)))));
             this.Code.IsReplaceMode = false;
-            this.Code.Language = FastColoredTextBoxNS.Language.PashASM;
+            this.Code.Language = FastColoredTextBoxNS.Language.PASM;
             this.Code.LeftBracket = '(';
             this.Code.LineNumberColor = System.Drawing.Color.Silver;
             this.Code.Location = new System.Drawing.Point(-1, 70);

@@ -1,11 +1,12 @@
-﻿using BASIC_Compiler;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-
+using CrocodileScript;
+using PASM;
+using static PashIDE.Logger;
 namespace PashIDE
 {
     public class CodeFile
@@ -26,11 +27,9 @@ namespace PashIDE
             string lang = Path.GetExtension(path);
             if (lang == ".p") language = Language.PASM;
             else
-            if (lang == ".k") language = Language.KIS;
-            else
-            if (lang == ".b") language = Language.BASIC;
+            if (lang == ".b") language = Language.PASM;
             else language = Language.Unknown;
-            Console.WriteLine("CodeFile Language set to " + language + " for CodeFile " + Name);
+            Log("CodeFile Language set to " + language + " for CodeFile " + Name);
         }
 
         public void Compile()
@@ -49,10 +48,12 @@ namespace PashIDE
                 {
                     tocompcode[i] = tocompcode[i].TrimEnd('\r');
                 }
-                Compiler compiler = new Compiler();
-                File.WriteAllLines(Main.inst.Explorer.WorkingDirectory + "/" + Name + ".p", compiler.Compile(tocompcode.ToArray()).ToArray());
+                CrocCompiler compiler = new CrocCompiler(tocompcode.ToArray());
+                CrocResult CompiledResult = compiler.Compile();
+                File.WriteAllLines(Main.inst.Explorer.WorkingDirectory + "/" + Name + ".p", CompiledResult.PASM);
+                //TODO: Write out the header file.
 
-                Console.WriteLine("Compilation Successfull...");
+                Log("Compilation Successfull...");
             }
             else if (language == Language.PASM)
             {
@@ -71,7 +72,7 @@ namespace PashIDE
 
         public void Save(string Code)
         {
-            Console.WriteLine("Saved " + Name);
+            Log("Saved " + Name);
             this.Code = Code;
             File.WriteAllText(path, Code);
             Saved = true;

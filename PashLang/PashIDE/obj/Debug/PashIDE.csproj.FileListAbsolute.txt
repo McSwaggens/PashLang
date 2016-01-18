@@ -23,11 +23,8 @@ C:\Users\Myvar\Documents\GitHub\PashLang\PashLang\PashIDE\bin\Debug\FastColoredT
 C:\Users\xxdjo\Documents\Visual Studio 2015\Projects\PashLang\PashLang\PashIDE\bin\Debug\PASM.dll
 C:\Users\xxdjo\Documents\Visual Studio 2015\Projects\PashLang\PashLang\PashIDE\bin\Debug\PASM.pdb
 C:\Users\xxdjo\Documents\Visual Studio 2015\Projects\PashLang\PashLang\PashIDE\obj\Debug\PashIDE.csprojResolveAssemblyReference.cache
-C:\Users\xxdjo\Documents\Visual Studio 2015\Projects\PashLang\PashLang\PashIDE\bin\Debug\Irony.dll
-C:\Users\xxdjo\Documents\Visual Studio 2015\Projects\PashLang\PashLang\PashIDE\bin\Debug\Irony.pdb
-C:\Users\xxdjo\Documents\Visual Studio 2015\Projects\PashLang\PashLang\PashIDE\bin\Debug\Irony.xml
 C:\Users\xxdjo\Documents\Visual Studio 2015\Projects\PashLang\PashLang\PashIDE\bin\Debug\FastColoredTextBox.dll
 C:\Users\xxdjo\Documents\Visual Studio 2015\Projects\PashLang\PashLang\PashIDE\bin\Debug\FastColoredTextBox.pdb
 C:\Users\xxdjo\Documents\Visual Studio 2015\Projects\PashLang\PashLang\PashIDE\bin\Debug\FastColoredTextBox.xml
-C:\Users\xxdjo\Documents\Visual Studio 2015\Projects\PashLang\PashLang\PashIDE\bin\Debug\BASIC Compiler.exe
-C:\Users\xxdjo\Documents\Visual Studio 2015\Projects\PashLang\PashLang\PashIDE\bin\Debug\BASIC Compiler.pdb
+C:\Users\xxdjo\Documents\Visual Studio 2015\Projects\PashLang\PashLang\PashIDE\bin\Debug\CrocodileScript.dll
+C:\Users\xxdjo\Documents\Visual Studio 2015\Projects\PashLang\PashLang\PashIDE\bin\Debug\CrocodileScript.pdb
