@@ -28,3 +28,4 @@ C:\Users\xxdjo\Documents\Visual Studio 2015\Projects\PashLang\PashLang\PashIDE\b
 C:\Users\xxdjo\Documents\Visual Studio 2015\Projects\PashLang\PashLang\PashIDE\bin\Debug\FastColoredTextBox.xml
 C:\Users\xxdjo\Documents\Visual Studio 2015\Projects\PashLang\PashLang\PashIDE\bin\Debug\CrocodileScript.dll
 C:\Users\xxdjo\Documents\Visual Studio 2015\Projects\PashLang\PashLang\PashIDE\bin\Debug\CrocodileScript.pdb
+C:\Users\xxdjo\Documents\Visual Studio 2015\Projects\PashLang\PashLang\PashIDE\obj\Debug\PashIDE.CodeFileAddWindow.resources

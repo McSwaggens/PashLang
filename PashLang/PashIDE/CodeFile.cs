@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using CrocodileScript;
 using PASM;
@@ -76,6 +77,17 @@ namespace PashIDE
             this.Code = Code;
             File.WriteAllText(path, Code);
             Saved = true;
+        }
+
+        public void Backup()
+        {
+            
+        }
+
+        public void Delete()
+        {
+            Log("Deleted CodeFile at " + path);
+            File.Delete(path);
         }
     }
 }

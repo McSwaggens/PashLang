@@ -72,7 +72,7 @@ namespace PashIDE
         {
         }
 
-        FileSystemWatcher watcher;
+        public FileSystemWatcher watcher;
 
         private void Main_Load(object sender, EventArgs e)
         {
