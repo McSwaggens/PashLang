@@ -1,3 +1,5 @@
+<div style="text-align:center"><img src ="https://raw.githubusercontent.com/McSwaggens/PashLang/master/Pash%20Lang.png" /></div>
+
 # What is PashLang?
 'Pash' or 'PashLang' is the projects name, and contains all the fundamental languages and libraries.
 
