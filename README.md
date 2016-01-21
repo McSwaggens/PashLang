@@ -1,7 +1,12 @@
 <div style="text-align:center"><img src ="https://raw.githubusercontent.com/McSwaggens/PashLang/master/Pash%20Lang.png" /></div>
 
 # What is PashLang?
-'Pash' or 'PashLang' is the projects name, and contains all the fundamental languages and libraries.
+PashLang is a set of tools allowing you to execute interpreted code.
+
+###Performance
+In a test done recently comparing Jint and PASM with essentually the same code, JavaScript completed the test in 73ms, PASM on the otherhand finished in around 7ms. (10 times the speed) 
+
+Performance was always the goal of this language and always will be.
 
 Pash is currently split into 4 projects
 
