@@ -12,13 +12,9 @@ namespace CrocodileScript
 		public List<Warning> Warnings = new List<Warning>();
 		public List<Error> Errors = new List<Error>();
 
-		public bool WasSuccessfull {
-			get { return Errors.Count == 0; }
-		}
+		public bool WasSuccessfull => Errors.Count == 0;
 
-		public bool HasWarnings {
-			get { return Warnings.Count > 0; }
-		}
+	    public bool HasWarnings => Warnings.Count > 0;
 	}
 
 	public class Warning {

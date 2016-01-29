@@ -9,35 +9,36 @@ namespace CrocodileScript
     public class Variable
     {
         public Function function;
-        public bool inFunction { get { return function != null; } }
-        public bool isPublic = false, isStatic = false;
+        public bool inFunction => function != null;
+        public bool isPublic, isStatic;
+
         public VariableType type = VariableType.VOID;
+
         public string RawUnassignedValue;
-        public bool WasAssignedValue { get { return RawUnassignedValue != null; } }
+        public bool WasAssignedValue => RawUnassignedValue != null;
 
         public string Name;
         private static int _id = -1;
         public int ID = ++_id;
 
-        public Variable(string Name, Function f)
+        public Variable()
         {
-            this.Name = Name;
+        }
+
+        public Variable(string name, Function f)
+        {
+            Name = name;
             function = f;
             ID = f.Variables.Count + 1;
-            //The caller of this object needs to add this object to the functions variable stack...
         }
 
-        public Variable(string Name, bool isPublic = false, bool isStatic = false)
+        public Variable(string name, bool isPublic = false, bool isStatic = false)
         {
-            this.Name = Name;
+            Name = name;
             this.isPublic = isPublic;
             this.isStatic = isStatic;
-            //TODO: Set the ID to the statics top ID
         }
 
-        public string Tag
-        {
-            get { return inFunction ? ":" + ID : ID + ""; }
-        }
+        public string Tag => inFunction ? ":" + ID : ID + "";
     }
 }

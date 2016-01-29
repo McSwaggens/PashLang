@@ -113,6 +113,8 @@ namespace PashIDE
             ExecutionThread.Start();
         }
 
+        CodeFile getStartupCodeFile() => Explorer.CodeFiles.Where(codeFile => codeFile.HardName == "main.p").FirstOrDefault();
+
         public void CompileProject()
         {
             foreach (CodeFile cf in Explorer.CodeFiles)
@@ -124,9 +126,11 @@ namespace PashIDE
         internal static extern Boolean AllocConsole();
         private void StartInstance()
         {
+            CodeFile mainCodeFile = getStartupCodeFile();
+            LogInfo("Starting debugger on CodeFile: " + mainCodeFile.HardName);
             isRunningCode = true;
             Engine engine = new Engine();
-            engine.Load(Explorer.CodeFiles[0].Code.Split('\n'));
+            engine.Load(mainCodeFile.Code.Split('\n'));
             engine.setMemory(1024);
             engine.ReferenceLibrary(typeof(Standard));
             engine.Execute();
@@ -158,7 +162,7 @@ namespace PashIDE
 
             switch (cf.language)
             {
-                case Language.BASIC:
+                case Language.CrocScript:
                     Code.Language = FastColoredTextBoxNS.Language.CrocScript;
                     break;
                 case Language.PASM:

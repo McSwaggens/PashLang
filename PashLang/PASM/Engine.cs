@@ -17,7 +17,7 @@ namespace PASM
                 
         */
 
-        private Function[] Functions = new Function[101];
+        private Point[] points = new Point[101];
         public Memory memory;
         public Register register = new Register(10);
         private List<FunctionInstance> Returns = new List<FunctionInstance>();
@@ -35,21 +35,21 @@ namespace PASM
             for (int i = 0; i < Code.Length; i++)
             {
                 string st = Code[i];
-                if (st.StartsWith("me"))
+                if (st.StartsWith("pt"))
                 {
                     string[] args = Code[i].Split(' ');
                     int c = ParseStringToInt(args[1]);
-                    Function func = new Function();
+                    Point func = new Point();
                     func.Line = i;
-                    Functions[c] = func;
-                    this.Code[i] = new me(args, this);
+                    points[c] = func;
+                    this.Code[i] = new pt(args, this);
                 }
             }
 
             for (int i = 0; i < Code.Length; i++)
             {
                 string st = Code[i];
-                if (st.StartsWith("st"))
+                if (st.StartsWith("set"))
                 {
                     this.Code[i] = st_Parser(st.Split(' '), st);
                 }
@@ -67,10 +67,7 @@ namespace PASM
             }
         }
 
-        public bool Loaded
-        {
-            get { return Code != null; }
-        }
+        public bool Loaded => Code != null;
 
         public void setMemory()
         {
@@ -251,6 +248,7 @@ namespace PASM
         {
             int reg;
             bool isMethod = isMethodPointer(sptr, out reg);
+            Register register = isMethod ? Returns.Last().register : this.register;
             byte[] data = memory.read(register[reg].address, 8);
             return BitConverter.ToInt16(data, 0);
         }
@@ -327,7 +325,7 @@ namespace PASM
         public class Handler
         {
 
-			public static List<Type> Handlers = new List<Type>() { typeof(mv), typeof(cl), typeof(re), typeof(ca), typeof(@if), typeof(im) };
+			public static List<Type> Handlers = new List<Type>() { typeof(mov), typeof(calib), typeof(re), typeof(call), typeof(@if), typeof(im) };
 
             public Engine inst;
             public Handler(Engine inst)
@@ -631,7 +629,7 @@ namespace PASM
                 func.ReturnVariablePos = p;
 
                 inst.Returns.Add(func);
-                inst.CurrentLine = inst.Functions[ParseStringToInt(args[3])].Line;
+                inst.CurrentLine = inst.points[ParseStringToInt(args[3])].Line;
             }
         }
 
@@ -650,7 +648,7 @@ namespace PASM
                 int Optr;
                 int Tptr;
                 bool OisMethod = isMethodPointer(sptr, out Optr);
-                bool TisMethod = isMethodPointer(sptr, out Tptr);
+                bool TisMethod = isMethodPointer(target, out Tptr);
                 if (OisMethod) inst.register[Optr] = (TisMethod ? inst.Returns.Last().register[Tptr] : inst.register[Tptr]);
                 else inst.Returns.Last().register[Optr] = (TisMethod ? inst.Returns.Last().register[Tptr] : inst.register[Tptr]);
             }
@@ -705,11 +703,11 @@ namespace PASM
             }
         }
 
-        public class cl : Handler
+        public class calib : Handler
         {
             string Class, MethodName;
             string[] args;
-            public cl(string[] args, Engine inst) : base(inst)
+            public calib(string[] args, Engine inst) : base(inst)
             {
                 this.args = args;
                 Class = args[1];
@@ -747,12 +745,12 @@ namespace PASM
 			}
 		}
 
-        public class mv : Handler
+        public class mov : Handler
         {
             public int Line;
-            public mv(string[] args, Engine inst) : base(inst)
+            public mov(string[] args, Engine inst) : base(inst)
             {
-                Line = inst.Functions[ParseStringToInt(args[1])].Line;
+                Line = inst.points[ParseStringToInt(args[1])].Line;
             }
 
             public override void Execute()
@@ -789,19 +787,19 @@ namespace PASM
             }
         }
 
-        public class me : Handler
+        public class pt : Handler
         {
-            public me(string[] args, Engine inst) : base(inst)
+            public pt(string[] args, Engine inst) : base(inst)
             {
                 //Do nothing...
             }
         }
 
-        public class ca : Handler
+        public class call : Handler
         {
             string Func;
             string[] args;
-            public ca(string[] args, Engine inst) : base(inst)
+            public call(string[] args, Engine inst) : base(inst)
             {
                 this.args = args;
             }
@@ -811,7 +809,7 @@ namespace PASM
                 FunctionInstance func = new FunctionInstance();
                 func.doesReturnValue = false;
                 func.ReturnLine = inst.CurrentLine;
-                inst.CurrentLine = inst.Functions[ParseStringToInt(args[1])].Line;
+                inst.CurrentLine = inst.points[ParseStringToInt(args[1])].Line;
 
                 if (args.Length > 1)
                 {
@@ -833,7 +831,7 @@ namespace PASM
             int jumpln;
             public @if(string[] args, Engine inst) : base(inst)
             {
-                jumpln = inst.Functions[ParseStringToInt(args[4])].Line;
+                jumpln = inst.points[ParseStringToInt(args[4])].Line;
                 Operator = args[2];
                 arg1 = args[1];
                 arg2 = args[3];
@@ -841,6 +839,8 @@ namespace PASM
 
             public override void Execute()
             {
+
+                //TODO: Need to move away from dynamic, slow af
                 //Compare the 2 arguements and jump to the next line if true...
                 dynamic a1 = inst.ResolveNumber(arg1); //
                                                        //  Dynamic a1 and a2 will be resolved at runtime to be either 16, 32 or 64 bit integers.
@@ -860,7 +860,7 @@ namespace PASM
 
     }
 
-    public class Function
+    public class Point
     {
         public int Line;
     }
