@@ -57,7 +57,7 @@ namespace PashIDE.Components
 
         private void RenameButton_Click(object sender, EventArgs e)
         {
-            throw new NotImplementedException();
+
         }
 
         protected override void OnSizeChanged(EventArgs e)

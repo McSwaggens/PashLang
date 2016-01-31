@@ -37,6 +37,7 @@ namespace PashIDE
         {
             if (language == Language.CrocScript)
             {
+                return;
                 if (!File.Exists(Main.inst.Explorer.WorkingDirectory + "/" + Name + ".p"))
                 {
                     FileStream fs = File.Create(Main.inst.Explorer.WorkingDirectory + "/" + Name + ".p");

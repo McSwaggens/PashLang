@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.Linq;
 using System.Reflection;
 
@@ -22,10 +23,12 @@ namespace PASM
         public Register register = new Register(10);
         private List<FunctionInstance> Returns = new List<FunctionInstance>();
 		private List<Type> ReferencedLibraries = new List<Type> ();
-
+        
 		private Handler[] Code; 
         public void Load(string[] Code)
         {
+
+            
             List<string> s = Code.ToList(); s.RemoveAll(str => string.IsNullOrEmpty(str));
             
             Code = s.ToArray();
@@ -205,7 +208,7 @@ namespace PASM
         public void TryFreeRegister(Register.Pointer p)
         {
             Memory.Part part = memory.PartAddressStack[p.address];
-            if (part.ReferenceCount == 0) memory.Free(part.Address);
+            if (p.ReferenceCount == 0) memory.Free(part.Address);
         }
 
         //Will free the registers address even if the address is being used by another register, try not to use this tho...
@@ -350,8 +353,9 @@ namespace PASM
             if (args[2] == "QMATH") return new st_QMATH(args, this);
             if (args[2] == "VOR") return new st_VOR(args, this);
             if (args[2] == "VOP") return new st_VOP(args, this);
+            if (args[2] == "PTR") return new st_PTR(args, this);
             if (args[2] == "VORL") return new st_VORL(args, this);
-            return null;
+            throw new Exception("Unknown set extension " + args[2]);
         }
 
         public class st_BYTE : Handler
@@ -633,11 +637,11 @@ namespace PASM
             }
         }
 
-        public class st_VOP : Handler
+        public class st_PTR : Handler
         {
             string sptr;
             string target;
-            public st_VOP(string[] args, Engine inst) : base(inst)
+            public st_PTR(string[] args, Engine inst) : base(inst)
             {
                 sptr = args[1];
                 target = args[3];
@@ -649,8 +653,9 @@ namespace PASM
                 int Tptr;
                 bool OisMethod = isMethodPointer(sptr, out Optr);
                 bool TisMethod = isMethodPointer(target, out Tptr);
-                if (OisMethod) inst.register[Optr] = (TisMethod ? inst.Returns.Last().register[Tptr] : inst.register[Tptr]);
-                else inst.Returns.Last().register[Optr] = (TisMethod ? inst.Returns.Last().register[Tptr] : inst.register[Tptr]);
+                Register.Pointer ptr = !OisMethod ? inst.register[Optr] : inst.Returns.Last().register[Optr];
+                ptr = (TisMethod ? inst.Returns.Last().register[Tptr] : inst.register[Tptr]);
+                ptr.ReferenceCount++;
             }
         }
 
@@ -658,7 +663,6 @@ namespace PASM
         {
             int ptr;
             bool isMethod;
-            string Class, MethodName;
             string[] args;
             public st_VORL(string[] args, Engine inst) : base(inst)
             {
@@ -680,28 +684,26 @@ namespace PASM
             }
         }
 
-        #endregion
-
-        public class MAR : Handler
+        public class st_VOP : Handler
         {
-            string[] parts;
-            public MAR(string[] args, Engine inst) : base(inst)
+            private string ptr, tptr;
+            public st_VOP(string[] args, Engine engine) : base(engine)
             {
-                parts = args;
+                ptr = args[1];
+                tptr = args[3];
             }
 
             public override void Execute()
             {
-                //if (parts[1] == "EXP")
-                //{
-                //    inst.Returns.Last().
-                //}
-                //else if (parts[2] == "SET")
-                //{
-                //    inst.Returns.Last().
-                //}
+                int Optr;
+                bool OisMethod = isMethodPointer(ptr, out Optr);
+                Register register = OisMethod ? inst.Returns.Last().register : inst.register;
+                Register.Pointer p = register[Optr];
+                inst.set(p.address, OisMethod, inst.ResolveData(tptr));
             }
         }
+
+        #endregion
 
         public class calib : Handler
         {
@@ -797,7 +799,6 @@ namespace PASM
 
         public class call : Handler
         {
-            string Func;
             string[] args;
             public call(string[] args, Engine inst) : base(inst)
             {

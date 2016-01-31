@@ -113,7 +113,7 @@ namespace PashIDE
             ExecutionThread.Start();
         }
 
-        CodeFile getStartupCodeFile() => Explorer.CodeFiles.Where(codeFile => codeFile.HardName == "main.p").FirstOrDefault();
+        CodeFile getStartupCodeFile() => Explorer.CodeFiles.FirstOrDefault(codeFile => codeFile.HardName == "main.p");
 
         public void CompileProject()
         {
@@ -126,7 +126,7 @@ namespace PashIDE
         internal static extern Boolean AllocConsole();
         private void StartInstance()
         {
-            CodeFile mainCodeFile = getStartupCodeFile();
+            CodeFile mainCodeFile = CurrentOpen;
             LogInfo("Starting debugger on CodeFile: " + mainCodeFile.HardName);
             isRunningCode = true;
             Engine engine = new Engine();

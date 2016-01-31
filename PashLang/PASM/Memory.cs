@@ -1,8 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace PASM
 {
@@ -12,7 +9,8 @@ namespace PASM
         private List<Part> UsedParts = new List<Part>();
         public Part[] PartAddressStack;
         public byte[] Data;
-        public int DataLength { get { return Data.Length; } }
+        public int DataLength => Data.Length;
+
         public Memory(int size)
         {
             Data = new byte[size];
@@ -91,6 +89,9 @@ namespace PASM
             }
         }
 
+
+        //Get the previous block location from another block
+        //TODO: Make this faster!!
         private int PreviousBlock(int currentAddress)
         {
             while (true)
@@ -109,6 +110,7 @@ namespace PASM
             }
         }
 
+        //Read the data from a given address.
         public byte[] read(int address, int size)
         {
             byte[] data = new byte[size];
@@ -118,11 +120,15 @@ namespace PASM
             }
             return data;
         }
+        //Write the data at the address given to 0 (null)
+        public void clean(int address, int size)
+        {
+            write(new byte[size], address);
+        }
 
         public class Part
         {
-            public bool Used = false;
-            public int ReferenceCount = 1;
+            public bool Used;
             public int Address, Size;
             public Part(int Address, int Size)
             {

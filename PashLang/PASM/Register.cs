@@ -9,7 +9,8 @@ namespace PASM
     public class Register
     {
         private Pointer[] registers;
-        public Pointer[] Stack { get { return registers; } }
+        public Pointer[] Stack => registers;
+
         public Register(int size)
         {
             registers = new Pointer[size];
@@ -21,6 +22,7 @@ namespace PASM
 
         public class Pointer
         {
+            public int ReferenceCount = 1;
             public int address, size;
             public Pointer(int address, int size)
             {
