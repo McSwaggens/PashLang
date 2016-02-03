@@ -10,7 +10,7 @@ namespace CrocodileScript
     {
         public Block AttachedBlock;
         public Function ParentFunction;
-        public bool inFunction { get { return ParentFunction != null; } }
+        public bool inFunction => ParentFunction != null;
         private CrocCompiler compiler;
         public Line(string rep, CrocCompiler compiler, Function func = null)
         {
@@ -25,7 +25,8 @@ namespace CrocodileScript
             AttachedBlock = attachedBlock;
         }
 
-        public void Compile()
+        //Get method names etc...
+        public void PreCompile()
         {
             if (!inFunction)
             {
@@ -40,14 +41,18 @@ namespace CrocodileScript
                         {
                             //Set the function that will be used to start from when the process starts.
                             compiler.StartFunction = split[2];
-                            ///Console.WriteLine ("Set Start Function to \"" + compiler.StartFunction + "\"");
+                            Console.WriteLine ("Set Start Function to \"" + compiler.StartFunction + "\"");
                         }
                     }
                     else if (split[0] == "import")
                     {
                         compiler.Imports.Add(split[1]);
                         compiler.CompiledCode.Add("im " + split[1]);
-                        ///Console.WriteLine ("Added import reference \"" + split [1] + "\"");
+                        Console.WriteLine ("Added import reference \"" + split [1] + "\"");
+                    }
+                    else if (split[0] == "enforce")
+                    {
+                        
                     }
                 }
                 else
@@ -62,13 +67,15 @@ namespace CrocodileScript
                         {
                             if (s == "public")
                             {
-                                if (isPublic) throw new Exception("Syntax error at: public");
+                                if (inFunction) throw new SyntaxException("Cannot declare \"public\" in a method space", SyntaxError.SyntaxError);
+                                if (isPublic) throw new SyntaxException("Syntax error at: public", SyntaxError.SyntaxError);
 
                                 isPublic = true;
                             }
                             else if (s == "static")
                             {
-                                if (isStatic) throw new Exception("Syntax error at: static");
+                                if (inFunction) throw new SyntaxException("Cannot declare \"static\" in a method space", SyntaxError.SyntaxError);
+                                if (isStatic) throw new SyntaxException("Syntax error at: static", SyntaxError.SyntaxError);
                                 isStatic = true;
                             }
                             else
@@ -78,14 +85,16 @@ namespace CrocodileScript
                                     {
                                         string Name = "";
                                         i++;
+                                        //Get the name of the method or variable
                                         for (;i < stack.Length;i++)
                                         {
                                             if (stack[i] == ' ' || stack[i] == '\t' || stack[i] == '(') break;
-                                            else Name += stack[i];
+                                            Name += stack[i];
                                         }
                                         char n = getNextChar(stack, i);
-                                        if (n != '\0' && n == '(')
+                                        if (n == '(')
                                         {
+                                            //method decloration
                                             if (AttachedBlock != null)
                                             {
                                                 Function function = new Function(Name, isPublic, isStatic);
@@ -95,29 +104,29 @@ namespace CrocodileScript
                                             else throw new SyntaxException("Cannot compile function: " + Name + " no block/code attached.", SyntaxError.BlockMissing);
                                             return;
                                         }
-                                        else
+
+                                        //Variable decloration
+                                        bool doesRegisterValue = n != '\0' && n == '=';
+
+                                        string value = "";
+                                        if (doesRegisterValue)
                                         {
-                                            bool doesRegisterValue = n != '\0' && n == '=';
-
-                                            string value = "";
-                                            if (doesRegisterValue)
+                                            i += 2;
+                                            i = getNextChar_Index(stack, i);
+                                            for (; i < stack.Length; i++)
                                             {
-                                                i += 2;
-                                                for (; i < stack.Length; i++)
-                                                {
-                                                    value += stack[i];
-                                                }
+                                                value += stack[i];
                                             }
-
-                                            Variable v = new Variable(Name, isPublic, isStatic);
-                                            v.type = type;
-                                            v.RawUnassignedValue = doesRegisterValue ? value : null;
-                                            compiler.Variables.Add(v);
-
-                                            compiler.Calculate(value);
-
-                                            return;
                                         }
+
+                                        Variable v = new Variable(Name, isPublic, isStatic)
+                                        {
+                                            type = type,
+                                            RawUnassignedValue = doesRegisterValue ? value : null
+                                        };
+                                        compiler.Variables.Add(v);
+                                        compiler.Calculate(value);
+                                        return;
                                     }
                                 throw new Exception("Unknown variable type: " + s);
                             }
@@ -128,6 +137,16 @@ namespace CrocodileScript
                     }
                 }
             }
+        }
+
+        private static int getNextChar_Index(char[] arr, int index)
+        {
+            for (; index < arr.Length; index++)
+            {
+                char c = arr[index];
+                if (c != ' ' && c != '\"') return index;
+            }
+            return index;
         }
 
         private static char getNextChar(char[] arr, int index)

@@ -40,7 +40,7 @@ namespace CrocodileScript
 			CResult.BatteredCode = Code;
 			List<Line> InitialLines = BuildStructure (Code);
 			isInitial = false;
-			InitialLines.ForEach(ln => ln.Compile());
+			InitialLines.ForEach(ln => ln.PreCompile());
 			CResult.PASM = CompiledCode.ToArray ();
 			return CResult;
 		}
@@ -210,6 +210,7 @@ namespace CrocodileScript
                     if (!operators.Contains(current.Operator)) continue;
 
                     Part next = null;
+                    
                     i++;
                     next = sect.Parts[i];
                     bool nextPt = false;
@@ -229,7 +230,7 @@ namespace CrocodileScript
                     }
                     else if (current is PointValue) currentPt = true;
 
-                    CompiledCode.Add("st " + currentVar.ID + " MATH " + (currentPt ? ((PointValue)current).pt : currentVar.ID) + current.Operator + (nextPt ? ((PointValue)next).pt : nextVar.ID));
+                    CompiledCode.Add("st " + currentVar.ID + " QMATH " + (currentPt ? ((PointValue)current).pt : currentVar.ID) + current.Operator + (nextPt ? ((PointValue)next).pt : nextVar.ID));
                     sect.Parts[i] = null;
                     sect.Parts[i - 1] = new PointValue(currentVar.ID, next.Operator);
                     i -= 2;
@@ -257,14 +258,9 @@ namespace CrocodileScript
                         workingVariable = vr;
                     else
                     {
-                        if (workingVariable.type == VariableType.INT && vr.type == VariableType.INT)
+                        if (isTypeInteger(workingVariable.type) && isTypeInteger(vr.type))
                         {
-                            CompiledCode.Add("st " + workingVariable.Tag + " MATH " + workingVariable.Tag + workingOperator + vr.Tag);
-                        }
-                        else if (workingVariable.type == VariableType.STRING || vr.type == VariableType.STRING)
-                        {
-                            if (workingOperator != '+') throw new Exception("Cannot to string calculation with the operator: " + workingOperator);
-                            CompiledCode.Add("st " + workingVariable.Tag + " STRAD " + workingVariable.Tag + " " + vr.Tag);
+                            CompiledCode.Add("st " + workingVariable.Tag + " QMATH " + workingVariable.Tag + workingOperator + vr.Tag);
                         }
                     }
                     workingOperator = pt.Operator;
@@ -275,26 +271,12 @@ namespace CrocodileScript
                     Value val = (Value)pt;
                     VariableType type = GetVariableTypeFromRaw(val.Rep);
                     setVariable.type = type;
-                    if (type == VariableType.STRING || (workingVariable != null && workingVariable.type == VariableType.STRING))
-                    {
-                        if (workingVariable != null)
-                        {
-                            if (val.Operator != '+') throw new SyntaxException("Cannot do a string calculation with the operator " + val.Operator, SyntaxError.SyntaxError);
-                            CompiledCode.Add("st " + setVariable.Tag + " STR \"" + Excerpt(val.Rep, type));
-                            CompiledCode.Add("st " + workingVariable.Tag + " STRAD " + workingVariable.Tag + " " + setVariable.Tag);
-                        }
-                        else
-                        {
-                            CompiledCode.Add("st " + workingVariable.Tag + " STR \"" + Excerpt(val.Rep, type));
-                        }
-                        workingVariable.type = type;
-                    }
-                    else if (type == VariableType.INT)
+                    if (type == VariableType.INT32)
                     {
                         if (workingVariable != null)
                         {
                             CompiledCode.Add("st " + setVariable.Tag + " INT " + Excerpt(val.Rep, type));
-                            CompiledCode.Add("st " + workingVariable.Tag + " MATH " + workingVariable.Tag + workingOperator + setVariable.Tag);
+                            CompiledCode.Add("st " + workingVariable.Tag + " QMATH " + workingVariable.Tag + workingOperator + setVariable.Tag);
                         }
                         else
                         {
@@ -316,11 +298,25 @@ namespace CrocodileScript
         {
             switch (t)
             {
-                case VariableType.INT: return int.Parse(rep);
-                case VariableType.STRING: return rep.TrimStart('\"').TrimEnd('\"');
+                case VariableType.BYTE: return byte.Parse(rep);
+                case VariableType.INT16: return short.Parse(rep);
+                case VariableType.INT32: return int.Parse(rep);
+                case VariableType.INT64: return long.Parse(rep);
             }
             throw new Exception("Unable to convert " + rep);
         }
+
+
+        //We will make a new version of this when we can do char[] arrays.
+        //object Excerpt(string rep, VariableType t)
+        //{
+        //    switch (t)
+        //    {
+        //        case VariableType.INT: return int.Parse(rep);
+        //        case VariableType.STRING: return rep.TrimStart('\"').TrimEnd('\"');
+        //    }
+        //    throw new Exception("Unable to convert " + rep);
+        //}
 
         private Variable GetVariableByID(int id)
         {
@@ -331,53 +327,33 @@ namespace CrocodileScript
         private VariableType GetVariableTypeFromRaw(string rep)
         {
             char[] carr = rep.ToCharArray();
-            if (isNumber(carr[0]) && isNumber(carr[0])) return VariableType.INT;
-            else if (carr[0] == '"' && carr[carr.Length - 1] == '"') return VariableType.STRING;
-            else if (rep == "true" || rep == "false") return VariableType.BOOL;
-            else
+            if (isNumber(carr[0]) && isNumber(carr[0])) return VariableType.INT32;
+            if (carr[0] == '"' && carr[carr.Length - 1] == '"') return VariableType.ARRAY;
+            if (rep == "true" || rep == "false") return VariableType.BOOL;
+            //Check if the value is an already defined variable or method...
+            foreach (Variable vr in Variables)
             {
-                //Check if the value is an already defined variable or method...
-                foreach (Variable vr in Variables)
-                {
-                    if (vr.Name == rep) return vr.type;
-                }
+                if (vr.Name == rep) return vr.type;
             }
             throw new SyntaxException("Unknown Variable or Variable Type: " + rep, SyntaxError.SyntaxError);
-            //return null;
         }
 
         private string GetTypeASM(VariableType type)
         {
             switch (type)
             {
-                case VariableType.STRING: return "STR";
-                case VariableType.INT: return "INT";
-                case VariableType.BOOL: return "BOL";
+                case VariableType.BYTE: return "BYTE";
+                case VariableType.INT16: return "INT16";
+                case VariableType.INT32: return "INT32";
+                case VariableType.INT64: return "INT64";
+                case VariableType.BOOL: return "BOOL";
                 default: throw new Exception("Cannot convert type " + type.ToString());
             }
         }
 
-        bool isNumber(char c)
-        {
-            int i;
-            return int.TryParse(c+"", out i);
-        }
+	    bool isTypeInteger(VariableType type) => (type == VariableType.BYTE || type == VariableType.INT16 || type == VariableType.INT32 || type == VariableType.INT64);
 
-        bool isNumber(char c, out int Result)
-        {
-            return int.TryParse(c + "", out Result);
-        }
-
-        bool isNumber(string c)
-        {
-            int i;
-            return int.TryParse(c, out i);
-        }
-
-        bool isNumber(string c, out int Result)
-        {
-            return int.TryParse(c, out Result);
-        }
+        bool isNumber(char c) => char.IsNumber(c);
 
         private Section SeperateCalculation(string calc)
         {
@@ -458,10 +434,7 @@ namespace CrocodileScript
         {
             public Section Parent;
             public List<Part> Parts = new List<Part>();
-            public override string ToString()
-            {
-                return "Section";
-            }
+            public override string ToString() => "Section";
         }
         private class Value : Part
         {
@@ -509,8 +482,10 @@ namespace CrocodileScript
         {
             switch (t)
             {
-                case "int": return VariableType.INT;
-                case "string": return VariableType.STRING;
+                case "byte": return VariableType.BYTE;
+                case "int16": return VariableType.INT16;
+                case "int32": return VariableType.INT32;
+                case "int64": return VariableType.INT64;
                 case "bool": return VariableType.BOOL;
                 case "void": return VariableType.VOID;
             }

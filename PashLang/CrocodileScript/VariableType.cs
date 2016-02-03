@@ -8,6 +8,7 @@ namespace CrocodileScript
 {
     public enum VariableType
     {
-        STRING, INT, BOOL, VOID
+        ARRAY, BYTE, INT16, INT32, INT64, BOOL, CHAR,
+        VOID
     }
 }

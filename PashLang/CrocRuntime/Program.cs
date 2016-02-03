@@ -11,7 +11,7 @@ namespace CrocRuntime
         public static void Main (string[] args)
 		{
             if (DevelopmentBuild)
-				args = new string[] { "C:/Users/xxdjo/Documents/Code/croc.c" };
+				args = new [] { @"C:\Users\xxdjo\Documents\Pash Projects\test\CompileTest.c" };
 
 			Console.WriteLine ("Compiling Croc Code...");
 
@@ -41,8 +41,8 @@ namespace CrocRuntime
             engine.setMemory(1024);
             engine.ReferenceLibrary(typeof(Standard));
             engine.Execute();
-            Console.WriteLine("PASM code has finished executing...");
-            Console.ReadLine();
+            Console.WriteLine("PASM code has finished executing...\nPress any key to exit...");
+            Console.ReadKey();
 		}
         private static void printarray(string[] array)
         {

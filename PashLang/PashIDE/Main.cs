@@ -2,16 +2,12 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
-using System.Drawing;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 using FastColoredTextBoxNS;
 using System.Threading;
 using PASM;
 using System.Runtime.InteropServices;
-using System.Diagnostics;
 using System.IO;
 using static PashIDE.Logger;
 namespace PashIDE
