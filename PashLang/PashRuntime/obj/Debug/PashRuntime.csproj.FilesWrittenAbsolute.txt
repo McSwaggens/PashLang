@@ -1,7 +1,0 @@
-/home/daniel/Documents/Projects/PashLang-master/PashLang/PashRuntime/obj/Debug/.NETFramework,Version=v4.5.AssemblyAttribute.cs
-/home/daniel/Documents/Projects/PashLang-master/PashLang/PashRuntime/bin/Debug/PashRuntime.exe.mdb
-/home/daniel/Documents/Projects/PashLang-master/PashLang/PashRuntime/bin/Debug/PashRuntime.exe
-/home/daniel/Documents/Projects/PashLang-master/PashLang/PashRuntime/obj/Debug/PashRuntime.exe
-/home/daniel/Documents/Projects/PashLang-master/PashLang/PashRuntime/obj/Debug/PashRuntime.exe.mdb
-/home/daniel/Documents/Projects/PashLang-master/PashLang/PashRuntime/bin/Debug/PASM.dll
-/home/daniel/Documents/Projects/PashLang-master/PashLang/PashRuntime/bin/Debug/PASM.dll.mdb

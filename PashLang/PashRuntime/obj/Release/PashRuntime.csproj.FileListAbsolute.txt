@@ -1,7 +1,0 @@
-C:\Users\xxdjo\Documents\Visual Studio 2015\Projects\PashLang\PashLang\PashRuntime\bin\Release\PashRuntime.exe
-C:\Users\xxdjo\Documents\Visual Studio 2015\Projects\PashLang\PashLang\PashRuntime\bin\Release\PashRuntime.pdb
-C:\Users\xxdjo\Documents\Visual Studio 2015\Projects\PashLang\PashLang\PashRuntime\bin\Release\PASM.dll
-C:\Users\xxdjo\Documents\Visual Studio 2015\Projects\PashLang\PashLang\PashRuntime\bin\Release\PASM.pdb
-C:\Users\xxdjo\Documents\Visual Studio 2015\Projects\PashLang\PashLang\PashRuntime\obj\Release\PashRuntime.csprojResolveAssemblyReference.cache
-C:\Users\xxdjo\Documents\Visual Studio 2015\Projects\PashLang\PashLang\PashRuntime\obj\Release\PashRuntime.exe
-C:\Users\xxdjo\Documents\Visual Studio 2015\Projects\PashLang\PashLang\PashRuntime\obj\Release\PashRuntime.pdb

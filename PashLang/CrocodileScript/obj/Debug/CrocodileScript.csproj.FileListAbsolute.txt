@@ -1,5 +1,0 @@
-C:\Users\xxdjo\Documents\Visual Studio 2015\Projects\PashLang\PashLang\CrocodileScript\bin\Debug\CrocodileScript.dll
-C:\Users\xxdjo\Documents\Visual Studio 2015\Projects\PashLang\PashLang\CrocodileScript\bin\Debug\CrocodileScript.pdb
-C:\Users\xxdjo\Documents\Visual Studio 2015\Projects\PashLang\PashLang\CrocodileScript\obj\Debug\CrocodileScript.csprojResolveAssemblyReference.cache
-C:\Users\xxdjo\Documents\Visual Studio 2015\Projects\PashLang\PashLang\CrocodileScript\obj\Debug\CrocodileScript.dll
-C:\Users\xxdjo\Documents\Visual Studio 2015\Projects\PashLang\PashLang\CrocodileScript\obj\Debug\CrocodileScript.pdb
