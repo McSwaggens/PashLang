@@ -12,6 +12,7 @@ namespace CrocodileScript
 		public List<string> CompiledCode = new List<string>();
 		public List<string> Imports = new List<string> ();
 
+        //FunctionSpace
         public List<Function> Functions = new List<Function>();
         public List<Variable> Variables = new List<Variable>();
 
@@ -36,7 +37,8 @@ namespace CrocodileScript
 			this.Code = BatterCode (Code);
 		}
 
-		public CrocResult Compile() {
+		public CrocResult Compile()
+		{
 			CResult.BatteredCode = Code;
 			List<Line> InitialLines = BuildStructure (Code);
 			isInitial = false;

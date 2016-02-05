@@ -4,22 +4,22 @@ namespace CrocodileScript
 {
     public class Function
     {
+        public List<Variable> Variables = new List<Variable>();
+        public Block block;
+
+        public VariableType[] RequiredVariableTypes;
+        public bool RequiresParameters => RequiresParameters == null;
+
         private static int _id = -1;
         public int ID = ++_id;
         public string Name;
-        public bool isStatic = false;
-        public bool isPublic = false;
+        public bool Public, Static;
 
         public Function(string Name, bool Public = false, bool Static = false)
         {
             this.Name = Name;
-            isPublic = Public;
-            isStatic = Static;
+            this.Public = Public;
+            this.Static = Static;
         }
-
-        //TODO: Params with types.
-
-        public List<Variable> Variables = new List<Variable>();
-        public Block block;
     }
 }

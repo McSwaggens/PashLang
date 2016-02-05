@@ -1,8 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace CrocodileScript
 {
@@ -81,7 +77,7 @@ namespace CrocodileScript
                             else
                             {
                                 foreach (VariableType type in Enum.GetValues(typeof(VariableType)))
-                                    if ((type.ToString().ToLower()) == s)
+                                    if (type.ToString().ToLower() == s)
                                     {
                                         string Name = "";
                                         i++;
