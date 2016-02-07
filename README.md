@@ -16,31 +16,6 @@ Each line is ment to do one (small) job at a time, and the result is each line i
 ##### Why? 
 The original goal behind PASM was to have many processes running on 1 CPU thread, and if we had one line of code taking more time than another line of code, it would make 1 process take more time than another.
 So the goal is to make every line of PASM code the exact same amount of time.
-##### How do I run a PASM script?
-PASM (Opposed to other scripting languages) is very easy setup and run
-###### Import PASM
-```C#
-using PASM;
-```
-###### Create an Engine
-```C#
-Engine engine = new engine();
-```
-###### Import a Standard library
-Note that the Standard library is a seperate class and the methods inside of it are ```public static```
-```C#
-engine.ReferenceLibrary(typeof(Standard));
-```
-###### Load the code
-```PASMCode```is a string array
-```C#
-engine.Load(PASMCode);
-```
-
-###### Execute the code
-```C#
-engine.Execute();
-```
 
 ##### Why use PASM opposed to another language like JavaScript or LUA?
 ###### You're in full control.
