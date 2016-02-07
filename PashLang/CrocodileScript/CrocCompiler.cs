@@ -178,7 +178,7 @@ namespace CrocodileScript
         ////Algebra BODMAS passovers
         ///Brackets Orders Division Multiplication Addition Subtraction
 
-        Variable GenerateExpressionFromParts_ALGEBRA (Section sect)
+		Variable GenerateExpressionFromParts_ALGEBRA (Section sect)
         {
             Variable returner = new Variable(null);
             Variable nextVar = new Variable(null);

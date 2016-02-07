@@ -20,7 +20,7 @@ namespace PashRuntime
 
         public static void Main(string[] args)
         {
-            args = new[] {"/Users/xxdjo/Documents/Pash Projects/test/main.p"};
+			args = new[] {"/Users/" + Environment.UserName + "/Documents/Pash Projects/test/main.p"};
             if (args.Length == 0)
             {
                 WriteError("Please parse in a file to be executed...");
@@ -33,6 +33,7 @@ namespace PashRuntime
             {
                 WriteError("Unknown file: " + args[0]);
                 WriteWarning("Aborting...");
+				return;
             }
             if (args.Length > 1)
             {

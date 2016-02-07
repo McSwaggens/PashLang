@@ -2,6 +2,8 @@
 using CrocodileScript;
 using System.IO;
 using PASM;
+using System.Diagnostics;
+using System.Collections.Generic;
 
 namespace CrocRuntime
 {
@@ -11,7 +13,7 @@ namespace CrocRuntime
         public static void Main (string[] args)
 		{
             if (DevelopmentBuild)
-				args = new [] { @"C:\Users\xxdjo\Documents\Pash Projects\test\CompileTest.c" };
+				args = new [] { "C:/Users/" + System.Environment.UserName + "/Documents/Pash Projects/test/CompileTest.c" };
 
 			Console.WriteLine ("Compiling Croc Code...");
 
