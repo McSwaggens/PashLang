@@ -1,8 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace CrocodileScript
 {
@@ -12,6 +8,7 @@ namespace CrocodileScript
         public Function ParentFunction;
         public bool inFunction => ParentFunction != null;
         private CrocCompiler compiler;
+        string rep;
         public Line(string rep, CrocCompiler compiler, Function func = null)
         {
             this.compiler = compiler;
@@ -26,7 +23,7 @@ namespace CrocodileScript
         }
 
         //Get method names etc...
-        public void PreCompile()
+        public void CompileFunctionSpace()
         {
             if (!inFunction)
             {
@@ -81,7 +78,7 @@ namespace CrocodileScript
                             else
                             {
                                 foreach (VariableType type in Enum.GetValues(typeof(VariableType)))
-                                    if ((type.ToString().ToLower()) == s)
+                                    if (type.ToString().ToLower() == s)
                                     {
                                         string Name = "";
                                         i++;
@@ -98,7 +95,7 @@ namespace CrocodileScript
                                             if (AttachedBlock != null)
                                             {
                                                 Function function = new Function(Name, isPublic, isStatic);
-                                                function.block = AttachedBlock;
+                                                function.attachedBlock = AttachedBlock;
                                                 compiler.Functions.Add(function);
                                             }
                                             else throw new SyntaxException("Cannot compile function: " + Name + " no block/code attached.", SyntaxError.BlockMissing);
@@ -139,6 +136,41 @@ namespace CrocodileScript
             }
         }
 
+        private char[] OperationCharacters = {'=', '+', '-', '*', '/', '%', '!', '"', '\'', ','};
+
+        //Compile a line of code in a function..
+        public void CompileInLine()
+        {
+            string current = "";
+            char[] carr = rep.ToCharArray();
+            for (int i = 0; i < carr.Length; i++)
+            {
+                char c = carr[i];
+
+                bool operationCharacterHit = false;
+                foreach (char op in OperationCharacters)
+                    if (c == op) operationCharacterHit = true;
+
+                if (operationCharacterHit)
+                {
+                     
+                }
+                else if (c == ' ')
+                {
+                    //Check if the variable type exists...
+                    VariableType type = CrocCompiler.ResolveVariableType_NO_THROW(current);
+
+                    if (type != VariableType.VOID)
+                    {
+                        
+                    }
+                }
+
+                if (c != ' ' && c != '\t')
+                    current += current;
+            }
+        }
+
         private static int getNextChar_Index(char[] arr, int index)
         {
             for (; index < arr.Length; index++)
@@ -159,6 +191,6 @@ namespace CrocodileScript
             return '\0';
         }
 
-        string rep;
+        
     }
 }
