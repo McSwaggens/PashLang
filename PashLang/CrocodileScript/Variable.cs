@@ -1,10 +1,12 @@
-﻿namespace CrocodileScript
+﻿using System.Collections.Generic;
+
+namespace CrocodileScript
 {
     public class Variable
     {
         public Function function;
-        public bool inFunction => function != null;
-        public bool isPublic, isStatic;
+        public bool inFunctionSpace => function == null;
+        public bool Public, Static;
 
         public VariableType type = VariableType.VOID;
 
@@ -26,13 +28,23 @@
             ID = f.Variables.Count + 1;
         }
 
-        public Variable(string name, bool isPublic = false, bool isStatic = false)
+        public Variable(string name, bool @public = false, bool @static = false)
         {
             Name = name;
-            this.isPublic = isPublic;
-            this.isStatic = isStatic;
+            Public = @public;
+            Static = @static;
         }
 
-        public string Tag => inFunction ? ":" + ID : ID + "";
+        public string[] Compile()
+        {
+            List<string> code = new List<string>();
+
+            CrocCompiler.ComputeResult result = CrocCompiler.instance.Calculate(RawUnassignedValue);
+            code = result.ComputeCode;
+            
+            return code.ToArray();
+        }
+
+        public string Tag => !inFunctionSpace ? ":" + ID : ID + "";
     }
 }

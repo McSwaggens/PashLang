@@ -5,7 +5,7 @@ namespace CrocodileScript
     public class Function
     {
         public List<Variable> Variables = new List<Variable>();
-        public Block block;
+        public Block attachedBlock;
 
         public VariableType[] RequiredVariableTypes;
         public bool RequiresParameters => RequiresParameters == null;
@@ -20,6 +20,16 @@ namespace CrocodileScript
             this.Name = Name;
             this.Public = Public;
             this.Static = Static;
+        }
+
+        public string[] Compile()
+        {
+            List<string> CompileResult = new List<string>();
+            foreach (Line line in attachedBlock.Lines)
+            {
+                line.CompileInLine();
+            }
+            return CompileResult.ToArray();
         }
     }
 }

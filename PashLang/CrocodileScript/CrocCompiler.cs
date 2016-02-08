@@ -6,6 +6,8 @@ namespace CrocodileScript
 	public class CrocCompiler
 	{
 
+	    public static CrocCompiler instance;
+
 		public CrocResult CResult = new CrocResult();
 		public string StartFunction = null;
 
@@ -35,6 +37,7 @@ namespace CrocodileScript
 		public CrocCompiler (string[] Code)
 		{
 			this.Code = BatterCode (Code);
+		    instance = this;
 		}
 
 		public CrocResult Compile()
@@ -42,8 +45,19 @@ namespace CrocodileScript
 			CResult.BatteredCode = Code;
 			List<Line> InitialLines = BuildStructure (Code);
 			isInitial = false;
-			InitialLines.ForEach(ln => ln.PreCompile());
-			CResult.PASM = CompiledCode.ToArray ();
+
+            //Generate the FunctionSpace Functions and Variables...
+            InitialLines.ForEach(ln => ln.CompileFunctionSpace());
+
+            //Compile the FunctionSpace Functions and Variables into actual PASM code, IN ORDER!!!
+            //Do Variables first...
+            for (int i = 0; i < Variables.Count; i++)
+            {
+                Variable variable = Variables[i];
+                foreach (string line in variable.Compile()) CompiledCode.Add(line);
+            }
+
+		    CResult.PASM = CompiledCode.ToArray ();
 			return CResult;
 		}
 
@@ -137,51 +151,33 @@ namespace CrocodileScript
 
 
         ///------------------------------------------------------------------------
-        private enum BODMAS
-        {
-            BRACKETS, OTHER, DEVIDE, MULTIPLY, ADDITION, SUBTRACTION
-        }
-
+        
         private enum PEMDAS
         {
             PARENTHESIS, EXPONENTS, MULTIPLICATION_DIVISION, ADDITION_SUBTRACTION
-        }
-
-        private char[] GetOperatorsFromBODMAS(BODMAS t)
-        {
-            switch (t)
-            {
-                case BODMAS.OTHER: return new char[] { '^' };
-                case BODMAS.DEVIDE: return new char[] { '/', '%' };
-                case BODMAS.MULTIPLY: return new char[] { '*' };
-                case BODMAS.ADDITION: return new char[] { '+' };
-                case BODMAS.SUBTRACTION: return new char[] { '-' };
-            }
-            return null;
         }
 
         private char[] GetOperatorsFromPEMDAS(PEMDAS t)
         {
             switch (t)
             {
-                case PEMDAS.EXPONENTS: return new char[] { '^' };
-                case PEMDAS.MULTIPLICATION_DIVISION: return new char[] { '/', '%', '*' };
-                case PEMDAS.ADDITION_SUBTRACTION: return new char[] { '+', '-' };
+                case PEMDAS.EXPONENTS: return new [] { '^' };
+                case PEMDAS.MULTIPLICATION_DIVISION: return new [] { '/', '%', '*' };
+                case PEMDAS.ADDITION_SUBTRACTION: return new [] { '+', '-' };
             }
             return null;
         }
 
-        public void Calculate(string calculation)
-        {
+        public ComputeResult Calculate(string calculation) => GenerateExpressionFromParts_ALGEBRA(SeperateCalculation(calculation));
 
-            Section sect = SeperateCalculation(calculation);
-            Variable v = GenerateExpressionFromParts_ALGEBRA(sect);
-        }
+
         ////Algebra BODMAS passovers
         ///Brackets Orders Division Multiplication Addition Subtraction
 
-        Variable GenerateExpressionFromParts_ALGEBRA (Section sect)
+        ComputeResult GenerateExpressionFromParts_ALGEBRA (Section sect )
         {
+            List<string> ComputeCode = new List<string>();
+
             Variable returner = new Variable(null);
             Variable nextVar = new Variable(null);
             //Do the calculation is BODMAS order
@@ -202,8 +198,10 @@ namespace CrocodileScript
                     {
                         if (current is Section)
                         {
-                            Variable vr = GenerateExpressionFromParts_ALGEBRA((Section)current);
-                            PointValue pv = new PointValue(vr.ID, current.Operator);
+                            ComputeResult result = GenerateExpressionFromParts_ALGEBRA((Section)current);
+                            result.ComputeCode.ForEach(cp => ComputeCode.Add(cp));
+                            
+                            PointValue pv = new PointValue(result.returnedVariable.ID, current.Operator);
                             sect.Parts[i] = pv;
                             i--;
                         }
@@ -218,7 +216,7 @@ namespace CrocodileScript
                     bool nextPt = false;
                     if (next is Value)
                     {
-                        CompiledCode.Add("st " + nextVar.ID + " " + GetTypeASM(GetVariableTypeFromRaw(((Value)next).Rep)) + " " + ((Value)next).Rep);
+                        ComputeCode.Add("st " + nextVar.ID + " " + GetTypeASM(GetVariableTypeFromRaw(((Value)next).Rep)) + " " + ((Value)next).Rep);
                     }
                     else if (next is PointValue) nextPt = true;
 
@@ -228,11 +226,11 @@ namespace CrocodileScript
                     if (current is Value)
                     {
                         currentVar = new Variable(null);
-                        CompiledCode.Add("st " + currentVar.ID + " " + GetTypeASM(GetVariableTypeFromRaw(((Value)current).Rep)) + " " + ((Value)current).Rep);
+                        ComputeCode.Add("st " + currentVar.ID + " " + GetTypeASM(GetVariableTypeFromRaw(((Value)current).Rep)) + " " + ((Value)current).Rep);
                     }
                     else if (current is PointValue) currentPt = true;
 
-                    CompiledCode.Add("st " + currentVar.ID + " QMATH " + (currentPt ? ((PointValue)current).pt : currentVar.ID) + current.Operator + (nextPt ? ((PointValue)next).pt : nextVar.ID));
+                    ComputeCode.Add("st " + currentVar.ID + " QMATH " + (currentPt ? ((PointValue)current).pt : currentVar.ID) + current.Operator + (nextPt ? ((PointValue)next).pt : nextVar.ID));
                     sect.Parts[i] = null;
                     sect.Parts[i - 1] = new PointValue(currentVar.ID, next.Operator);
                     i -= 2;
@@ -240,8 +238,22 @@ namespace CrocodileScript
                 }
             }
 
-            return returner;
+            ComputeResult computeResult = new ComputeResult(ComputeCode, returner);
+
+            return computeResult;
         }
+
+	    public class ComputeResult
+	    {
+	        public List<string> ComputeCode;
+	        public Variable returnedVariable;
+
+	        public ComputeResult(List<string> computeCode, Variable vari)
+	        {
+	            ComputeCode = computeCode;
+	            returnedVariable = vari;
+	        }
+	    }
 
         #region NON ALGEBRA
         Variable GenerateExpressionFromParts (Section sect)
@@ -254,7 +266,11 @@ namespace CrocodileScript
             {
                 if (pt is Section)
                 {
-                    Variable vr = GenerateExpressionFromParts_ALGEBRA(((Section)pt));
+                    ComputeResult result = GenerateExpressionFromParts_ALGEBRA((Section)pt);
+
+                    Variable vr = null;
+
+                    //TODO: Fix this code... Maybe ...
 
                     if (workingVariable == null)
                         workingVariable = vr;
@@ -492,6 +508,20 @@ namespace CrocodileScript
                 case "void": return VariableType.VOID;
             }
             throw new SyntaxException("Unknown Type " + t, SyntaxError.SyntaxError);
+        }
+
+        public static VariableType ResolveVariableType_NO_THROW(string t)
+        {
+            switch (t)
+            {
+                case "byte": return VariableType.BYTE;
+                case "int16": return VariableType.INT16;
+                case "int32": return VariableType.INT32;
+                case "int64": return VariableType.INT64;
+                case "bool": return VariableType.BOOL;
+                case "void": return VariableType.VOID;
+            }
+            return VariableType.VOID;
         }
 
         private static List<char> MathOperators = new List<char>()
