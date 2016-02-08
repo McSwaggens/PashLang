@@ -41,7 +41,7 @@ namespace CrocodileScript
 
             CrocCompiler.ComputeResult result = CrocCompiler.instance.Calculate(RawUnassignedValue);
             code = result.ComputeCode;
-            
+
             return code.ToArray();
         }
 
