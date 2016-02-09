@@ -20,7 +20,10 @@ namespace PashRuntime
 
         public static void Main(string[] args)
         {
-			args = new[] {"/Users/" + Environment.UserName + "/Documents/Pash Projects/test/main.p"};
+			#if DEBUG
+			args = new[] {"/Users/" + Environment.UserName + "/Documents/Scripts/PASM_test.p"};
+			Console.WriteLine("Using debug mode");
+			#endif
             if (args.Length == 0)
             {
                 WriteError("Please parse in a file to be executed...");
@@ -71,7 +74,6 @@ namespace PashRuntime
                                   ? " in " + sw.ElapsedMilliseconds + "ms, " + sw.ElapsedTicks + "ticks (" + sw.Elapsed +
                                     ")."
                                   : "..."));
-            Console.ReadLine();
         }
 
         public static List<Type> StandardLibraries = new List<Type>()
