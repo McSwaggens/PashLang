@@ -19,7 +19,7 @@ namespace PASM
         }
         public static unsafe byte[] int32(int i)
         {
-            byte[] arr = new byte[8];
+            byte[] arr = new byte[4];
             byte* pi = (byte*)&i;
             arr[0] = pi[0];
             arr[1] = pi[1];
@@ -29,7 +29,7 @@ namespace PASM
         }
         public static unsafe byte[] int16(short i)
         {
-            byte[] arr = new byte[8];
+            byte[] arr = new byte[2];
             byte* pi = (byte*)&i;
             arr[0] = pi[0];
             arr[1] = pi[1];
