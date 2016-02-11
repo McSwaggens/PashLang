@@ -10,11 +10,11 @@ namespace PashRuntime
     {
         public static Dictionary<string, bool> Flags = new Dictionary<string, bool>()
         {
-            {"d", false},
-            {"s", false},
-            {"v", false},
-            {"t", true}, //Record and print the execution time...
-            {"dr", false}, // Double run
+            {"d",   false},
+            {"s",   false},
+            {"v",   false},
+            {"t",   true}, //Record and print the execution time...
+            {"dr",  false}, // Double run
             {"nostdlib", false}
         };
 
