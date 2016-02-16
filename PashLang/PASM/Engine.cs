@@ -45,7 +45,7 @@ namespace PASM
                     Point func = new Point();
                     func.Line = i;
                     points[c] = func;
-                    this.Code[i] = new pt(args, this);
+                    
                 }
             }
 
@@ -802,14 +802,6 @@ namespace PASM
                 }
                 inst.CurrentLine = inst.Returns.Last().ReturnLine;
                 inst.Returns.Remove(inst.Returns.Last());
-            }
-        }
-
-        public class pt : Handler
-        {
-            public pt(string[] args, Engine inst) : base(inst)
-            {
-                //Do nothing...
             }
         }
 
