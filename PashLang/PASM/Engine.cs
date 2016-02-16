@@ -328,7 +328,7 @@ namespace PASM
         public class Handler
         {
 
-			public static List<Type> Handlers = new List<Type>() { typeof(mov), typeof(calib), typeof(re), typeof(call), typeof(@if), typeof(im) };
+			public static List<Type> Handlers = new List<Type>() { typeof(mov), typeof(free), typeof(calib), typeof(re), typeof(call), typeof(@if), typeof(im) };
 
             public Engine inst;
             public Handler(Engine inst)
@@ -728,6 +728,22 @@ namespace PASM
                     Params[i] = inst.ResolveData(s[i]);
                 }
                 inst.CallStaticMethod(Class, MethodName, Params);
+            }
+        }
+        
+        public class free : Handler {
+            public string tf;
+            
+            public free (string[] args, Engine inst) : base (inst) {
+                tf = args[1];
+            }
+            
+            public override void Execute() {
+                int ptr;
+                bool isMethodPtr = isMethodPointer(tf, out ptr);
+                PASM.Register.Pointer pointer = isMethodPtr ? inst.Returns.Last().register.Stack[ptr] : inst.register.Stack[ptr];
+                inst.ForceFreeRegister(pointer);
+                pointer = null;
             }
         }
 
