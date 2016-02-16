@@ -24,7 +24,12 @@ namespace PASM
         private List<FunctionInstance> Returns = new List<FunctionInstance>();
 		private List<Type> ReferencedLibraries = new List<Type> ();
         
-		private Handler[] Code; 
+        public int CurrentLine = 0;
+        
+		private Handler[] Code;
+        
+        private static char[] MathCharacters = { '+', '-', '*', '/', '%' };
+        
         public void Load(string[] Code)
         {
 
@@ -45,7 +50,6 @@ namespace PASM
                     Point func = new Point();
                     func.Line = i;
                     points[c] = func;
-                    
                 }
             }
 
@@ -53,40 +57,22 @@ namespace PASM
             {
                 string st = Code[i];
                 if (st.StartsWith("set"))
-                {
                     this.Code[i] = st_Parser(st.Split(' '), st);
-                }
                 else {
                     string[] args = st.Split(' ');
                     string g = args[0];
-                    foreach (Type t in Handler.Handlers)
-                    {
-                        if (t.Name == g)
-                        {
-                            this.Code[i] = (Handler)Activator.CreateInstance(t, args, this);
-                        }
-                    }
+                    foreach (Type t in Handler.Handlers) if (t.Name == g) this.Code[i] = (Handler)Activator.CreateInstance(t, args, this);
                 }
             }
         }
 
         public bool Loaded => Code != null;
 
-        public void setMemory()
-        {
-            Memory memory = new Memory(1024);
-            this.memory = memory;
-        }
+        public void setMemory() => memory = new Memory(1024);
 
-        public void setMemory(int size)
-        {
-            memory = new Memory(size);
-        }
+        public void setMemory(int size) => memory = new Memory(size);
 
-        public void setMemory(Memory memory)
-        {
-            this.memory = memory;
-        }
+        public void setMemory(Memory memory) => this.memory = memory;
 
         public void malloc(Register register, int ptr, int size)
         {
@@ -95,7 +81,7 @@ namespace PASM
             pointer.size = size;
         }
 
-        public int CurrentLine = 0;
+        
 
         public void Execute()
         {
@@ -531,10 +517,6 @@ namespace PASM
                 foreach (char c in MathCharacters) if (op == c) return true;
                 return false;
             }
-
-            //private bool isMathCharacter(char c) => MathCharacters.Any(v => c == v);
-
-            public char[] MathCharacters = { '+', '-', '*', '/', '%' };
         }
 
         public class st_MATH : Handler
