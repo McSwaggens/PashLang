@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Drawing;
 using System.Linq;
 using System.Reflection;
 
@@ -101,6 +100,24 @@ namespace PASM
             {
                 Code[CurrentLine].Execute();
                 CurrentLine++;
+            }
+        }
+        
+        public void ExecuteDebug() {
+            Console.WriteLine("Executing in debug mode, (May not get the best performance.)");
+            while (CurrentLine < Code.Length)
+            {
+                try {
+                    Code[CurrentLine].Execute();
+                    CurrentLine++;
+                }
+                catch (PException pe) {
+                    ConsoleColor color = Console.ForegroundColor;
+                    Console.ForegroundColor = ConsoleColor.Red;
+                    Console.WriteLine($"(ERROR) PASM Exception at line {CurrentLine} while executing {Code[CurrentLine].ToString()} returned Exception Notice: {pe.Message}, Please check code and try again!");
+                    Console.ForegroundColor = color;
+                    break;
+                }
             }
         }
 
@@ -254,7 +271,7 @@ namespace PASM
                 case 4: return BitConverter.ToInt32(data, 0);
                 case 8: return BitConverter.ToInt64(data, 0);
             }
-            throw new Exception("Unknown number length of " + register[reg].size + " bytes, 16bits(2bytes), 32bits(4bytes), 64bits(8bytes)");
+            throw new PException("Unknown number length of " + register[reg].size + " bytes, 16bits(2bytes), 32bits(4bytes), 64bits(8bytes)");
         }
 
         private Register.Pointer ResolvePointer(string sptr)
@@ -341,7 +358,7 @@ namespace PASM
             if (args[2] == "VOP") return new st_VOP(args, this);
             if (args[2] == "PTR") return new st_PTR(args, this);
             if (args[2] == "VORL") return new st_VORL(args, this);
-            throw new Exception("Unknown set extension " + args[2]);
+            throw new PException("Unknown set extension " + args[2]);
         }
 
         public class st_BYTE : Handler
@@ -451,7 +468,7 @@ namespace PASM
                     if (Operator == '*') result = (short)(a1 * a2);
                     else
                     if (Operator == '/') result = (short)(a1 / a2);
-                    else throw new Exception("Unknown QMATH operator: " + Operator);
+                    else throw new PException("Unknown QMATH operator: " + Operator);
 
                     inst.set(reg, isMethod, result);
                 }
@@ -468,7 +485,7 @@ namespace PASM
                     if (Operator == '*') result = a1 * a2;
                     else
                     if (Operator == '/') result = a1 / a2;
-                    else throw new Exception("Unknown QMATH operator: " + Operator);
+                    else throw new PException("Unknown QMATH operator: " + Operator);
 
                     inst.set(reg, isMethod, result);
                 }
@@ -486,7 +503,7 @@ namespace PASM
                     if (Operator == '*') result = a1 * a2;
                     else
                     if (Operator == '/') result = a1 / a2;
-                    else throw new Exception("Unknown QMATH operator: " + Operator);
+                    else throw new PException("Unknown QMATH operator: " + Operator);
 
                     inst.set(reg, isMethod, result);
                 }
@@ -844,7 +861,7 @@ namespace PASM
                 if (Operator == ">=" && a1 >= a2) ReturnedValue = true; else
                 if (Operator == "<" && a1 < a2) ReturnedValue = true; else
                 if (Operator == "<=" && a1 <= a2) ReturnedValue = true;
-
+	            else throw new PException ($"Unknown comparison operator: {Operator}"); 
                 if (!ReturnedValue) inst.CurrentLine = jumpln;
             }
         }
@@ -863,5 +880,11 @@ namespace PASM
         public bool MethodVariable = false; // Does the pointer have a : ?
         public int ReturnVariablePos; // Variable to set Location
         public Register register = new Register(10);
+    }
+    
+    public class PException : Exception {
+        public PException (string exception) : base (exception) {
+            
+        }
     }
 }

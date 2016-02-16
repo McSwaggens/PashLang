@@ -10,7 +10,7 @@ namespace PashRuntime
     {
         public static Dictionary<string, bool> Flags = new Dictionary<string, bool>()
         {
-            {"d",   false},
+            {"d",   false},//Debug
             {"s",   false},
             {"v",   false},
             {"t",   true}, //Record and print the execution time...
@@ -87,7 +87,13 @@ namespace PashRuntime
         {
             Engine engine = new Engine();
             engine.setMemory(1024);
-            engine.Load(File.ReadAllLines(file));
+            try {
+                engine.Load(File.ReadAllLines(file));
+            }
+            catch (PException pe) {
+                WriteColor($"(ERROR) PreExecution failed, please check your code and try again...\nPASM Exception: {pe.Message}", ConsoleColor.Red);
+                return;
+            }
             if (!Flags["nostdlib"])
             {
                 //Reference the Standard library...
@@ -99,7 +105,11 @@ namespace PashRuntime
             {
                 sw.Reset();
                 sw.Start();
-                engine.Execute();
+                if (Flags["d"]){
+                    engine.ExecuteDebug();
+                }
+                else
+                    engine.Execute();
                 sw.Stop();
             }
         }
@@ -114,12 +124,12 @@ namespace PashRuntime
 
         public static void WriteError(string text)
         {
-            WriteColor("Error: " + text, ConsoleColor.Red);
+            WriteColor("(ERROR) " + text, ConsoleColor.Red);
         }
 
         public static void WriteWarning(string text)
         {
-            WriteColor("Warn!: " + text, ConsoleColor.Yellow);
+            WriteColor("(Warning) " + text, ConsoleColor.Yellow);
         }
     }
 }
