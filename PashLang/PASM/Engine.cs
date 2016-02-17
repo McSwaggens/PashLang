@@ -221,6 +221,8 @@ namespace PASM
         }
 
         public Register GetRegister(bool isMethod) => isMethod ? Returns.Last().register : register;
+        
+        
 
         private Dictionary<string, Type> StaticCache = new Dictionary<string, Type>();
         
@@ -242,21 +244,42 @@ namespace PASM
             return BitConverter.ToInt16(data, 0);
         }
 
-        private short ResolveINT32(string sptr)
+        private int ResolveINT32(string sptr)
         {
             int reg;
             bool isMethod = isMethodPointer(sptr, out reg);
             byte[] data = memory.read(register[reg].address, 4);
-            return BitConverter.ToInt16(data, 0);
+            return BitConverter.ToInt32(data, 0);
         }
 
-        private short ResolveINT64(string sptr)
+        private long ResolveINT64(string sptr)
         {
             int reg;
             bool isMethod = isMethodPointer(sptr, out reg);
             Register register = isMethod ? Returns.Last().register : this.register;
             byte[] data = memory.read(register[reg].address, 8);
+            return BitConverter.ToInt64(data, 0);
+        }
+        //Direct reference
+        private short ResolveINT16(bool isMethodPtr, int reg)
+        {
+            Register register = isMethodPtr ? Returns.Last().register : this.register;
+            byte[] data = memory.read(register[reg].address, 2);
             return BitConverter.ToInt16(data, 0);
+        }
+
+        private int ResolveINT32(bool isMethodPtr, int reg)
+        {
+            Register register = isMethodPtr ? Returns.Last().register : this.register;
+            byte[] data = memory.read(register[reg].address, 4);
+            return BitConverter.ToInt32(data, 0);
+        }
+
+        private long ResolveINT64(bool isMethodPtr, int reg)
+        {
+            Register register = isMethodPtr ? Returns.Last().register : this.register;
+            byte[] data = memory.read(register[reg].address, 8);
+            return BitConverter.ToInt64(data, 0);
         }
 
         private object ResolveNumber (string sptr)
@@ -331,7 +354,7 @@ namespace PASM
         public class Handler
         {
 
-			public static List<Type> Handlers = new List<Type>() { typeof(mov), typeof(free), typeof(calib), typeof(re), typeof(call), typeof(@if), typeof(im) };
+			public static List<Type> Handlers = new List<Type>() { typeof(mov), typeof(free), typeof(calib), typeof(@malloc), typeof(re), typeof(call), typeof(@if), typeof(im) };
 
             public Engine inst;
             public Handler(Engine inst)
@@ -703,6 +726,38 @@ namespace PASM
         }
 
         #endregion
+        
+        public class malloc_d : Handler {
+            string ts_ptr;
+            int AllocationSize;
+            public malloc_d(string[] args, Engine inst) : base (inst) {
+                ts_ptr = args[1];
+                AllocationSize = int.Parse(args[2]);
+            }
+            
+            public override void Execute() {
+                int ptr;
+                bool isMethodPtr = isMethodPointer(ts_ptr, out ptr);
+                inst.malloc(inst.GetRegister(isMethodPtr),ptr,AllocationSize);
+            }
+        }
+        
+        public class @malloc : Handler {
+            string ts_ptr;
+            int set_ptr;
+            
+            bool isMethodPtr;
+            public malloc(string[] args, Engine inst) : base (inst) {
+                ts_ptr = args[1];
+                isMethodPtr = isMethodPointer(ts_ptr, out set_ptr);
+            }
+            
+            public override void Execute() {
+                int ptr;
+                bool isMethodPtr = isMethodPointer(ts_ptr, out ptr);
+                inst.malloc(inst.GetRegister(isMethodPtr),ptr,inst.ResolveINT32(isMethodPtr,ptr));
+            }
+        }
 
         public class calib : Handler
         {
