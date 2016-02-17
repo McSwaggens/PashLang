@@ -354,7 +354,7 @@ namespace PASM
         public class Handler
         {
 
-			public static List<Type> Handlers = new List<Type>() { typeof(mov), typeof(free), typeof(calib), typeof(@malloc), typeof(re), typeof(call), typeof(@if), typeof(im) };
+			public static List<Type> Handlers = new List<Type>() { typeof(mov), typeof(free), typeof(calib), typeof(malloc_c), typeof(malloc_d), typeof(malloc_p), typeof(re), typeof(call), typeof(@if), typeof(im) };
 
             public Engine inst;
             public Handler(Engine inst)
@@ -726,7 +726,30 @@ namespace PASM
         }
 
         #endregion
-        
+
+        //malloc copy
+        public class malloc_c : Handler
+        {
+            string ts_ptr;
+            string setter;
+            public malloc_c(string[] args, Engine inst) : base(inst)
+            {
+                ts_ptr = args[1];
+                setter = args[2];
+            }
+
+            public override void Execute()
+            {
+                int ptr;
+                bool isMethodPtr = isMethodPointer(ts_ptr, out ptr);
+
+                int setter_ptr;
+                bool setter_isMethodPtr = isMethodPointer(setter, out setter_ptr);
+                inst.set(ptr, isMethodPtr, new byte[inst.ResolveData(setter).Length]);
+            }
+        }
+
+        //malloc direct (set the amount of bytes static)
         public class malloc_d : Handler {
             string ts_ptr;
             int AllocationSize;
@@ -742,12 +765,13 @@ namespace PASM
             }
         }
         
-        public class @malloc : Handler {
+        //malloc pointer
+        public class malloc_p : Handler {
             string ts_ptr;
             int set_ptr;
             
             bool isMethodPtr;
-            public malloc(string[] args, Engine inst) : base (inst) {
+            public malloc_p(string[] args, Engine inst) : base (inst) {
                 ts_ptr = args[1];
                 isMethodPtr = isMethodPointer(ts_ptr, out set_ptr);
             }
