@@ -6,7 +6,7 @@ using System.Diagnostics;
 
 namespace PashRuntime
 {
-    class MainClass
+    public class MainClass
     {
         public static Dictionary<string, bool> Flags = new Dictionary<string, bool>()
         {
@@ -38,6 +38,12 @@ namespace PashRuntime
                 WriteWarning("Aborting...");
 				return;
             }
+            Main(File.ReadAllLines(args[1]), args);
+            Console.ReadLine();
+        }
+
+        public static void Main(string[] code, string[] args)
+        {
             if (args.Length > 1)
             {
                 for (int i = 1; i < args.Length; i++)
@@ -61,14 +67,8 @@ namespace PashRuntime
                     Console.WriteLine(p);
                 }
             }
-            StartRuntime(args[0]);
-            //try {
-            //    StartRuntime(args[0]);
-            //}
-            //catch (Exception e)
-            //{
-            //    WriteError("Failed to execute PASH code, ERROR: " + e.GetType() + ", " + e.Message);
-            //}
+            
+            StartRuntime(code);
             Console.WriteLine("Finished" +
                               (Flags["t"]
                                   ? " in " + sw.ElapsedMilliseconds + "ms, " + sw.ElapsedTicks + "ticks (" + sw.Elapsed +
@@ -83,11 +83,11 @@ namespace PashRuntime
 
         private static Stopwatch sw = new Stopwatch();
 
-        public static void StartRuntime(string file)
+        public static void StartRuntime(string[] code)
         {
             Engine engine = new Engine();
             engine.setMemory(1024);
-            engine.Load(File.ReadAllLines(file));
+            engine.Load(code);
             if (!Flags["nostdlib"])
             {
                 //Reference the Standard library...
