@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Drawing;
 using System.Linq;
 using System.Reflection;
 
@@ -24,7 +23,12 @@ namespace PASM
         private List<FunctionInstance> Returns = new List<FunctionInstance>();
 		private List<Type> ReferencedLibraries = new List<Type> ();
         
-		private Handler[] Code; 
+        public int CurrentLine = 0;
+        
+		private Handler[] Code;
+        
+        private static char[] MathCharacters = { '+', '-', '*', '/', '%' };
+        
         public void Load(string[] Code)
         {
 
@@ -45,7 +49,6 @@ namespace PASM
                     Point func = new Point();
                     func.Line = i;
                     points[c] = func;
-                    this.Code[i] = new pt(args, this);
                 }
             }
 
@@ -53,40 +56,22 @@ namespace PASM
             {
                 string st = Code[i];
                 if (st.StartsWith("set"))
-                {
                     this.Code[i] = st_Parser(st.Split(' '), st);
-                }
                 else {
                     string[] args = st.Split(' ');
                     string g = args[0];
-                    foreach (Type t in Handler.Handlers)
-                    {
-                        if (t.Name == g)
-                        {
-                            this.Code[i] = (Handler)Activator.CreateInstance(t, args, this);
-                        }
-                    }
+                    foreach (Type t in Handler.Handlers) if (t.Name == g) this.Code[i] = (Handler)Activator.CreateInstance(t, args, this);
                 }
             }
         }
 
         public bool Loaded => Code != null;
 
-        public void setMemory()
-        {
-            Memory memory = new Memory(1024);
-            this.memory = memory;
-        }
+        public void setMemory() => memory = new Memory(1024);
 
-        public void setMemory(int size)
-        {
-            memory = new Memory(size);
-        }
+        public void setMemory(int size) => memory = new Memory(size);
 
-        public void setMemory(Memory memory)
-        {
-            this.memory = memory;
-        }
+        public void setMemory(Memory memory) => this.memory = memory;
 
         public void malloc(Register register, int ptr, int size)
         {
@@ -95,7 +80,7 @@ namespace PASM
             pointer.size = size;
         }
 
-        public int CurrentLine = 0;
+        
 
         public void Execute()
         {
@@ -115,6 +100,24 @@ namespace PASM
             {
                 Code[CurrentLine].Execute();
                 CurrentLine++;
+            }
+        }
+        
+        public void ExecuteDebug() {
+            Console.WriteLine("Executing in debug mode, (May not get the best performance.)");
+            while (CurrentLine < Code.Length)
+            {
+                try {
+                    Code[CurrentLine].Execute();
+                    CurrentLine++;
+                }
+                catch (PException pe) {
+                    ConsoleColor color = Console.ForegroundColor;
+                    Console.ForegroundColor = ConsoleColor.Red;
+                    Console.WriteLine($"(ERROR) PASM Exception at line {CurrentLine} while executing {Code[CurrentLine].ToString()} returned Exception Notice: {pe.Message}, Please check code and try again!");
+                    Console.ForegroundColor = color;
+                    break;
+                }
             }
         }
 
@@ -218,6 +221,8 @@ namespace PASM
         }
 
         public Register GetRegister(bool isMethod) => isMethod ? Returns.Last().register : register;
+        
+        
 
         private Dictionary<string, Type> StaticCache = new Dictionary<string, Type>();
         
@@ -239,21 +244,42 @@ namespace PASM
             return BitConverter.ToInt16(data, 0);
         }
 
-        private short ResolveINT32(string sptr)
+        private int ResolveINT32(string sptr)
         {
             int reg;
             bool isMethod = isMethodPointer(sptr, out reg);
             byte[] data = memory.read(register[reg].address, 4);
-            return BitConverter.ToInt16(data, 0);
+            return BitConverter.ToInt32(data, 0);
         }
 
-        private short ResolveINT64(string sptr)
+        private long ResolveINT64(string sptr)
         {
             int reg;
             bool isMethod = isMethodPointer(sptr, out reg);
             Register register = isMethod ? Returns.Last().register : this.register;
             byte[] data = memory.read(register[reg].address, 8);
+            return BitConverter.ToInt64(data, 0);
+        }
+        //Direct reference
+        private short ResolveINT16(bool isMethodPtr, int reg)
+        {
+            Register register = isMethodPtr ? Returns.Last().register : this.register;
+            byte[] data = memory.read(register[reg].address, 2);
             return BitConverter.ToInt16(data, 0);
+        }
+
+        private int ResolveINT32(bool isMethodPtr, int reg)
+        {
+            Register register = isMethodPtr ? Returns.Last().register : this.register;
+            byte[] data = memory.read(register[reg].address, 4);
+            return BitConverter.ToInt32(data, 0);
+        }
+
+        private long ResolveINT64(bool isMethodPtr, int reg)
+        {
+            Register register = isMethodPtr ? Returns.Last().register : this.register;
+            byte[] data = memory.read(register[reg].address, 8);
+            return BitConverter.ToInt64(data, 0);
         }
 
         private object ResolveNumber (string sptr)
@@ -268,7 +294,7 @@ namespace PASM
                 case 4: return BitConverter.ToInt32(data, 0);
                 case 8: return BitConverter.ToInt64(data, 0);
             }
-            throw new Exception("Unknown number length of " + register[reg].size + " bytes, 16bits(2bytes), 32bits(4bytes), 64bits(8bytes)");
+            throw new PException("Unknown number length of " + register[reg].size + " bytes, 16bits(2bytes), 32bits(4bytes), 64bits(8bytes)");
         }
 
         private Register.Pointer ResolvePointer(string sptr)
@@ -328,7 +354,7 @@ namespace PASM
         public class Handler
         {
 
-			public static List<Type> Handlers = new List<Type>() { typeof(mov), typeof(calib), typeof(re), typeof(call), typeof(@if), typeof(im) };
+			public static List<Type> Handlers = new List<Type>() { typeof(mov), typeof(free), typeof(calib), typeof(@malloc), typeof(re), typeof(call), typeof(@if), typeof(im) };
 
             public Engine inst;
             public Handler(Engine inst)
@@ -355,7 +381,7 @@ namespace PASM
             if (args[2] == "VOP") return new st_VOP(args, this);
             if (args[2] == "PTR") return new st_PTR(args, this);
             if (args[2] == "VORL") return new st_VORL(args, this);
-            throw new Exception("Unknown set extension " + args[2]);
+            throw new PException("Unknown set extension " + args[2]);
         }
 
         public class st_BYTE : Handler
@@ -465,7 +491,7 @@ namespace PASM
                     if (Operator == '*') result = (short)(a1 * a2);
                     else
                     if (Operator == '/') result = (short)(a1 / a2);
-                    else throw new Exception("Unknown QMATH operator: " + Operator);
+                    else throw new PException("Unknown QMATH operator: " + Operator);
 
                     inst.set(reg, isMethod, result);
                 }
@@ -482,7 +508,7 @@ namespace PASM
                     if (Operator == '*') result = a1 * a2;
                     else
                     if (Operator == '/') result = a1 / a2;
-                    else throw new Exception("Unknown QMATH operator: " + Operator);
+                    else throw new PException("Unknown QMATH operator: " + Operator);
 
                     inst.set(reg, isMethod, result);
                 }
@@ -500,7 +526,7 @@ namespace PASM
                     if (Operator == '*') result = a1 * a2;
                     else
                     if (Operator == '/') result = a1 / a2;
-                    else throw new Exception("Unknown QMATH operator: " + Operator);
+                    else throw new PException("Unknown QMATH operator: " + Operator);
 
                     inst.set(reg, isMethod, result);
                 }
@@ -531,10 +557,6 @@ namespace PASM
                 foreach (char c in MathCharacters) if (op == c) return true;
                 return false;
             }
-
-            //private bool isMathCharacter(char c) => MathCharacters.Any(v => c == v);
-
-            public char[] MathCharacters = { '+', '-', '*', '/', '%' };
         }
 
         public class st_MATH : Handler
@@ -704,6 +726,38 @@ namespace PASM
         }
 
         #endregion
+        
+        public class malloc_d : Handler {
+            string ts_ptr;
+            int AllocationSize;
+            public malloc_d(string[] args, Engine inst) : base (inst) {
+                ts_ptr = args[1];
+                AllocationSize = int.Parse(args[2]);
+            }
+            
+            public override void Execute() {
+                int ptr;
+                bool isMethodPtr = isMethodPointer(ts_ptr, out ptr);
+                inst.malloc(inst.GetRegister(isMethodPtr),ptr,AllocationSize);
+            }
+        }
+        
+        public class @malloc : Handler {
+            string ts_ptr;
+            int set_ptr;
+            
+            bool isMethodPtr;
+            public malloc(string[] args, Engine inst) : base (inst) {
+                ts_ptr = args[1];
+                isMethodPtr = isMethodPointer(ts_ptr, out set_ptr);
+            }
+            
+            public override void Execute() {
+                int ptr;
+                bool isMethodPtr = isMethodPointer(ts_ptr, out ptr);
+                inst.malloc(inst.GetRegister(isMethodPtr),ptr,inst.ResolveINT32(isMethodPtr,ptr));
+            }
+        }
 
         public class calib : Handler
         {
@@ -728,6 +782,22 @@ namespace PASM
                     Params[i] = inst.ResolveData(s[i]);
                 }
                 inst.CallStaticMethod(Class, MethodName, Params);
+            }
+        }
+        
+        public class free : Handler {
+            public string tf;
+            
+            public free (string[] args, Engine inst) : base (inst) {
+                tf = args[1];
+            }
+            
+            public override void Execute() {
+                int ptr;
+                bool isMethodPtr = isMethodPointer(tf, out ptr);
+                PASM.Register.Pointer pointer = isMethodPtr ? inst.Returns.Last().register.Stack[ptr] : inst.register.Stack[ptr];
+                inst.ForceFreeRegister(pointer);
+                pointer = null;
             }
         }
 
@@ -789,14 +859,6 @@ namespace PASM
             }
         }
 
-        public class pt : Handler
-        {
-            public pt(string[] args, Engine inst) : base(inst)
-            {
-                //Do nothing...
-            }
-        }
-
         public class call : Handler
         {
             string[] args;
@@ -854,7 +916,7 @@ namespace PASM
                 if (Operator == ">=" && a1 >= a2) ReturnedValue = true; else
                 if (Operator == "<" && a1 < a2) ReturnedValue = true; else
                 if (Operator == "<=" && a1 <= a2) ReturnedValue = true;
-
+	            else throw new PException ($"Unknown comparison operator: {Operator}"); 
                 if (!ReturnedValue) inst.CurrentLine = jumpln;
             }
         }
@@ -873,5 +935,11 @@ namespace PASM
         public bool MethodVariable = false; // Does the pointer have a : ?
         public int ReturnVariablePos; // Variable to set Location
         public Register register = new Register(10);
+    }
+    
+    public class PException : Exception {
+        public PException (string exception) : base (exception) {
+            
+        }
     }
 }

@@ -28,6 +28,8 @@ namespace PASM
                 Part pt = new Part(AllocatedPart.Address + size, AllocatedPart.Size - size);
                 FreeParts.Insert(0, pt);
                 PartAddressStack[pt.Address] = pt;
+				if (pt.Address+pt.Size < PartAddressStack.Length)
+                	PartAddressStack[pt.Address+pt.Size].BackAddress = pt.Size;
                 AllocatedPart.Size = size;
             }
             AllocatedPart.Used = true;
@@ -65,6 +67,7 @@ namespace PASM
                 currentBlock.Size += nextBlock.Size;
                 FreeParts.Remove(nextBlock);
                 PartAddressStack[nextAddress] = null;
+                PartAddressStack[currentAddress+currentBlock.Size].BackAddress = currentBlock.Size;
             }
             if (currentAddress != 0)
             {
@@ -75,30 +78,20 @@ namespace PASM
                     previousBlock.Size += currentBlock.Size;
                     FreeParts.Remove(currentBlock);
                     PartAddressStack[currentAddress] = null;
+                    PartAddressStack[previousBlock.Size].BackAddress = previousBlock.Size;
                 }
             }
         }
 
-        private int NextBlock(int currentAddress)
-        {
-            //return currentAddress + size?
-            while (true)
-            {
-                currentAddress++;
-                if (PartAddressStack[currentAddress] != null) return currentAddress;
-            }
-        }
+        private int NextBlock(int currentAddress) => PartAddressStack[PartAddressStack[currentAddress].getNextAddress()].Address;
 
 
         //Get the previous block location from another block
-        //TODO: Make this faster!!
         private int PreviousBlock(int currentAddress)
         {
-            while (true)
-            {
-                currentAddress--;
-                if (PartAddressStack[currentAddress] != null) return currentAddress;
-            }
+            Part current = PartAddressStack[currentAddress];
+            Part prevAdr = PartAddressStack[current.Address-current.BackAddress];
+            return prevAdr.Address;
         }
 
         //Writes & reads
@@ -128,8 +121,12 @@ namespace PASM
 
         public class Part
         {
+            //13 Bytes per part
+            public int BackAddress;
             public bool Used;
             public int Address, Size;
+            
+            public int getNextAddress() => Address + Size;
             public Part(int Address, int Size)
             {
                 this.Address = Address;
