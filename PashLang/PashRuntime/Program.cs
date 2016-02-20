@@ -78,7 +78,7 @@ namespace PashRuntime
 
         public static List<Type> StandardLibraries = new List<Type>()
         {
-            typeof (Standard)
+            typeof (Standard), typeof(Threading)
         };
 
         private static Stopwatch sw = new Stopwatch();
@@ -114,12 +114,12 @@ namespace PashRuntime
 
         public static void WriteError(string text)
         {
-            WriteColor("Error: " + text, ConsoleColor.Red);
+            WriteColor("(ERROR) " + text, ConsoleColor.Red);
         }
 
         public static void WriteWarning(string text)
         {
-            WriteColor("Warn!: " + text, ConsoleColor.Yellow);
+            WriteColor("(WARN) " + text, ConsoleColor.Yellow);
         }
     }
 }

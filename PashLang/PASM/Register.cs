@@ -8,16 +8,16 @@ namespace PASM
 {
     public class Register
     {
-        private Pointer[] registers;
-        public Pointer[] Stack => registers;
+        private Pointer[] pointers;
+        public Pointer[] Stack => pointers;
 
         public Register(int size)
         {
-            registers = new Pointer[size];
+            pointers = new Pointer[size];
         }
         public Pointer this[int index] {
-            get { return registers[index]; }
-            set { registers[index] = value; }
+            get { return pointers[index]; }
+            set { pointers[index] = value; }
         }
 
         public class Pointer

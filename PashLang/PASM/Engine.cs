@@ -75,13 +75,10 @@ namespace PASM
 
         public void malloc(Register register, int ptr, int size)
         {
-            Register.Pointer pointer = register[ptr];
-            pointer.address = memory.Allocate(size);
-            pointer.size = size;
+            Register.Pointer pointer = new Register.Pointer(memory.Allocate(size), size);
+            register[ptr] = pointer;
         }
-
         
-
         public void Execute()
         {
             CurrentLine = 0;
@@ -342,10 +339,13 @@ namespace PASM
             return value;
         }
 
-        public byte[] CallStaticMethod(string @class, string method, object[] perams)
+        public byte[] CallStaticMethod(string @class, string method, byte[][] Params)
         {
-            foreach (var i in StaticCache.Where(i => i.Key == @class))
-                Convert.ToString(i.Value.GetMethod(method, BindingFlags.Static | BindingFlags.Public).Invoke(i.Value, perams));
+            object[] Objects = new object[Params.Length + 1];
+            Objects[0] = this;
+            for (int i = 0; i < Params.Length; i++) Objects[i + 1] = Params[i];
+            foreach (KeyValuePair<string, Type> i in StaticCache.Where(i => i.Key == @class))
+                Convert.ToString(i.Value.GetMethod(method, BindingFlags.Static | BindingFlags.Public).Invoke(i.Value, Objects));
             return null;
         }
 
@@ -661,23 +661,24 @@ namespace PASM
 
         public class st_PTR : Handler
         {
-            string sptr;
-            string target;
+            string working;
+            string setter;
             public st_PTR(string[] args, Engine inst) : base(inst)
             {
-                sptr = args[1];
-                target = args[3];
+                working = args[1];
+                setter = args[3];
             }
 
-            public override void Execute()
+            public override unsafe void Execute()
             {
-                int Optr;
-                int Tptr;
-                bool OisMethod = isMethodPointer(sptr, out Optr);
-                bool TisMethod = isMethodPointer(target, out Tptr);
-                Register.Pointer ptr = !OisMethod ? inst.register[Optr] : inst.Returns.Last().register[Optr];
-                ptr = (TisMethod ? inst.Returns.Last().register[Tptr] : inst.register[Tptr]);
-                ptr.ReferenceCount++;
+                int workerPtr;
+                Register workerRegister = inst.GetRegister(isMethodPointer(working, out workerPtr));
+
+                int setterPtr;
+                Register setterRegister = inst.GetRegister(isMethodPointer(setter, out setterPtr));
+                
+                workerRegister[workerPtr] = setterRegister[setterPtr];
+                setterRegister[setterPtr].ReferenceCount++;
             }
         }
 
@@ -694,10 +695,10 @@ namespace PASM
 
             public override void Execute()
             {
-                object[] Params;
+                byte[][] Params;
                 List<string> v = args.ToList();
                 v.RemoveRange(0, 5);
-                Params = new object[v.Count];
+                Params = new byte[v.Count][];
                 for (int i = 0; i < v.Count; i++)
                 {
                     Params[i] = inst.ResolveData(v[i]);
@@ -708,20 +709,19 @@ namespace PASM
 
         public class st_VOP : Handler
         {
-            private string ptr, tptr;
+            private string worker, setter;
             public st_VOP(string[] args, Engine engine) : base(engine)
             {
-                ptr = args[1];
-                tptr = args[3];
+                worker = args[1];
+                setter = args[3];
             }
 
             public override void Execute()
             {
-                int Optr;
-                bool OisMethod = isMethodPointer(ptr, out Optr);
-                Register register = OisMethod ? inst.Returns.Last().register : inst.register;
-                Register.Pointer p = register[Optr];
-                inst.set(p.address, OisMethod, inst.ResolveData(tptr));
+                int setterPtr;
+                bool isMethodPtr_Setter = isMethodPointer(worker, out setterPtr);
+
+                inst.set(setterPtr, isMethodPtr_Setter, inst.ResolveData(setter));
             }
         }
 
@@ -730,22 +730,23 @@ namespace PASM
         //malloc copy
         public class malloc_c : Handler
         {
-            string ts_ptr;
-            string setter;
+            string workingPointer;
+            string setterPointer;
             public malloc_c(string[] args, Engine inst) : base(inst)
             {
-                ts_ptr = args[1];
-                setter = args[2];
+                workingPointer = args[1];
+                setterPointer = args[2];
             }
 
             public override void Execute()
             {
-                int ptr;
-                bool isMethodPtr = isMethodPointer(ts_ptr, out ptr);
+                int workPtr;
+                bool isMethodWorkingPtr = isMethodPointer(workingPointer, out workPtr);
 
-                int setter_ptr;
-                bool setter_isMethodPtr = isMethodPointer(setter, out setter_ptr);
-                inst.set(ptr, isMethodPtr, new byte[inst.ResolveData(setter).Length]);
+                int setterPtr;
+                bool isMethodSetterPtr = isMethodPointer(setterPointer, out setterPtr);
+
+                inst.malloc(inst.GetRegister(isMethodWorkingPtr), workPtr, inst.ResolveData(setterPointer).Length);
             }
         }
 
