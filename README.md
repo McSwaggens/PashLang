@@ -1,4 +1,4 @@
-<div style="text-align:center"><img src ="https://raw.githubusercontent.com/McSwaggens/PashLang/master/Images/WIP/PashLang_Icon_Rainbow_Shadow.png" /></div>
+<div style="text-align:center"><img src ="https://raw.githubusercontent.com/McSwaggens/PashLang/master/Images/WIP/PashLang_R1_C1_Rainbow_Shadow.png" /></div>
 
 # What is PashLang?
 PashLang is a set of tools allowing you to execute interpreted code.
