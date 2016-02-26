@@ -39,7 +39,6 @@ namespace PashRuntime
 				return;
             }
             Main(File.ReadAllLines(args[1]), args);
-            Console.ReadLine();
         }
 
         public static void Main(string[] code, string[] args)

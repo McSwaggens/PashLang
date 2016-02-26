@@ -22,10 +22,23 @@ namespace PashRuntime
                 if (part != null)
                 {
                     bool used = part.Used;
-                    Console.WriteLine((used ? "USED" : "FREE") + " A: 0x" + part.Address.ToString("X") + " S :0x" + part.Size.ToString("X"));
+                    Console.WriteLine((used ? "USED" : "FREE") + " ADR: " + part.Address + " SIZE: " + part.Size);
                 }
             }
         }
+
+		public static void PRINT_MEMORY_DUMP_COMPLEX(Engine engine)
+		{
+			Memory memory = engine.memory;
+			foreach (PASM.Memory.Part part in memory.PartAddressStack)
+			{
+				if (part != null)
+				{
+					bool used = part.Used;
+					Console.WriteLine((used ? "USED" : "FREE") + " ADR: NUM (" + part.Address + ") HEX (0x" + part.Address.ToString("X") + ") SIZE: NUM (" + part.Size + ") HEX (0x" + part.Size.ToString("X") + ")");
+				}
+			}
+		}
 
         public static void WRITE_MEMORY_SIZE(Engine engine, byte[] m)
         {
