@@ -158,8 +158,8 @@ namespace PashIDE
 
             switch (cf.language)
             {
-                case Language.CrocScript:
-                    Code.Language = FastColoredTextBoxNS.Language.CrocScript;
+                case Language.SnapScript:
+                    Code.Language = FastColoredTextBoxNS.Language.SnapScript;
                     break;
                 case Language.PASM:
                     Code.Language = FastColoredTextBoxNS.Language.PASM;

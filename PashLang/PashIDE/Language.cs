@@ -8,6 +8,6 @@ namespace PashIDE
 {
     public enum Language
     {
-        PASM, CrocScript, UNKNOWN
+        PASM, SnapScript, UNKNOWN
     }
 }

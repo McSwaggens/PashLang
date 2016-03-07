@@ -21,7 +21,7 @@ namespace PashRuntime
         public static void Main(string[] args)
         {
 			#if DEBUG
-			args = new[] {"/Users/" + Environment.UserName + "/Documents/Scripts/PASM_test.p"};
+			args = new[] {"/Users/" + Environment.UserName + "/Documents/Pash Projects/test/main.p"};
 			Console.WriteLine("Using debug mode");
 			#endif
             if (args.Length == 0)
@@ -38,7 +38,7 @@ namespace PashRuntime
                 WriteWarning("Aborting...");
 				return;
             }
-            Main(File.ReadAllLines(args[1]), args);
+            Main(File.ReadAllLines(args[0]), args);
             Console.ReadLine();
         }
 

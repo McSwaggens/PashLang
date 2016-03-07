@@ -17,7 +17,7 @@ namespace PASM
                 
         */
 
-        private Point[] points = new Point[101];
+        private int[] points;
         public Memory memory;
         public Register register = new Register(10);
         private List<FunctionInstance> Returns = new List<FunctionInstance>();
@@ -39,6 +39,9 @@ namespace PASM
 
             this.Code = new Handler[s.Count];
 
+            Dictionary<int, int> points = new Dictionary<int, int>();
+            int maxPointNum = 0;
+
             for (int i = 0; i < Code.Length; i++)
             {
                 string st = Code[i];
@@ -46,10 +49,16 @@ namespace PASM
                 {
                     string[] args = Code[i].Split(' ');
                     int c = ParseStringToInt(args[1]);
-                    Point func = new Point();
-                    func.Line = i;
-                    points[c] = func;
+                    int point = i;
+                    points.Add(c, point);
+                    if (c > maxPointNum) maxPointNum = c;
                 }
+            }
+
+            this.points = new int[maxPointNum + 1];
+            foreach (KeyValuePair<int, int> pair in points)
+            {
+                this.points[pair.Key] = pair.Value;
             }
 
             for (int i = 0; i < Code.Length; i++)
@@ -655,7 +664,7 @@ namespace PASM
                 func.ReturnVariablePos = p;
 
                 inst.Returns.Add(func);
-                inst.CurrentLine = inst.points[ParseStringToInt(args[3])].Line;
+                inst.CurrentLine = inst.points[ParseStringToInt(args[3])];
             }
         }
 
@@ -847,7 +856,7 @@ namespace PASM
             public int Line;
             public mov(string[] args, Engine inst) : base(inst)
             {
-                Line = inst.points[ParseStringToInt(args[1])].Line;
+                Line = inst.points[ParseStringToInt(args[1])];
             }
 
             public override void Execute()
@@ -897,7 +906,7 @@ namespace PASM
                 FunctionInstance func = new FunctionInstance();
                 func.doesReturnValue = false;
                 func.ReturnLine = inst.CurrentLine;
-                inst.CurrentLine = inst.points[ParseStringToInt(args[1])].Line;
+                inst.CurrentLine = inst.points[ParseStringToInt(args[1])];
 
                 if (args.Length > 1)
                 {
@@ -919,7 +928,7 @@ namespace PASM
             int jumpln;
             public @if(string[] args, Engine inst) : base(inst)
             {
-                jumpln = inst.points[ParseStringToInt(args[4])].Line;
+                jumpln = inst.points[ParseStringToInt(args[4])];
                 Operator = args[2];
                 arg1 = args[1];
                 arg2 = args[3];
@@ -946,11 +955,6 @@ namespace PASM
             }
         }
 
-    }
-
-    public class Point
-    {
-        public int Line;
     }
     
     public class FunctionInstance

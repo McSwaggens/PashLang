@@ -28,14 +28,14 @@ namespace PashIDE
             string lang = Path.GetExtension(path);
             if (lang == ".p") language = Language.PASM;
             else
-            if (lang == ".c") language = Language.CrocScript;
+            if (lang == ".s") language = Language.SnapScript;
             else language = Language.UNKNOWN;
             Log("CodeFile Language set to " + language + " for CodeFile " + Name);
         }
 
         public void Compile()
         {
-            if (language == Language.CrocScript)
+            if (language == Language.SnapScript)
             {
                 if (!File.Exists(Main.inst.Explorer.WorkingDirectory + "/" + Name + ".p"))
                 {

@@ -35,6 +35,9 @@
     <WarningLevel>4</WarningLevel>
     <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
+  <PropertyGroup>
+    <ApplicationIcon>FireBird_ICON_BLACK.png.ico</ApplicationIcon>
+  </PropertyGroup>
   <ItemGroup>
     <Reference Include="CrocodileScript">
       <HintPath>..\CrocRuntime\bin\Debug\CrocodileScript.dll</HintPath>
@@ -68,7 +71,16 @@
     <Compile Include="CodeFileAddWindow.Designer.cs">
       <DependentUpon>CodeFileAddWindow.cs</DependentUpon>
     </Compile>
+    <Compile Include="CodeFileRename.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="CodeFileRename.Designer.cs">
+      <DependentUpon>CodeFileRename.cs</DependentUpon>
+    </Compile>
     <Compile Include="Components\Bar.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Components\ContextMenuStripFlat.cs">
       <SubType>Component</SubType>
     </Compile>
     <Compile Include="Components\ProjectButton.cs">
@@ -114,6 +126,9 @@
     <Compile Include="Util.cs" />
     <EmbeddedResource Include="CodeFileAddWindow.resx">
       <DependentUpon>CodeFileAddWindow.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="CodeFileRename.resx">
+      <DependentUpon>CodeFileRename.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="CreateProjectWindow.resx">
       <DependentUpon>CreateProjectWindow.cs</DependentUpon>
@@ -166,6 +181,15 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\Stop.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="FireBird_ICON_BLACK.png.ico" />
+    <Content Include="PashLang_FireBird_Circle.ico" />
+    <None Include="Resources\Add.png" />
+    <None Include="Resources\PASM.png" />
+    <None Include="Resources\ASM.png" />
+    <None Include="Resources\Delete.png" />
+    <None Include="Resources\Rename.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

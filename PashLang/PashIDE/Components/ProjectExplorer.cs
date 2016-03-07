@@ -20,22 +20,28 @@ namespace PashIDE.Components
         public ProjectExplorer()
         {
             DoubleBuffered = true;
-            RemoveButton = new TinyButton(Width, Height,"Remove");
-            AddButton = new TinyButton(Width, Height, "Add");
-            RenameButton = new TinyButton(Width, Height, "Rename");
-            Controls.Add(RemoveButton);
-            RemoveButton.Click += RemoveButton_Click;
-            Controls.Add(AddButton);
-            AddButton.Click += AddButton_Click;
-            Controls.Add(RenameButton);
-            RenameButton.Click += RenameButton_Click;
-
-            this.KeyPress += ProjectExplorer_KeyPress;
+            KeyPress += ProjectExplorer_KeyPress;
         }
 
         private void ProjectExplorer_KeyPress(object sender, KeyPressEventArgs e)
         {
             LogInfo(e.KeyChar.ToString());
+        }
+
+        protected override void OnMouseClick(MouseEventArgs e)
+        {
+            if (e.Button == MouseButtons.Right)
+            {
+                ContextMenuStripFlat menu = new ContextMenuStripFlat();
+                menu.Items.Add(new ToolStripMenuItem("Add", Properties.Resources.Add, new EventHandler(Add)));
+                menu.Show(this, new Point(e.X, e.Y));
+            }
+        }
+
+        private void Add(object sender, EventArgs args)
+        {
+            CodeFileAddWindow window = new CodeFileAddWindow();
+            window.ShowDialog();
         }
 
         private void RemoveButton_Click(object sender, EventArgs e)
@@ -49,37 +55,17 @@ namespace PashIDE.Components
                 mninst.CurrentOpen.Delete();
             }
         }
-        private void AddButton_Click(object sender, EventArgs e)
-        {
-            CodeFileAddWindow window = new CodeFileAddWindow();
-            window.ShowDialog();
-        }
 
         private void RenameButton_Click(object sender, EventArgs e)
         {
-
         }
 
         protected override void OnSizeChanged(EventArgs e)
         {
-            AddButton.Width = (Width) - 8;
-            AddButton.Height = 25;
-            AddButton.Location = new Point(3, Height - ((AddButton.Height + 5) * 2));
-
-            RemoveButton.Width = (Width / 2) - 8;
-            RemoveButton.Height = 25;
-            RemoveButton.Location = new Point(3, Height - (RemoveButton.Height + 5));
-
-            RenameButton.Width = (Width / 2);
-            RenameButton.Height = 25;
-            RenameButton.Location = new Point(RenameButton.Width - 3, Height - (RemoveButton.Height + 5));
         }
 
         public List<CodeFile> CodeFiles = new List<CodeFile>();
         public List<Rep> Reps = new List<Rep>();
-        public TinyButton RemoveButton;
-        public TinyButton AddButton;
-        public TinyButton RenameButton;
 
         public void ScanRoot()
         {
@@ -95,7 +81,6 @@ namespace PashIDE.Components
                 Controls.Add(r);
             }
 
-            bool requiresRefresh = false;
 
             List<CodeFile> toremove = new List<CodeFile>();
 
@@ -103,7 +88,6 @@ namespace PashIDE.Components
             {
                 if (!File.Exists(Main.inst.project.WorkingDirectory + "/" + cf.HardName))
                 {
-                    requiresRefresh = true;
                     foreach (Rep r in Reps)
                         if (r.codeFile == cf)
                         {
@@ -185,15 +169,16 @@ namespace PashIDE.Components
         }
     }
 
-    public class Rep : Control
+    public class Rep : Panel
     {
         public ProjectExplorer peinst;
         public CodeFile codeFile;
+
         public Rep(CodeFile cf)
         {
             codeFile = cf;
         }
-
+        
         public bool Hovered = false;
 
         protected override void OnMouseEnter(EventArgs e)
@@ -211,7 +196,33 @@ namespace PashIDE.Components
 
         protected override void OnMouseClick(MouseEventArgs e)
         {
+            if (e.Button == MouseButtons.Left)
             peinst.mninst.OpenCodeFile(codeFile);
+            else if (e.Button == MouseButtons.Right)
+            {
+                ContextMenuStripFlat menu = new ContextMenuStripFlat();
+                menu.Items.Add(new ToolStripMenuItem("Rename", Properties.Resources.Rename, new EventHandler(Rename)));
+                menu.Items.Add(new ToolStripMenuItem("Delete", Properties.Resources.Delete, new EventHandler(Delete)));
+                menu.Show(this, new Point(e.X, e.Y));
+            }
+        }
+
+        private void Delete(object sender, EventArgs e)
+        {
+            string message = $"Are you sure that you want to delete the CodeFile \"{codeFile.HardName}\"?";
+            string caption = "Remove?";
+            var result = MessageBox.Show(message, caption, MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+            
+            if (result == DialogResult.Yes)
+            {
+                codeFile.Delete();
+            }
+        }
+
+        private void Rename(object sender, EventArgs e)
+        {
+            CodeFileRename renameWindow = new CodeFileRename(codeFile);
+            renameWindow.ShowDialog();
         }
 
         protected override void OnPaint(PaintEventArgs e)
@@ -222,9 +233,10 @@ namespace PashIDE.Components
             if (Hovered) pen.Color = Color.FromArgb(80, 80, 80);
             g.FillRectangle(pen.Brush, 0, 0, Width, Height);
             pen.Color = Color.FromArgb(180, 180 , 180);
-            g.DrawString(codeFile.HardName, new Font("Consolas", 9f, FontStyle.Regular), pen.Brush, 3, 3);
+            g.DrawString(codeFile.HardName, new Font("Consolas", 9f, FontStyle.Regular), pen.Brush, 4, 3);
             pen.Color = codeFile.Saved ? Color.FromArgb(69, 191, 85) : Color.FromArgb(255, 109, 15);
             g.DrawLine(pen, 0, 0, 0, Height);
+            g.DrawLine(pen, 1, 0, 1, Height);
         }
     }
 }
