@@ -8,7 +8,7 @@ namespace PashIDE
     public partial class CodeFileAddWindow : Form
     {
         public char CodeFileType = 'p';
-        public char[] AllowedCharacters = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ".ToCharArray();
+        public char[] AllowedCharacters = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ_".ToCharArray();
         public CodeFileAddWindow()
         {
             InitializeComponent();
@@ -37,7 +37,7 @@ namespace PashIDE
 
         private void R_CROC_CheckedChanged(object sender, EventArgs e)
         {
-            CodeFileType = 'c';
+            CodeFileType = 's';
         }
 
         private void CodeFileAddWindow_Load(object sender, EventArgs e)

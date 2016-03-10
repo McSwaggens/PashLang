@@ -74,9 +74,9 @@ namespace PashIDE.Components
                 CodeFiles.Add(cf);
                 Rep r = new Rep(cf);
                 Reps.Add(r);
-                r.Location = new Point(0, 10 + (CodeFiles.Count * 22));
+                r.Location = new Point(0, (CodeFiles.Count * 22));
                 r.Width = Width;
-                r.Height = 20;
+                r.Height = 21;
                 r.peinst = this;
                 Controls.Add(r);
             }
@@ -105,7 +105,7 @@ namespace PashIDE.Components
             int at = 1;
             foreach (Rep r in Reps)
             {
-                r.Location = new Point(0, 10 + (at * 22));
+                r.Location = new Point(0, 2+(at * 23));
                 at++;
             }
         }
@@ -120,12 +120,15 @@ namespace PashIDE.Components
         {
             Graphics g = e.Graphics;
 
-            Pen pen = new Pen(Color.FromArgb(50, 50, 50));
+            Pen pen = new Pen(Color.FromArgb(46, 47, 50));
 
             //Draw Background
             g.FillRectangle(pen.Brush, 0, 0, Width, Height);
-            pen.Color = Color.FromArgb(75, 75, 75);
+            pen.Color = Color.FromArgb(57, 60, 64);
             g.FillRectangle(pen.Brush, 0, 0, Width, 20);
+            pen.Color = Color.FromArgb(77, 80, 84);
+            g.DrawLine(pen, 0, 10, 65, 10);
+            g.DrawLine(pen, Width-75, 10, Width, 10);
             pen.Color = Color.FromArgb(210, 210, 210);
             g.DrawString("Project Files", new Font("Calibri Regular", 11.4f, FontStyle.Regular), pen.Brush, (Width / 2) - (g.MeasureString("Project Files", new Font("Calibri Regular", 11.4f, FontStyle.Regular)).Width / 2), 0);
         }
@@ -177,6 +180,7 @@ namespace PashIDE.Components
         public Rep(CodeFile cf)
         {
             codeFile = cf;
+            codeFile.rep = this;
         }
         
         public bool Hovered = false;
@@ -234,6 +238,12 @@ namespace PashIDE.Components
             g.FillRectangle(pen.Brush, 0, 0, Width, Height);
             pen.Color = Color.FromArgb(180, 180 , 180);
             g.DrawString(codeFile.HardName, new Font("Consolas", 9f, FontStyle.Regular), pen.Brush, 4, 3);
+            if (Main.inst.inCompileTime)
+            {
+                pen.Color = Color.FromArgb(23, 199, 0);
+                if (codeFile.compileStatus != CodeFile.CompileTimeStatus.Complete) pen.Color = Color.FromArgb(255, 194, 12);
+                g.FillRectangle(pen.Brush, 0, Height - 2, Width, 2);
+            }
             pen.Color = codeFile.Saved ? Color.FromArgb(69, 191, 85) : Color.FromArgb(255, 109, 15);
             g.DrawLine(pen, 0, 0, 0, Height);
             g.DrawLine(pen, 1, 0, 1, Height);

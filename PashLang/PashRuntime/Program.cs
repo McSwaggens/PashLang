@@ -38,12 +38,8 @@ namespace PashRuntime
                 WriteWarning("Aborting...");
 				return;
             }
-<<<<<<< HEAD
             Main(File.ReadAllLines(args[0]), args);
             Console.ReadLine();
-=======
-            Main(File.ReadAllLines(args[1]), args);
->>>>>>> origin/master
         }
 
         public static void Main(string[] code, string[] args)
@@ -82,7 +78,7 @@ namespace PashRuntime
 
         public static List<Type> StandardLibraries = new List<Type>()
         {
-            typeof (Standard), typeof(Threading)
+            typeof (stdlib.Standard), typeof(stdlib.Threading)
         };
 
         private static Stopwatch sw = new Stopwatch();

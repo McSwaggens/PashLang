@@ -34,14 +34,16 @@
   <ItemGroup>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="stdlib\Standard.cs" />
-    <Compile Include="stdlib\Threading.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>
     <ProjectReference Include="..\PASM\PASM.csproj">
       <Project>{3E9F9454-D6EE-4D52-824B-F25FD24F29EC}</Project>
       <Name>PASM</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\stdlib\stdlib.csproj">
+      <Project>{8344bb4f-008f-4c01-828b-14e7b9652fae}</Project>
+      <Name>stdlib</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

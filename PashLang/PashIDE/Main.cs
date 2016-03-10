@@ -76,7 +76,9 @@ namespace PashIDE
             Explorer.mninst = this;
             Explorer.WorkingDirectory = project.WorkingDirectory;
             Explorer.ScanRoot();
-            Code.Text = "#PashIDE by Daniel Jones\n#Use the explorer on the right side to open a CodeFile.\n#Happy Coding!";
+            Code.SyntaxHighlighter.StaticClasses = "Standard|Threading";
+            Code.SyntaxHighlighter.InitPASMRegex();
+            Code.Text = "#PashIDE by Daniel Jones\n#Use the explorer on the right side to open a CodeFile.\n#Use the controls above to compile and run your application\n#Happy Coding!";
             Code.ReadOnly = true;
             watcher = new FileSystemWatcher(project.WorkingDirectory);
             watcher.Created += ProjectDirectoryChanged;
@@ -109,26 +111,40 @@ namespace PashIDE
             ExecutionThread.Start();
         }
 
-        CodeFile getStartupCodeFile() => Explorer.CodeFiles.FirstOrDefault(codeFile => codeFile.HardName == "main.p");
+        public bool inCompileTime = false;
+
+        CodeFile getStartupCodeFile() => Explorer.CodeFiles.Find(codeFile => codeFile.HardName == "main.p");
 
         public void CompileProject()
         {
-            foreach (CodeFile cf in Explorer.CodeFiles)
+            inCompileTime = true;
+            List<CodeFile> codeFiles = new List<CodeFile>(Explorer.CodeFiles);
+            foreach (CodeFile cf in codeFiles) cf.rep.Invoke(new MethodInvoker(delegate { cf.rep.Refresh(); }));
+            foreach (CodeFile cf in codeFiles)
             {
-                cf.Compile();
+                try {
+                    cf.Compile();
+                }
+                catch (Exception e)
+                {
+
+                }
             }
+            inCompileTime = false;
+            foreach (CodeFile cf in codeFiles) { cf.compileStatus = CodeFile.CompileTimeStatus.None; try { cf.rep.Invoke(new MethodInvoker(delegate { cf.rep.Refresh(); })); } catch (Exception e) { } }
+            Thread.Sleep(50);
         }
         [DllImport("kernel32.dll")]
         internal static extern Boolean AllocConsole();
         private void StartInstance()
         {
-            CodeFile mainCodeFile = CurrentOpen;
+            CodeFile mainCodeFile = getStartupCodeFile();
             LogInfo("Starting debugger on CodeFile: " + mainCodeFile.HardName);
             isRunningCode = true;
             Engine engine = new Engine();
             engine.Load(mainCodeFile.Code.Split('\n'));
             engine.setMemory(1024);
-            engine.ReferenceLibrary(typeof(Standard));
+            engine.ReferenceLibrary(typeof(stdlib.Standard));
             engine.Execute();
             isRunningCode = false;
             onDebugStopped();
@@ -143,7 +159,11 @@ namespace PashIDE
 
         public void onDebugStopped()
         {
-            Invoke(new MethodInvoker(delegate { bar1.startButton.Refresh(); }));
+            try
+            {
+                Invoke(new MethodInvoker(delegate { bar1.startButton.Refresh(); }));
+            }
+            catch (Exception e) { }
         }
 
         public bool ChangeExpected, CE2 = false;

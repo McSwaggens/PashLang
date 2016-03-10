@@ -1,7 +1,7 @@
 ﻿using PASM;
 using System;
 
-namespace PashRuntime
+namespace stdlib
 {
 	public class Standard
 	{

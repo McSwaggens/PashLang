@@ -8,16 +8,23 @@ using System.Threading.Tasks;
 using CrocodileScript;
 using PASM;
 using static PashIDE.Logger;
+using PashIDE.Components;
+using System.Windows.Forms;
+
 namespace PashIDE
 {
     public class CodeFile
     {
+        public CompileTimeStatus compileStatus = CompileTimeStatus.None;
         public bool Saved = true;
         public string Name;
         public string HardName;
         public string Code;
         public Language language;
         public string path;
+
+        public Rep rep;
+
         public CodeFile(string path)
         {
             this.path = path;
@@ -35,40 +42,46 @@ namespace PashIDE
 
         public void Compile()
         {
-            if (language == Language.SnapScript)
-            {
-                if (!File.Exists(Main.inst.Explorer.WorkingDirectory + "/" + Name + ".p"))
+            compileStatus = CompileTimeStatus.Compiling;
+            rep.Invoke(new MethodInvoker(delegate { rep.Refresh(); }));
+            Thread.Sleep(50);
+            try {
+                if (language == Language.SnapScript)
                 {
-                    FileStream fs = File.Create(Main.inst.Explorer.WorkingDirectory + "/" + Name + ".p");
-                    fs.Close();
+                    if (!File.Exists(Main.inst.Explorer.WorkingDirectory + "/" + Name + ".p"))
+                    {
+                        FileStream fs = File.Create(Main.inst.Explorer.WorkingDirectory + "/" + Name + ".p");
+                        fs.Close();
+                    }
+
+                    List<string> tocompcode = Code.Split('\n').ToList();
+
+                    for (int i = 0; i < tocompcode.Count; i++)
+                    {
+                        tocompcode[i] = tocompcode[i].TrimEnd('\r');
+                    }
+                    CrocCompiler compiler = new CrocCompiler(tocompcode.ToArray());
+                    CrocResult CompiledResult = compiler.Compile();
+                    File.WriteAllLines(Main.inst.Explorer.WorkingDirectory + "/" + Name + ".p", CompiledResult.PASM);
+                    //TODO: Write out the header file.
+
+                    Log("Compilation Successfull...");
                 }
-
-                List<string> tocompcode = Code.Split('\n').ToList();
-
-                for (int i = 0; i < tocompcode.Count; i++)
+                else if (language == Language.PASM)
                 {
-                    tocompcode[i] = tocompcode[i].TrimEnd('\r');
-                }
-                CrocCompiler compiler = new CrocCompiler(tocompcode.ToArray());
-                CrocResult CompiledResult = compiler.Compile();
-                File.WriteAllLines(Main.inst.Explorer.WorkingDirectory + "/" + Name + ".p", CompiledResult.PASM);
-                //TODO: Write out the header file.
+                    Code = File.ReadAllText(Main.inst.Explorer.WorkingDirectory + "/" + HardName);
+                    List<string> fixedcode = Code.Split('\n').ToList();
 
-                Log("Compilation Successfull...");
+                    string construct = "";
+
+                    for (int i = 0; i < fixedcode.Count; i++)
+                    {
+                        construct += fixedcode[i].TrimEnd('\r') + "\n";
+                    }
+                    Code = construct;
+                }
             }
-            else if (language == Language.PASM)
-            {
-                Code = File.ReadAllText(Main.inst.Explorer.WorkingDirectory + "/" + HardName);
-                List<string> fixedcode = Code.Split('\n').ToList();
-
-                string construct = "";
-
-                for (int i = 0; i < fixedcode.Count; i++)
-                {
-                    construct += fixedcode[i].TrimEnd('\r') + "\n";
-                }
-                Code = construct;
-            }
+            finally { compileStatus = CompileTimeStatus.Complete; rep.Invoke(new MethodInvoker(delegate { rep.Refresh(); })); }
         }
 
         public void Save(string Code)
@@ -88,6 +101,11 @@ namespace PashIDE
         {
             Log("Deleted CodeFile at " + path);
             File.Delete(path);
+        }
+
+        public enum CompileTimeStatus
+        {
+            None, Compiling, Complete
         }
     }
 }

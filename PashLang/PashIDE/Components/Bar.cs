@@ -14,18 +14,8 @@ namespace PashIDE.Components
     {
 
         public StartButton startButton = new StartButton();
-        HeaderButton Solution = new HeaderButton();
-        HeaderButton Build = new HeaderButton();
-        HeaderButton Options = new HeaderButton();
-        HeaderButton Settings = new HeaderButton();
         public Bar()
         {
-            Solution.Size = new Size((Width - 80) / 4, Height - 20);
-            Solution.Location = new Point(0, 0);
-            Controls.Add(this.Solution);
-            Controls.Add(Build);
-            Controls.Add(Options);
-            Controls.Add(Settings);
             startButton.Size = new Size(80, 50);
             Controls.Add(startButton);
         }
@@ -33,14 +23,6 @@ namespace PashIDE.Components
         protected override void OnClientSizeChanged(EventArgs e)
         {
             startButton.Location = new Point(((Width - 80) / (4)) * 2, 0);
-            Solution.Size = new Size((Width - 80) / 4, Height - 20);
-            Solution.Location = new Point(0, 0);
-            Build.Size = new Size((Width - 80) / (4), Height - 20);
-            Build.Location = new Point(Solution.Location.X + Build.Width, 0);
-            Options.Size = new Size((Width - 80) / (4), Height - 20);
-            Options.Location = new Point(Build.Location.X + Options.Width + 80, 0);
-            Settings.Size = new Size((Width - 80) / (4), Height - 20);
-            Settings.Location = new Point(Options.Location.X + Settings.Width, 0);
         }
 
         protected override void OnSizeChanged(EventArgs e)
@@ -50,15 +32,11 @@ namespace PashIDE.Components
 
         protected override void OnPaintBackground(PaintEventArgs e)
         {
-            e.Graphics.FillRectangle(new Pen(Color.FromArgb(75, 75, 75)).Brush, 0, 0, Width, Height);
+            e.Graphics.FillRectangle(new Pen(Color.FromArgb(57, 60, 64)).Brush, 0, 0, Width, Height);
         }
 
         public class StartButton : Control
         {
-
-            public Bitmap Icon_Start = (Bitmap)PashIDE.Properties.Resources.ResourceManager.GetObject("Start");
-            public Bitmap Icon_Stop = (Bitmap)PashIDE.Properties.Resources.ResourceManager.GetObject("Stop");
-
             public StartButton()
             {
                 DoubleBuffered = true;
@@ -67,11 +45,9 @@ namespace PashIDE.Components
 
             public List<Color> RainbowColors = new List<Color>()
             {
-                Color.FromArgb(255, 106, 43),
-                Color.FromArgb(255, 205, 0),
-                Color.FromArgb(71, 229, 118),
-                Color.FromArgb(52, 184, 237),
-                Color.FromArgb(255, 100, 185),
+                Color.FromArgb(63, 130, 150),
+                Color.FromArgb(53, 120, 140),
+                Color.FromArgb(43, 110, 130),
             };
 
             public bool isLooping = false;
@@ -143,10 +119,11 @@ namespace PashIDE.Components
                     g.FillRectangle(pen.Brush, 0, 0, Width, Height);
                 }
                 Rectangle r = new Rectangle(15, 3, Width - 30, Height - 10);
+                if (Main.inst != null)
                 if (!Main.inst.isRunningCode)
-                    g.DrawImage(Icon_Start, r);
+                    g.DrawImage(Resources.Start, r);
                 else
-                    g.DrawImage(Icon_Stop, r);
+                    g.DrawImage(Resources.Stop, r);
             }
         }
 

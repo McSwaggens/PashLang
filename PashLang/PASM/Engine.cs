@@ -29,15 +29,24 @@ namespace PASM
         
         private static char[] MathCharacters = { '+', '-', '*', '/', '%' };
         
+        public void Load(string[][] code)
+        {
+            foreach (string[] c in code) Load(c);
+        }
+
         public void Load(string[] Code)
         {
-
-            
             List<string> s = Code.ToList(); s.RemoveAll(str => string.IsNullOrEmpty(str));
             
             Code = s.ToArray();
 
-            this.Code = new Handler[s.Count];
+            if (this.Code == null) this.Code = new Handler[s.Count];
+            else
+            {
+                Handler[] prev = this.Code;
+                this.Code = new Handler[prev.Length + s.Count];
+                for (int i = 0; i < prev.Length; i++) this.Code[i] = prev[i];
+            }
 
             Dictionary<int, int> points = new Dictionary<int, int>();
             int maxPointNum = 0;

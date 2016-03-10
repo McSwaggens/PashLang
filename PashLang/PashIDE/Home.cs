@@ -36,7 +36,7 @@ namespace PashIDE
 
         private void LoadProjects()
         {
-            
+
             Projects.Clear();
             if (!Directory.Exists(WorkingDirectory)) { Directory.CreateDirectory(WorkingDirectory); return; }
 
@@ -56,7 +56,7 @@ namespace PashIDE
         private void RenderProjects()
         {
 
-            
+
 
             foreach (ProjectButton pb in projbuttons) pb.Dispose();
             L_NoProjects.Visible = Projects.Count == 0;
@@ -79,15 +79,43 @@ namespace PashIDE
 
         public void OpenProject(ProjectPreload project)
         {
+            MainPanel.Visible = false;
+            Loading_Title.Text = "Loading " + project.Name;
+            Loading_Title.Location = new Point((Width / 2) - (Loading_Title.Width / 2), Loading_Title.Location.Y);
+            Loading_Title.Visible = true;
+
+            Thread loadingTitleThread = new Thread(() =>
+            {
+                int dots = 0;
+                while (true)
+                {
+                    Thread.Sleep(110);
+                    dots++;
+                    if (dots == 4) dots = 1;
+                    string str_dots = "";
+                    for (int i = 0; i < dots; i++) str_dots += ".";
+                    try
+                    {
+                        Invoke(new MethodInvoker(delegate { Loading_Title.Text = "Loading " + project.Name + str_dots; }));
+                    }
+                    catch (Exception e) { }
+                }
+            });
+            loadingTitleThread.Start();
+
             new Thread(() =>
             {
-                Thread.Sleep(300);
+                Thread.Sleep(1000);
                 Main main = new Main();
                 main.project = new Project(project);
                 main.Show();
+                loadingTitleThread.Abort();
+                try {
+                    Invoke(new MethodInvoker(delegate { Close(); }));
+                }
+                catch (Exception e) { Environment.Exit(0); }
                 Application.Run(main);
             }).Start();
-            Close();
         }
 
         public bool creatednew = false;

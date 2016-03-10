@@ -46,6 +46,12 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\..\FastColoredTextBox\FastColoredTextBox\bin\Debug\FastColoredTextBox.dll</HintPath>
     </Reference>
+    <Reference Include="PashRuntime">
+      <HintPath>..\PashRuntime\bin\Debug\PashRuntime.exe</HintPath>
+    </Reference>
+    <Reference Include="stdlib">
+      <HintPath>..\stdlib\bin\Debug\stdlib.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Design" />
@@ -87,6 +93,9 @@
       <SubType>Component</SubType>
     </Compile>
     <Compile Include="Components\ProjectExplorer.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Components\TextBallet.cs">
       <SubType>Component</SubType>
     </Compile>
     <Compile Include="Components\TextEntry.cs">
@@ -185,6 +194,8 @@
   <ItemGroup>
     <Content Include="FireBird_ICON_BLACK.png.ico" />
     <Content Include="PashLang_FireBird_Circle.ico" />
+    <None Include="Resources\Status_Circle_Yellow_Dots.png" />
+    <None Include="Resources\Status_Circle_Green_Tick.png" />
     <None Include="Resources\Add.png" />
     <None Include="Resources\PASM.png" />
     <None Include="Resources\ASM.png" />
