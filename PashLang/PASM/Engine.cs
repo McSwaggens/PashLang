@@ -241,9 +241,10 @@ namespace PASM
 
         private Dictionary<string, Type> StaticCache = new Dictionary<string, Type>();
         
-        public void ReferenceLibrary(Type t)
+        public void ReferenceLibrary(params Type[] t)
         {
-			ReferencedLibraries.Add (t);
+            foreach (Type type in t)
+			    ReferencedLibraries.Add (type);
         }
 
 		public void ImportLibrary(Type t)
