@@ -10,6 +10,7 @@ namespace PashIDE
 {
     public class Settings
     {
+        public static Settings CurrentSettings => Main.inst.settings;
 
         public static Settings LoadIDESettings()
         {
@@ -34,6 +35,7 @@ namespace PashIDE
 
         public Theme theme;
         public bool showLineNumber = true;
+        public bool showConsoleWarnings = true;
         public string test = "Hello World";
 
         public void LoadProjectSettings(Project project)

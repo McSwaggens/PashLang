@@ -10,29 +10,30 @@ namespace PashIDE
             ConsoleColor bprev = Console.BackgroundColor;
             Console.BackgroundColor = ConsoleColor.Black;
             Console.ForegroundColor = ConsoleColor.Yellow;
-            Console.WriteLine("LOG: " + text);
+            Console.WriteLine("Log: " + text);
             Console.ForegroundColor = prev;
             Console.BackgroundColor = bprev;
         }
 
-        public static void LogError(string text)
+        public static void Error(string text)
         {
             ConsoleColor prev = Console.ForegroundColor;
             ConsoleColor bprev = Console.BackgroundColor;
             Console.BackgroundColor = ConsoleColor.Black;
             Console.ForegroundColor = ConsoleColor.Red;
-            Console.WriteLine("ERROR: " + text);
+            Console.WriteLine("Error: " + text);
             Console.ForegroundColor = prev;
             Console.BackgroundColor = bprev;
         }
 
-        public static void LogInfo(string text)
+        public static void Warning(string text)
         {
+            if (!Settings.CurrentSettings.showConsoleWarnings) return;
             ConsoleColor prev = Console.ForegroundColor;
             ConsoleColor bprev = Console.BackgroundColor;
             Console.BackgroundColor = ConsoleColor.Black;
             Console.ForegroundColor = ConsoleColor.Yellow;
-            Console.WriteLine("INFO: " + text);
+            Console.WriteLine("Warning: " + text);
             Console.ForegroundColor = prev;
             Console.BackgroundColor = bprev;
         }

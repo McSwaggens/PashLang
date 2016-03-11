@@ -112,6 +112,7 @@ namespace PashIDE
                 main.project = project;
                 settings.LoadProjectSettings(project);
                 Thread.Sleep(1000); //Until we have heavy loading, want to show off loading screen :3
+                main.InitializeConsole();
                 main.Show();
                 loadingTitleThread.Abort();
                 try {

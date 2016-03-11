@@ -29,13 +29,17 @@ namespace PashIDE
             InitializeComponent();
             Code.KeyDown += Main_KeyDown;
             Code.TextChanged += Code_TextChanged;
+            ExecutionThread = new Thread(StartInstance);
+        }
+
+        public void InitializeConsole()
+        {
             AllocConsole();
             Console.ForegroundColor = ConsoleColor.Green;
             Console.WriteLine("DO NOT CLOSE THIS WINDOW!");
             Console.ForegroundColor = ConsoleColor.DarkGreen;
             Console.WriteLine("This window will show you in depth information on what is going on in the IDE, and will also show and get output and input from your application.");
             Console.ForegroundColor = ConsoleColor.White;
-            ExecutionThread = new Thread(StartInstance);
         }
 
         private void Code_TextChanged(object sender, TextChangedEventArgs e)
@@ -66,10 +70,6 @@ namespace PashIDE
                     Explorer.Refresh();
                 }
             }
-        }
-
-        protected override void OnClosing(CancelEventArgs e)
-        {
         }
 
         public FileSystemWatcher watcher;
@@ -146,10 +146,11 @@ namespace PashIDE
 
         [DllImport("kernel32.dll")]
         internal static extern Boolean AllocConsole();
+
         private void StartInstance()
         {
             CodeFile mainCodeFile = getStartupCodeFile();
-            LogInfo("Starting debugger on CodeFile: " + mainCodeFile.HardName);
+            Log("Starting debugger on CodeFile: " + mainCodeFile.HardName);
             isRunningCode = true;
             Engine engine = null;
             try {
@@ -161,11 +162,11 @@ namespace PashIDE
             }
             catch (PException e)
             {
-                LogError($"PASM Error initializing the engine: {e.Message}");
+                Error($"PASM Error initializing the engine: {e.Message}");
             }
             catch (Exception e)
             {
-                LogError($"There was an unknown error initializing the PASM Engine, more details is as follows; ERROR={e.ToString()} MESSAGE={e.Message} SOURCE={e.Source}");
+                Error($"There was an unknown error initializing the PASM Engine, more details is as follows; ERROR={e.ToString()} MESSAGE={e.Message} SOURCE={e.Source}");
             }
             finally {
                 isRunningCode = false;
@@ -176,11 +177,11 @@ namespace PashIDE
             }
             catch (PException e)
             {
-                LogError($"PASM Error at line {engine.CurrentLine}: {e.Message}");
+                Error($"PASM Error at line {engine.CurrentLine}: {e.Message}");
             }
             catch (Exception e)
             {
-                LogError($"There was an unknown error initializing the PASM Engine, more details is as follows; ERROR={e.ToString()} MESSAGE={e.Message} SOURCE={e.Source}");
+                Error($"There was an unknown error initializing the PASM Engine, more details is as follows; ERROR={e.ToString()} MESSAGE={e.Message} SOURCE={e.Source}");
             }
             finally
             {

@@ -25,7 +25,7 @@ namespace PashIDE.Components
 
         private void ProjectExplorer_KeyPress(object sender, KeyPressEventArgs e)
         {
-            LogInfo(e.KeyChar.ToString());
+            Warning(e.KeyChar.ToString());
         }
 
         protected override void OnMouseClick(MouseEventArgs e)

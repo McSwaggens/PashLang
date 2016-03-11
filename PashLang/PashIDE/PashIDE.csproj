@@ -93,6 +93,9 @@
     <Compile Include="Components\ContextMenuStripFlat.cs">
       <SubType>Component</SubType>
     </Compile>
+    <Compile Include="Components\Line.cs">
+      <SubType>Component</SubType>
+    </Compile>
     <Compile Include="Components\ProjectButton.cs">
       <SubType>Component</SubType>
     </Compile>
