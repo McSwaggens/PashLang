@@ -23,7 +23,6 @@ namespace PASM
         public Register register = new Register(10);
         public  List<FunctionInstance> Returns = new List<FunctionInstance>();
 		public List<Type> ReferencedLibraries = new List<Type> ();
-        public readonly MathParser mathParser = new MathParser();
         
         public int CurrentLine = 0;
         
@@ -335,12 +334,11 @@ namespace PASM
 
         private Handler set_Parser(string[] args, string ln)
         {
+			if (args[2] == "QMATH") return new st_QMATH(args, this);
+			if (args[2] == "INT32") return new st_INT32(args, this);
             if (args[2] == "BYTE") return new st_INT64(args, this);
             if (args[2] == "INT16") return new st_INT16(args, this);
-            if (args[2] == "INT32") return new st_INT32(args, this);
             if (args[2] == "INT64") return new st_INT64(args, this);
-            if (args[2] == "MATH") return new st_MATH(args, this);
-            if (args[2] == "QMATH") return new st_QMATH(args, this);
             if (args[2] == "VOR") return new st_VOR(args, this);
             if (args[2] == "VOP") return new st_VOP(args, this);
             if (args[2] == "PTR") return new st_PTR(args, this);

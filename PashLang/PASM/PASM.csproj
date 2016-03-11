@@ -60,7 +60,6 @@
     <Compile Include="Handlers\malloc_c.cs" />
     <Compile Include="Handlers\malloc_d.cs" />
     <Compile Include="Handlers\malloc_p.cs" />
-    <Compile Include="MathParser.cs" />
     <Compile Include="Memory.cs" />
     <Compile Include="Handlers\mov.cs" />
     <Compile Include="PException.cs" />
@@ -76,7 +75,6 @@
     <Compile Include="Handlers\st_INT16.cs" />
     <Compile Include="Handlers\st_INT32.cs" />
     <Compile Include="Handlers\st_INT64.cs" />
-    <Compile Include="Handlers\st_MATH.cs" />
     <Compile Include="Handlers\st_PTR.cs" />
     <Compile Include="Handlers\st_QMATH.cs" />
     <Compile Include="Handlers\st_VOP.cs" />
