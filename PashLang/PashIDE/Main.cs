@@ -141,13 +141,42 @@ namespace PashIDE
             CodeFile mainCodeFile = getStartupCodeFile();
             LogInfo("Starting debugger on CodeFile: " + mainCodeFile.HardName);
             isRunningCode = true;
-            Engine engine = new Engine();
-            engine.Load(mainCodeFile.Code.Split('\n'));
-            engine.setMemory(1024);
-            engine.ReferenceLibrary(typeof(stdlib.Standard));
-            engine.Execute();
-            isRunningCode = false;
-            onDebugStopped();
+            Engine engine = null;
+            try {
+                engine = new Engine();
+                engine.Load(mainCodeFile.Code.Split('\n'));
+                Log("Creating PASM engine with all stdlibs");
+                engine.setMemory(1024);
+                engine.ReferenceLibrary(typeof(stdlib.Standard), typeof(stdlib.Threading));
+            }
+            catch (PException e)
+            {
+                LogError($"PASM Error initializing the engine: {e.Message}");
+            }
+            catch (Exception e)
+            {
+                LogError($"There was an unknown error initializing the PASM Engine, more details is as follows; ERROR={e.ToString()} MESSAGE={e.Message} SOURCE={e.Source}");
+            }
+            finally {
+                isRunningCode = false;
+                onDebugStopped();
+            }
+            try {
+                engine.Execute();
+            }
+            catch (PException e)
+            {
+                LogError($"PASM Error at line {engine.CurrentLine}: {e.Message}");
+            }
+            catch (Exception e)
+            {
+                LogError($"There was an unknown error initializing the PASM Engine, more details is as follows; ERROR={e.ToString()} MESSAGE={e.Message} SOURCE={e.Source}");
+            }
+            finally
+            {
+                isRunningCode = false;
+                onDebugStopped();
+            }
         }
 
         public void StopInstance()
