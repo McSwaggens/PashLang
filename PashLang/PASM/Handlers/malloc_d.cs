@@ -1,0 +1,25 @@
+using System;
+using System.Linq;
+using System.Collections.Generic;
+using static PASM.Extended;
+namespace PASM.Handlers
+{
+    //malloc direct (set the amount of bytes static)
+    public class malloc_d : Handler
+    {
+        string ts_ptr;
+        int AllocationSize;
+        public malloc_d(string[] args, Engine inst) : base(inst)
+        {
+            ts_ptr = args[1];
+            AllocationSize = int.Parse(args[2]);
+        }
+
+        public override void Execute()
+        {
+            int ptr;
+            bool isMethodPtr = isMethodPointer(ts_ptr, out ptr);
+            inst.malloc(inst.GetRegister(isMethodPtr), ptr, AllocationSize);
+        }
+    }
+}

@@ -1,0 +1,34 @@
+using System;
+using System.Linq;
+using System.Collections.Generic;
+using PASM;
+namespace PASM.Handlers
+{
+    public class call : Handler
+    {
+        string[] args;
+        public call(string[] args, Engine inst) : base(inst)
+        {
+            this.args = args;
+        }
+
+        public override void Execute()
+        {
+            FunctionInstance func = new FunctionInstance();
+            func.doesReturnValue = false;
+            func.ReturnLine = inst.CurrentLine;
+            inst.CurrentLine = inst.points[Converter.ParseStringToInt(args[1])];
+
+            if (args.Length > 1)
+            {
+                List<string> v = args.ToList();
+                v.RemoveRange(0, 2);
+                for (int g = 0; g < v.Count; g++)
+                {
+                    func.register[g] = inst.ResolvePointer(v[g]);
+                }
+            }
+            inst.Returns.Add(func);
+        }
+    }
+}

@@ -35,5 +35,35 @@ namespace PASM
             arr[1] = pi[1];
             return arr;
         }
+
+        public static short ParseStringToShort(string s)
+        {
+            short value = 0;
+            for (var i = 0; i < s.Length; i++)
+            {
+                value = (short)(value * 10 + (s[i] - '0'));
+            }
+            return value;
+        }
+
+        public static int ParseStringToInt(string s)
+        {
+            int value = 0;
+            for (var i = 0; i < s.Length; i++)
+            {
+                value = value * 10 + (s[i] - '0');
+            }
+            return value;
+        }
+
+        public static long ParseStringToLong(string s)
+        {
+            long value = 0;
+            for (var i = 0; i < s.Length; i++)
+            {
+                value = value * 10 + (s[i] - '0');
+            }
+            return value;
+        }
     }
 }
