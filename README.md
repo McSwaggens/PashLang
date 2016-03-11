@@ -1,8 +1,8 @@
-<a href="http://www.github.com/McSwaggens/PashLang/PashLang/"><img src="http://www.pashlang.com/PashLang_Icon_P_White.png" Width="128" Height="128"></a>
-<a href="http://www.github.com/McSwaggens/PashLang/PashLang/PASM"><img src="http://www.pashlang.com/PashLang_Icon_ASM_White.png" Width="128" Height="128"></a>
-<a href="http://www.github.com/McSwaggens/PashLang/PashLang/CrocodileScript/"><img src="http://www.pashlang.com/PashLang_Icon_Snap_White.png" Width="128" Height="128"></a>
+<a href="http://www.github.com/McSwaggens/PashLang/tree/master/PashLang/"><img src="http://www.pashlang.com/PashLang_Icon_P_White.png" Width="128" Height="128"></a>
+<a href="http://www.github.com/McSwaggens/PashLang/tree/master/PashLang/PASM"><img src="http://www.pashlang.com/PashLang_Icon_ASM_White.png" Width="128" Height="128"></a>
+<a href="http://www.github.com/McSwaggens/PashLang/tree/master/PashLang/CrocodileScript/"><img src="http://www.pashlang.com/PashLang_Icon_Snap_White.png" Width="128" Height="128"></a>
 <a href="http://www.github.com/McSwaggens/PashLang/wiki"><img src="http://www.pashlang.com/PashLang_Icon_Wiki_White.png" Width="128" Height="128"></a>
-<a href="http://www.github.com/McSwaggens/PashLang/PashLang/PashIDE"><img src="http://www.pashlang.com/FireBird_ICON_BLACK.png" Width="128" Height="128"></a>
+<a href="http://www.github.com/McSwaggens/PashLang/tree/master/PashLang/PashIDE"><img src="http://www.pashlang.com/FireBird_ICON_BLACK.png" Width="128" Height="128"></a>
 <a href="http://www.pashlang.com"><img src="http://www.pashlang.com/Heart_ICON_BLACK.png" Width="128" Height="128"></a>
 
 
