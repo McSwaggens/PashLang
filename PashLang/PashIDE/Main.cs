@@ -20,6 +20,10 @@ namespace PashIDE
 
         public static Main inst;
 
+        public SettingsWindow settingsWindow;
+
+        public Settings settings;
+
         public Main()
         {
             InitializeComponent();
@@ -134,6 +138,12 @@ namespace PashIDE
             foreach (CodeFile cf in codeFiles) { cf.compileStatus = CodeFile.CompileTimeStatus.None; try { cf.rep.Invoke(new MethodInvoker(delegate { cf.rep.Refresh(); })); } catch (Exception e) { } }
             Thread.Sleep(50);
         }
+
+        protected override void OnShown(EventArgs e)
+        {
+            
+        }
+
         [DllImport("kernel32.dll")]
         internal static extern Boolean AllocConsole();
         private void StartInstance()

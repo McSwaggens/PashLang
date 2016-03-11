@@ -14,15 +14,21 @@ namespace PashIDE.Components
     {
 
         public StartButton startButton = new StartButton();
+        public P_Button settingsButton = new P_Button(Resources.Settings_icon);
         public Bar()
         {
             startButton.Size = new Size(80, 50);
             Controls.Add(startButton);
+
+            settingsButton.Size = new Size(50, 50);
+            Controls.Add(settingsButton);
+            settingsButton.BackColor = Color.FromArgb(57, 60, 64);
         }
 
         protected override void OnClientSizeChanged(EventArgs e)
         {
             startButton.Location = new Point(((Width - 80) / (4)) * 2, 0);
+            settingsButton.Location = new Point(Width - (settingsButton.Width + 10), 0);
         }
 
         protected override void OnSizeChanged(EventArgs e)
@@ -33,6 +39,52 @@ namespace PashIDE.Components
         protected override void OnPaintBackground(PaintEventArgs e)
         {
             e.Graphics.FillRectangle(new Pen(Color.FromArgb(57, 60, 64)).Brush, 0, 0, Width, Height);
+        }
+
+        public class P_Button : Control
+        {
+            public bool drawBackground = false;
+            private Image image;
+            public P_Button(Image image)
+            {
+                this.image = image;
+                DoubleBuffered = true;
+                Cursor = Cursors.Hand;
+            }
+
+            public bool Hovered = false;
+
+            protected override void OnMouseEnter(EventArgs e)
+            {
+                Hovered = true;
+                Refresh();
+            }
+
+            protected override void OnMouseLeave(EventArgs e)
+            {
+                Hovered = false;
+                Refresh();
+            }
+
+            protected override void OnMouseClick(MouseEventArgs e)
+            {
+                if (Main.inst.settingsWindow == null)
+                    Main.inst.settingsWindow = new SettingsWindow();
+                Main.inst.settingsWindow.ShowDialog();
+            }
+
+            protected override void OnPaint(PaintEventArgs e)
+            {
+                Graphics g = e.Graphics;
+                Pen pen = new Pen(Color.FromArgb(73, 140, 160));
+                if (drawBackground)
+                {
+                    if (Hovered) pen.Color = Color.FromArgb(83, 150, 170);
+                    g.FillRectangle(pen.Brush, 0, 0, Width, Height);
+                }
+                Rectangle r = new Rectangle(10, 10, Width-10, Height-10);
+                g.DrawImage(image, r);
+            }
         }
 
         public class StartButton : Control
@@ -65,7 +117,7 @@ namespace PashIDE.Components
                     while (true)
                     {
                         Color to = RainbowColors[r.Next(0, RainbowColors.Count)];
-                        for (int i = 0; i < 100; i+=5)
+                        for (int i = 0; i < 100; i += 5)
                         {
                             rbsetColor = Util.Mix(CurrentColor, to, i);
                             Invoke(new MethodInvoker(delegate { Refresh(); }));
@@ -120,10 +172,10 @@ namespace PashIDE.Components
                 }
                 Rectangle r = new Rectangle(15, 3, Width - 30, Height - 10);
                 if (Main.inst != null)
-                if (!Main.inst.isRunningCode)
-                    g.DrawImage(Resources.Start, r);
-                else
-                    g.DrawImage(Resources.Stop, r);
+                    if (!Main.inst.isRunningCode)
+                        g.DrawImage(Resources.Start, r);
+                    else
+                        g.DrawImage(Resources.Stop, r);
             }
         }
 

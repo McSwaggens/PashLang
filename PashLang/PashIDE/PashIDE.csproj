@@ -46,6 +46,10 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\..\FastColoredTextBox\FastColoredTextBox\bin\Debug\FastColoredTextBox.dll</HintPath>
     </Reference>
+    <Reference Include="Newtonsoft.Json, Version=8.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>packages\Newtonsoft.Json.8.0.2\lib\net45\Newtonsoft.Json.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="PashRuntime">
       <HintPath>..\PashRuntime\bin\Debug\PashRuntime.exe</HintPath>
     </Reference>
@@ -95,6 +99,9 @@
     <Compile Include="Components\ProjectExplorer.cs">
       <SubType>Component</SubType>
     </Compile>
+    <Compile Include="Components\Region.cs">
+      <SubType>Component</SubType>
+    </Compile>
     <Compile Include="Components\TextBallet.cs">
       <SubType>Component</SubType>
     </Compile>
@@ -131,7 +138,15 @@
     <Compile Include="Program.cs" />
     <Compile Include="Project.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Settings.cs" />
+    <Compile Include="SettingsWindow.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="SettingsWindow.Designer.cs">
+      <DependentUpon>SettingsWindow.cs</DependentUpon>
+    </Compile>
     <Compile Include="Standard.cs" />
+    <Compile Include="Theme.cs" />
     <Compile Include="Util.cs" />
     <EmbeddedResource Include="CodeFileAddWindow.resx">
       <DependentUpon>CodeFileAddWindow.cs</DependentUpon>
@@ -159,6 +174,9 @@
       <DependentUpon>Resources.resx</DependentUpon>
       <DesignTime>True</DesignTime>
     </Compile>
+    <EmbeddedResource Include="SettingsWindow.resx">
+      <DependentUpon>SettingsWindow.cs</DependentUpon>
+    </EmbeddedResource>
     <None Include="packages.config" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
@@ -194,6 +212,8 @@
   <ItemGroup>
     <Content Include="FireBird_ICON_BLACK.png.ico" />
     <Content Include="PashLang_FireBird_Circle.ico" />
+    <None Include="Resources\Settings icon.png" />
+    <None Include="Resources\Icon_Play_FireRed.png" />
     <None Include="Resources\Status_Circle_Yellow_Dots.png" />
     <None Include="Resources\Status_Circle_Green_Tick.png" />
     <None Include="Resources\Add.png" />

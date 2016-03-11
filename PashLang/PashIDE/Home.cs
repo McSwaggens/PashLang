@@ -77,10 +77,10 @@ namespace PashIDE
             }
         }
 
-        public void OpenProject(ProjectPreload project)
+        public void OpenProject(ProjectPreload preLoadProject)
         {
             MainPanel.Visible = false;
-            Loading_Title.Text = "Loading " + project.Name;
+            Loading_Title.Text = "Loading " + preLoadProject.Name;
             Loading_Title.Location = new Point((Width / 2) - (Loading_Title.Width / 2), Loading_Title.Location.Y);
             Loading_Title.Visible = true;
 
@@ -96,7 +96,7 @@ namespace PashIDE
                     for (int i = 0; i < dots; i++) str_dots += ".";
                     try
                     {
-                        Invoke(new MethodInvoker(delegate { Loading_Title.Text = "Loading " + project.Name + str_dots; }));
+                        Invoke(new MethodInvoker(delegate { Loading_Title.Text = "Loading " + preLoadProject.Name + str_dots; }));
                     }
                     catch (Exception e) { }
                 }
@@ -105,9 +105,13 @@ namespace PashIDE
 
             new Thread(() =>
             {
-                Thread.Sleep(1000);
+                Settings settings = Settings.LoadIDESettings();
                 Main main = new Main();
-                main.project = new Project(project);
+                main.settings = settings;
+                Project project = new Project(preLoadProject);
+                main.project = project;
+                settings.LoadProjectSettings(project);
+                Thread.Sleep(1000); //Until we have heavy loading, want to show off loading screen :3
                 main.Show();
                 loadingTitleThread.Abort();
                 try {
