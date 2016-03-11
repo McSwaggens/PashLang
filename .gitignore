@@ -235,7 +235,3 @@ _Pvt_Extensions
 
 # FAKE - F# Make
 .fake/
-
-Images/WIP/P_ICON.png
-*.psd
-*.png
