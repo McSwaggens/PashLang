@@ -23,12 +23,11 @@ namespace PASM
         public Register register = new Register(10);
         public  List<FunctionInstance> Returns = new List<FunctionInstance>();
 		public List<Type> ReferencedLibraries = new List<Type> ();
-        
+        private Dictionary<string, Type> StaticCache = new Dictionary<string, Type>();
+
         public int CurrentLine = 0;
         
 		private Handler[] Code;
-        
-        private static char[] MathCharacters = { '+', '-', '*', '/', '%' };
         
         public void Load(string[][] code)
         {
@@ -84,6 +83,33 @@ namespace PASM
             }
         }
 
+        private Handler set_Parser(string[] args, string ln)
+        {
+            if (args[2] == "QMATH") return new st_QMATH(args, this);
+            if (args[2] == "INT32") return new st_INT32(args, this);
+            if (args[2] == "BYTE") return new st_INT64(args, this);
+            if (args[2] == "INT16") return new st_INT16(args, this);
+            if (args[2] == "INT64") return new st_INT64(args, this);
+            if (args[2] == "PAR") return new set_PAR(args, this);
+            if (args[2] == "PARC") return new set_PAR(args, this);
+            if (args[2] == "VOR") return new st_VOR(args, this);
+            if (args[2] == "VOP") return new st_VOP(args, this);
+            if (args[2] == "PTR") return new st_PTR(args, this);
+            if (args[2] == "VORL") return new st_VORL(args, this);
+            throw new PException("Unknown set extension " + args[2]);
+        }
+
+        public void ReferenceLibrary(params Type[] t)
+        {
+            foreach (Type type in t)
+                ReferencedLibraries.Add(type);
+        }
+
+        public void ImportLibrary(Type t)
+        {
+            StaticCache.Add(t.Name, t);
+        }
+
         public bool Loaded => Code != null;
 
         public void setMemory() => memory = new Memory(1024);
@@ -91,12 +117,6 @@ namespace PASM
         public void setMemory(int size) => memory = new Memory(size);
 
         public void setMemory(Memory memory) => this.memory = memory;
-
-        public void malloc(Register register, int ptr, int size)
-        {
-            Register.Pointer pointer = new Register.Pointer(memory.Allocate(size), size);
-            register[ptr] = pointer;
-        }
         
         public void Execute()
         {
@@ -135,6 +155,12 @@ namespace PASM
                     break;
                 }
             }
+        }
+
+        public void malloc(Register register, int ptr, int size)
+        {
+            Register.Pointer pointer = new Register.Pointer(memory.Allocate(size), size);
+            register[ptr] = pointer;
         }
 
         public void set(int ptr, bool isMethodPtr, short set) //INT16
@@ -212,8 +238,6 @@ namespace PASM
             }
         }
 
-        
-
         //Free the address if it's not being used by another register.
         public void TryFreeRegister(Register.Pointer p)
         {
@@ -228,21 +252,6 @@ namespace PASM
         }
 
         public Register GetRegister(bool isMethod) => isMethod ? Returns.Last().register : register;
-        
-        
-
-        private Dictionary<string, Type> StaticCache = new Dictionary<string, Type>();
-        
-        public void ReferenceLibrary(params Type[] t)
-        {
-            foreach (Type type in t)
-			    ReferencedLibraries.Add (type);
-        }
-
-		public void ImportLibrary(Type t)
-		{
-			StaticCache.Add(t.Name, t);
-		}
 
         public short ResolveINT16(string sptr)
         {
@@ -268,6 +277,7 @@ namespace PASM
             byte[] data = memory.read(register[reg].address, 8);
             return BitConverter.ToInt64(data, 0);
         }
+
         //Direct reference
         public short ResolveINT16(bool isMethodPtr, int reg)
         {
@@ -320,7 +330,11 @@ namespace PASM
             return memory.read(register[reg].address, register[reg].size);
         }
 
-        
+        public byte[] ResolveData(int ptr, bool isMethodPtr)
+        {
+            Register register = isMethodPtr ? Returns.Last().register : this.register;
+            return memory.read(register[ptr].address, register[ptr].size);
+        }
 
         public byte[] CallStaticMethod(string @class, string method, byte[][] Params)
         {
@@ -330,20 +344,6 @@ namespace PASM
             foreach (KeyValuePair<string, Type> i in StaticCache.Where(i => i.Key == @class))
                 Convert.ToString(i.Value.GetMethod(method, BindingFlags.Static | BindingFlags.Public).Invoke(i.Value, Objects));
             return null;
-        }
-
-        private Handler set_Parser(string[] args, string ln)
-        {
-			if (args[2] == "QMATH") return new st_QMATH(args, this);
-			if (args[2] == "INT32") return new st_INT32(args, this);
-            if (args[2] == "BYTE") return new st_INT64(args, this);
-            if (args[2] == "INT16") return new st_INT16(args, this);
-            if (args[2] == "INT64") return new st_INT64(args, this);
-            if (args[2] == "VOR") return new st_VOR(args, this);
-            if (args[2] == "VOP") return new st_VOP(args, this);
-            if (args[2] == "PTR") return new st_PTR(args, this);
-            if (args[2] == "VORL") return new st_VORL(args, this);
-            throw new PException("Unknown set extension " + args[2]);
         }
     }
     

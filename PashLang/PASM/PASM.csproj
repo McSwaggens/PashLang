@@ -60,6 +60,8 @@
     <Compile Include="Handlers\malloc_c.cs" />
     <Compile Include="Handlers\malloc_d.cs" />
     <Compile Include="Handlers\malloc_p.cs" />
+    <Compile Include="Handlers\set_PAR.cs" />
+    <Compile Include="Handlers\set_PARC.cs" />
     <Compile Include="Memory.cs" />
     <Compile Include="Handlers\mov.cs" />
     <Compile Include="PException.cs" />
