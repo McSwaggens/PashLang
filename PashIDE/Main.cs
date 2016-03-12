@@ -126,13 +126,8 @@ namespace PashIDE
             foreach (CodeFile cf in codeFiles) cf.rep.Invoke(new MethodInvoker(delegate { cf.rep.Refresh(); }));
             foreach (CodeFile cf in codeFiles)
             {
-                try {
-                    cf.Compile();
-                }
-                catch (Exception e)
-                {
-
-                }
+                //if (cf.language == Language.SnapScript && !settings.compileSnapScriptFiles) continue;
+                cf.Compile();
             }
             inCompileTime = false;
             foreach (CodeFile cf in codeFiles) { cf.compileStatus = CodeFile.CompileTimeStatus.None; try { cf.rep.Invoke(new MethodInvoker(delegate { cf.rep.Refresh(); })); } catch (Exception e) { } }
@@ -155,7 +150,9 @@ namespace PashIDE
             Engine engine = null;
             try {
                 engine = new Engine();
-                engine.Load(mainCodeFile.Code.Split('\n'));
+                string[] code = mainCodeFile.Code.Split('\n');
+                for (int i = 0; i < code.Length; i++) code[i] = code[i].TrimEnd('\r');
+                engine.Load(code);
                 Log("Creating PASM engine with all stdlibs");
                 engine.setMemory(1024);
                 engine.ReferenceLibrary(typeof(stdlib.Standard), typeof(stdlib.Threading));

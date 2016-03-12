@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 
 namespace PashIDE
 {
+    [Serializable]
     public class Theme
     {
         public string Name;

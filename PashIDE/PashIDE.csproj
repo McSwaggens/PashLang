@@ -39,22 +39,31 @@
     <ApplicationIcon>FireBird_ICON_BLACK.png.ico</ApplicationIcon>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="CrocodileScript">
-      <HintPath>..\CrocRuntime\bin\Debug\CrocodileScript.dll</HintPath>
-    </Reference>
     <Reference Include="FastColoredTextBox, Version=2.16.11.0, Culture=neutral, PublicKeyToken=fb8aa12b994ef61b, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\FastColoredTextBox\FastColoredTextBox\bin\Debug\FastColoredTextBox.dll</HintPath>
+      <HintPath>..\..\FastColoredTextBox\FastColoredTextBox\bin\Debug\FastColoredTextBox.dll</HintPath>
     </Reference>
     <Reference Include="Newtonsoft.Json, Version=8.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <HintPath>packages\Newtonsoft.Json.8.0.2\lib\net45\Newtonsoft.Json.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="PashRuntime">
-      <HintPath>..\PashRuntime\bin\Debug\PashRuntime.exe</HintPath>
+    <Reference Include="PashRuntime, Version=1.0.5915.16662, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\PashLang\PashRuntime\bin\Debug\PashRuntime.exe</HintPath>
     </Reference>
-    <Reference Include="stdlib">
-      <HintPath>..\stdlib\bin\Debug\stdlib.dll</HintPath>
+    <Reference Include="PASM, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\PashLang\PASM\bin\Debug\PASM.dll</HintPath>
+    </Reference>
+    <Reference Include="Snap">
+      <HintPath>..\PashLang\SnapScript\bin\Debug\Snap.exe</HintPath>
+    </Reference>
+    <Reference Include="SnapScript">
+      <HintPath>..\PashLang\SnapScript\bin\Debug\SnapScript.dll</HintPath>
+    </Reference>
+    <Reference Include="stdlib, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\PashLang\stdlib\bin\Debug\stdlib.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
@@ -69,9 +78,6 @@
     <Reference Include="System.Net.Http" />
     <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml" />
-    <Reference Include="PASM">
-      <HintPath>..\PASM\bin\Debug\PASM.dll</HintPath>
-    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="CodeFile.cs" />

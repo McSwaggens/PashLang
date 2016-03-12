@@ -8,6 +8,7 @@ using System.IO;
 
 namespace PashIDE
 {
+    [Serializable]
     public class Settings
     {
         public static Settings CurrentSettings => Main.inst.settings;
@@ -36,7 +37,10 @@ namespace PashIDE
         public Theme theme;
         public bool showLineNumber = true;
         public bool showConsoleWarnings = true;
-        public string test = "Hello World";
+        public bool globalCompile = false;
+        public bool compileSnapScriptFiles = true;
+        public bool useIDEFileCompiler = false;
+        public bool PASMCodeWrapping = false;
 
         public void LoadProjectSettings(Project project)
         {

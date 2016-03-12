@@ -123,8 +123,8 @@
         #endregion
 
         private FastColoredTextBoxNS.FastColoredTextBox fastColoredTextBox1;
-        private FastColoredTextBoxNS.FastColoredTextBox Code;
         public Components.ProjectExplorer Explorer;
         private Components.Bar bar1;
+        public FastColoredTextBoxNS.FastColoredTextBox Code;
     }
 }

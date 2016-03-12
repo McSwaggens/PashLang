@@ -5,7 +5,6 @@ using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
-using CrocodileScript;
 using PASM;
 using static PashIDE.Logger;
 using PashIDE.Components;
@@ -60,9 +59,9 @@ namespace PashIDE
                     {
                         tocompcode[i] = tocompcode[i].TrimEnd('\r');
                     }
-                    CrocCompiler compiler = new CrocCompiler(tocompcode.ToArray());
-                    CrocResult CompiledResult = compiler.Compile();
-                    File.WriteAllLines(Main.inst.Explorer.WorkingDirectory + "/" + Name + ".p", CompiledResult.PASM);
+                    SnapScript.SnapCompiler compiler = new SnapScript.SnapCompiler(tocompcode.ToArray());
+                    string[] compiledPASM = compiler.CompileToPASM();
+                    File.WriteAllLines(Main.inst.Explorer.WorkingDirectory + "/" + Name + ".p", compiledPASM);
                     //TODO: Write out the header file.
 
                     Log("Compilation Successfull...");

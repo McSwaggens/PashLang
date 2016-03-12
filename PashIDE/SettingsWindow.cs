@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
 using System.Drawing;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -12,6 +13,7 @@ namespace PashIDE
 {
     public partial class SettingsWindow : Form
     {
+        Settings tempSettings = Clone(Main.inst.settings);
         public SettingsWindow()
         {
             InitializeComponent();
@@ -21,9 +23,13 @@ namespace PashIDE
         private void Settings_Load(object sender, EventArgs e)
         {
             mainPanel.HorizontalScroll.Enabled = true;
-            Warning("Hello World");
-            xButton2.Text = Settings.CurrentSettings.showConsoleWarnings ? "Enable" : "Disable";
-            xButton1.Text = Settings.CurrentSettings.showLineNumber ? "Disable" : "Enable";
+            ShowWarnings_Button.Text = Settings.CurrentSettings.showConsoleWarnings ? "Enable" : "Disable";
+            LineVisibility_Button.Text = Settings.CurrentSettings.showLineNumber ? "Enable" : "Disable";
+        }
+
+        protected override void OnShown(EventArgs e)
+        {
+            tempSettings = Clone(Main.inst.settings);
         }
 
         protected override void OnResize(EventArgs e)
@@ -47,18 +53,46 @@ namespace PashIDE
         private void xButton1_Click(object sender, EventArgs e)
         {
             Settings.CurrentSettings.showLineNumber = !Settings.CurrentSettings.showLineNumber;
-            xButton1.Text = Settings.CurrentSettings.showLineNumber ? "Disable" : "Enable";
+            LineVisibility_Button.Text = Settings.CurrentSettings.showLineNumber ? "Enable" : "Disable";
+            Main.inst.Code.ShowLineNumbers = !Settings.CurrentSettings.showLineNumber;
         }
 
         private void xButton2_Click(object sender, EventArgs e)
         {
             Settings.CurrentSettings.showConsoleWarnings = !Settings.CurrentSettings.showConsoleWarnings;
-            xButton2.Text = Settings.CurrentSettings.showConsoleWarnings ? "Enable" : "Disable";
+            ShowWarnings_Button.Text = Settings.CurrentSettings.showConsoleWarnings ? "Enable" : "Disable";
         }
 
         private void xButton3_Click(object sender, EventArgs e)
         {
 
+        }
+
+        private void AcceptButton_Click(object sender, EventArgs e)
+        {
+            Main.inst.settings = tempSettings;
+        }
+
+        private static T Clone<T>(T source)
+        {
+            if (!typeof(T).IsSerializable)
+            {
+                throw new ArgumentException("The type must be serializable.", "source");
+            }
+
+            if (ReferenceEquals(source, null))
+            {
+                return default(T);
+            }
+
+            System.Runtime.Serialization.IFormatter formatter = new System.Runtime.Serialization.Formatters.Binary.BinaryFormatter();
+            Stream stream = new MemoryStream();
+            using (stream)
+            {
+                formatter.Serialize(stream, source);
+                stream.Seek(0, SeekOrigin.Begin);
+                return (T)formatter.Deserialize(stream);
+            }
         }
     }
 }
