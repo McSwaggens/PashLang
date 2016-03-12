@@ -5,6 +5,9 @@ using static PASM.Extended;
 
 namespace PASM.Handlers
 {
+    /// <summary>
+    /// Sets the given register to a 2 byte unsigned integer
+    /// </summary>
     public class st_INT16 : Handler
     {
         short set;

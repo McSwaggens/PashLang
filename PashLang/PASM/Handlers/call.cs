@@ -4,6 +4,11 @@ using System.Collections.Generic;
 using PASM;
 namespace PASM.Handlers
 {
+    /// <summary>
+    /// Moves the current line to the given point,
+    /// Creates a new function instance for returning and method variables/registers
+    /// When the currentline hits an "re" command, it moves the current line back to where it began (below the call command)
+    /// </summary>
     public class call : Handler
     {
         string[] args;

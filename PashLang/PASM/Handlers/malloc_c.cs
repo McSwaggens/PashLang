@@ -4,7 +4,9 @@ using System.Collections.Generic;
 using static PASM.Extended;
 namespace PASM.Handlers
 {
-    //malloc copy
+    /// <summary>
+    /// Allocates memory to a given register with the size being copied from another address
+    /// </summary>
     public class malloc_c : Handler
     {
         string workingPointer;

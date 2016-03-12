@@ -4,6 +4,11 @@ using System.Collections.Generic;
 using static PASM.Extended;
 namespace PASM.Handlers
 {
+    /// <summary>
+    /// Value Of Pointer
+    /// Sets the data at the given register to another registers data
+    /// Copies the data of another registers data
+    /// </summary>
     public class st_VOP : Handler
     {
         private string worker, setter;

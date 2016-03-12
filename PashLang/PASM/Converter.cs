@@ -1,6 +1,9 @@
 ﻿using System;
 namespace PASM
 {
+    /// <summary>
+    /// Untra Fast conversion
+    /// </summary>
     public class Converter
     {
         public static unsafe byte[] int64(long i)

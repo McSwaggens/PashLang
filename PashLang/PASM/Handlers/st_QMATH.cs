@@ -4,6 +4,10 @@ using System.Collections.Generic;
 using static PASM.Extended;
 namespace PASM.Handlers
 {
+    /// <summary>
+    /// Sets the data at the current address to the result of a mathematical calculation
+    /// This command requires the byte context to be disclosed
+    /// </summary>
     public class st_QMATH : Handler
     {
         private string ptr;

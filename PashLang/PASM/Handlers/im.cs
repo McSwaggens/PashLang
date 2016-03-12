@@ -3,6 +3,9 @@ using System.Linq;
 using System.Collections.Generic;
 namespace PASM.Handlers
 {
+    /// <summary>
+    /// Enables the use of referenced libraries in code
+    /// </summary>
     public class im : Handler
     {
         public string lib;

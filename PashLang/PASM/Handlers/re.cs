@@ -3,6 +3,11 @@ using System.Linq;
 using System.Collections.Generic;
 namespace PASM.Handlers
 {
+
+    /// <summary>
+    /// Returns from a method
+    /// Can also return data
+    /// </summary>
     public class re : Handler
     {
         string returnval;

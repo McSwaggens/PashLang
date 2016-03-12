@@ -7,6 +7,12 @@ using PASM;
 using static PASM.Extended;
 namespace PASM.Handlers
 {
+    /// <summary>
+    /// Pointer Address Range
+    /// Copies the data from another block of data, with where is starts and where it ends
+    /// This operator enables OOP and arrays
+    /// TODO: Explain this better
+    /// </summary>
     public class set_PARC : Handler
     {
         //to set value pair

@@ -3,6 +3,9 @@ using System.Linq;
 using System.Collections.Generic;
 namespace PASM.Handlers
 {
+    /// <summary>
+    /// Move the current line to a pointer
+    /// </summary>
     public class mov : Handler
     {
         public int Line;

@@ -4,6 +4,9 @@ using System.Collections.Generic;
 using static PASM.Extended;
 namespace PASM.Handlers
 {
+    /// <summary>
+    /// Sets the given register to a 1 byte unsigned integer
+    /// </summary>
     public class st_BYTE : Handler
     {
         byte set;

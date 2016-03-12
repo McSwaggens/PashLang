@@ -8,6 +8,12 @@ using static PASM.Extended;
 
 namespace PASM.Handlers
 {
+    /// <summary>
+    /// Sets the pointer and size to another pointer + size
+    /// This operator enables the use of OOP and Arrays
+    /// TODO: Explain this better
+    /// 
+    /// </summary>
     public class set_PAR : Handler
     {
         //to set value pair

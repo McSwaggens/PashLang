@@ -4,7 +4,11 @@ using System.Collections.Generic;
 using static PASM.Extended;
 namespace PASM.Handlers
 {
-    //malloc pointer
+    /// <summary>
+    /// Allocates memory to the given register
+    /// The size of the memory allocated is the number from another integer
+    /// Fix this
+    /// </summary>
     public class malloc_p : Handler
     {
         string ts_ptr;

@@ -3,6 +3,10 @@ using System.Linq;
 using System.Collections.Generic;
 namespace PASM.Handlers
 {
+    /// <summary>
+    /// Conditional checker
+    /// TODO: Finish this comment...
+    /// </summary>
     public class @if : Handler
     {
         string arg1, arg2;

@@ -5,10 +5,12 @@ using PASM;
 using static PASM.Extended;
 namespace PASM.Handlers
 {
+    /// <summary>
+    /// Free's the memory at a given pointer
+    /// </summary>
     public class free : Handler
     {
         public string tf;
-
         public free(string[] args, Engine inst) : base(inst)
         {
             tf = args[1];

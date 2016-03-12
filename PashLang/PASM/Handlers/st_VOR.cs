@@ -3,6 +3,11 @@ using System.Linq;
 using System.Collections.Generic;
 namespace PASM.Handlers
 {
+    /// <summary>
+    /// Value Of Return
+    /// Sets the data at the given register to the return of a function call
+    /// Captures the return of a call command
+    /// </summary>
     public class st_VOR : Handler
     {
         string ptr;

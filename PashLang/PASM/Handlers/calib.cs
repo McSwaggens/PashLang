@@ -4,6 +4,10 @@ using System.Collections.Generic;
 using PASM;
 namespace PASM.Handlers
 {
+    /// <summary>
+    /// Calls a library
+    /// The library must be imported with the "im" command before being used with calib
+    /// </summary>
     public class calib : Handler
     {
         string Class, MethodName;

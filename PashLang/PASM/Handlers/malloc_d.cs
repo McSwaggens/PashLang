@@ -4,7 +4,9 @@ using System.Collections.Generic;
 using static PASM.Extended;
 namespace PASM.Handlers
 {
-    //malloc direct (set the amount of bytes static)
+    /// <summary>
+    /// Allocates a given amount of data to a register
+    /// </summary>
     public class malloc_d : Handler
     {
         string ts_ptr;

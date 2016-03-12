@@ -34,6 +34,10 @@ namespace PASM
             foreach (string[] c in code) Load(c);
         }
 
+        /// <summary>
+        /// Load code into handler heap
+        /// </summary>
+        /// <param name="Code"></param>
         public void Load(string[] Code)
         {
             List<string> s = Code.ToList(); s.RemoveAll(str => string.IsNullOrEmpty(str));
@@ -83,6 +87,12 @@ namespace PASM
             }
         }
 
+        /// <summary>
+        /// Separate the set commands to the correct class instances
+        /// </summary>
+        /// <param name="args"></param>
+        /// <param name="ln"></param>
+        /// <returns></returns>
         private Handler set_Parser(string[] args, string ln)
         {
             if (args[2] == "QMATH") return new st_QMATH(args, this);
@@ -99,25 +109,53 @@ namespace PASM
             throw new PException("Unknown set extension " + args[2]);
         }
 
+        /// <summary>
+        /// Add the static library type to a pool, awaiting to be imported by the script
+        /// </summary>
+        /// <param name="t"></param>
         public void ReferenceLibrary(params Type[] t)
         {
             foreach (Type type in t)
                 ReferencedLibraries.Add(type);
         }
 
+        /// <summary>
+        /// Imports the library, making its functions available to the code.
+        /// </summary>
+        /// <param name="t"></param>
         public void ImportLibrary(Type t)
         {
             StaticCache.Add(t.Name, t);
         }
 
+
+        /// <summary>
+        /// Check if there is any code to be loaded
+        /// </summary>
         public bool Loaded => Code != null;
 
+        /// <summary>
+        /// Sets the amount of memory the engine is allowed to use
+        /// Also known as memory allocation
+        /// </summary>
         public void setMemory() => memory = new Memory(1024);
 
+        /// <summary>
+        /// Sets the amount of memory the engine is allowed to use
+        /// Also known as memory allocation
+        /// </summary>
         public void setMemory(int size) => memory = new Memory(size);
 
+        /// <summary>
+        /// Sets the amount of memory the engine is allowed to use
+        /// Also known as memory allocation
+        /// </summary>
         public void setMemory(Memory memory) => this.memory = memory;
         
+
+        /// <summary>
+        /// Executes the PASM script that is loaded into the engine instance.
+        /// </summary>
         public void Execute()
         {
             CurrentLine = 0;
@@ -129,6 +167,10 @@ namespace PASM
             }
         }
 
+        /// <summary>
+        /// Executes the PASM script that is loaded into the engine and starts the 
+        /// </summary>
+        /// <param name="startingln"></param>
         public void Execute(int startingln)
         {
             CurrentLine = startingln;
@@ -139,6 +181,10 @@ namespace PASM
             }
         }
         
+        /// <summary>
+        /// Executes the current code loaded into the engine in a debug mode
+        /// This "Debug mode" will throw more detailed information and allowes for break points (not currently implemented)
+        /// </summary>
         public void ExecuteDebug() {
             Console.WriteLine("Executing in debug mode, (May not get the best performance.)");
             while (CurrentLine < Code.Length)
@@ -157,12 +203,25 @@ namespace PASM
             }
         }
 
+
+        /// <summary>
+        /// Allocate memory at an address location
+        /// </summary>
+        /// <param name="Register"></param>
+        /// <param name="Pointer"></param>
+        /// <param name="Size"></param>
         public void malloc(Register register, int ptr, int size)
         {
             Register.Pointer pointer = new Register.Pointer(memory.Allocate(size), size);
             register[ptr] = pointer;
         }
 
+        /// <summary>
+        /// Write a 2 byte integer to an address
+        /// </summary>
+        /// <param name="Pointer"></param>
+        /// <param name="isMethodPointer"></param>
+        /// <param name="DataSet"></param>
         public void set(int ptr, bool isMethodPtr, short set) //INT16
         {
             Register register = isMethodPtr ? Returns.Last().register : this.register;
@@ -178,6 +237,12 @@ namespace PASM
             }
         }
 
+        /// <summary>
+        /// Write a 4 byte integer to an address
+        /// </summary>
+        /// <param name="Pointer"></param>
+        /// <param name="isMethodPointer"></param>
+        /// <param name="DataSet"></param>
         public void set(int ptr, bool isMethodPtr, int set) //INT32
         {
             Register register = isMethodPtr ? Returns.Last().register : this.register;
@@ -193,6 +258,12 @@ namespace PASM
             }
         }
 
+        /// <summary>
+        /// Write a 8 byte integer to an address
+        /// </summary>
+        /// <param name="Pointer"></param>
+        /// <param name="isMethodPointer"></param>
+        /// <param name="DataSet"></param>
         public void set(int ptr, bool isMethodPtr, long set) //INT64
         {
             Register register = isMethodPtr ? Returns.Last().register : this.register;
@@ -208,6 +279,12 @@ namespace PASM
             }
         }
 
+        /// <summary>
+        /// Write a 1 byte integer to an address
+        /// </summary>
+        /// <param name="Pointer"></param>
+        /// <param name="isMethodPointer"></param>
+        /// <param name="DataSet"></param>
         public void set(int ptr, bool isMethodPtr, byte set)
         {
             Register register = isMethodPtr ? Returns.Last().register : this.register;
@@ -223,6 +300,13 @@ namespace PASM
             }
         }
 
+
+        /// <summary>
+        /// Writes a set of data to a given address
+        /// </summary>
+        /// <param name="Pointer"></param>
+        /// <param name="isMethodPointer"></param>
+        /// <param name="DataSet"></param>
         public void set(int ptr, bool isMethodPtr, byte[] set)
         {
             Register register = isMethodPtr ? Returns.Last().register : this.register;
@@ -238,21 +322,37 @@ namespace PASM
             }
         }
 
-        //Free the address if it's not being used by another register.
+        /// <summary>
+        /// Free an address if it's not being used by another register
+        /// </summary>
+        /// <param name="p"></param>
         public void TryFreeRegister(Register.Pointer p)
         {
             Memory.Part part = memory.PartAddressStack[p.address];
             if (p.ReferenceCount == 0) memory.Free(part.Address);
         }
 
-        //Will free the registers address even if the address is being used by another register, try not to use this tho...
+        /// <summary>
+        /// Will free the registers address even if the address is being used by another register, try not to use this tho...
+        /// </summary>
+        /// <param name="p"></param>
         public void ForceFreeRegister(Register.Pointer p)
         {
             memory.Free(p.address);
         }
 
+        /// <summary>
+        /// Returns the right register
+        /// </summary>
+        /// <param name="isMethod"></param>
+        /// <returns></returns>
         public Register GetRegister(bool isMethod) => isMethod ? Returns.Last().register : register;
 
+        /// <summary>
+        /// Returns a 2 byte integer from a string
+        /// </summary>
+        /// <param name="string"></param>
+        /// <returns></returns>
         public short ResolveINT16(string sptr)
         {
             int reg;
@@ -261,6 +361,11 @@ namespace PASM
             return BitConverter.ToInt16(data, 0);
         }
 
+        /// <summary>
+        /// Returns a 4 byte integer from a string
+        /// </summary>
+        /// <param name="string"></param>
+        /// <returns></returns>
         public int ResolveINT32(string sptr)
         {
             int reg;
@@ -269,6 +374,11 @@ namespace PASM
             return BitConverter.ToInt32(data, 0);
         }
 
+        /// <summary>
+        /// Returns a 8 byte integer from a string
+        /// </summary>
+        /// <param name="string"></param>
+        /// <returns></returns>
         public long ResolveINT64(string sptr)
         {
             int reg;
@@ -278,7 +388,12 @@ namespace PASM
             return BitConverter.ToInt64(data, 0);
         }
 
-        //Direct reference
+        /// <summary>
+        /// Returns a 2 byte integer from a given address
+        /// </summary>
+        /// <param name="isMethodPtr"></param>
+        /// <param name="Register"></param>
+        /// <returns></returns>
         public short ResolveINT16(bool isMethodPtr, int reg)
         {
             Register register = isMethodPtr ? Returns.Last().register : this.register;
@@ -286,6 +401,12 @@ namespace PASM
             return BitConverter.ToInt16(data, 0);
         }
 
+        /// <summary>
+        /// Returns a 4 byte integer from a given address
+        /// </summary>
+        /// <param name="isMethodPtr"></param>
+        /// <param name="Register"></param>
+        /// <returns></returns>
         public int ResolveINT32(bool isMethodPtr, int reg)
         {
             Register register = isMethodPtr ? Returns.Last().register : this.register;
@@ -293,6 +414,12 @@ namespace PASM
             return BitConverter.ToInt32(data, 0);
         }
 
+        /// <summary>
+        /// Returns a 8 byte integer from a given address
+        /// </summary>
+        /// <param name="isMethodPtr"></param>
+        /// <param name="Register"></param>
+        /// <returns></returns>
         public long ResolveINT64(bool isMethodPtr, int reg)
         {
             Register register = isMethodPtr ? Returns.Last().register : this.register;
@@ -300,6 +427,11 @@ namespace PASM
             return BitConverter.ToInt64(data, 0);
         }
 
+        /// <summary>
+        /// Resolves an integer with an unknown size
+        /// </summary>
+        /// <param name="sptr"></param>
+        /// <returns></returns>
         public object ResolveNumber (string sptr)
         {
             int reg;
@@ -315,6 +447,12 @@ namespace PASM
             throw new PException("Unknown number length of " + register[reg].size + " bytes, 16bits(2bytes), 32bits(4bytes), 64bits(8bytes)");
         }
 
+        /// <summary>
+        /// Returns a Pointer from a string 
+        /// example: :0 or 0
+        /// </summary>
+        /// <param name="string"></param>
+        /// <returns></returns>
         public Register.Pointer ResolvePointer(string sptr)
         {
             int reg;
@@ -322,6 +460,11 @@ namespace PASM
             return isMethod ? Returns.Last().register[reg] : register[reg];
         }
 
+        /// <summary>
+        /// Returns data from an address
+        /// </summary>
+        /// <param name="String pointer"></param>
+        /// <returns></returns>
         public byte[] ResolveData(string sptr)
         {
             int reg;
@@ -330,12 +473,24 @@ namespace PASM
             return memory.read(register[reg].address, register[reg].size);
         }
 
+        /// <summary>
+        /// Returns data from an address
+        /// </summary>
+        /// <param name="String pointer"></param>
+        /// <returns></returns>
         public byte[] ResolveData(int ptr, bool isMethodPtr)
         {
             Register register = isMethodPtr ? Returns.Last().register : this.register;
             return memory.read(register[ptr].address, register[ptr].size);
         }
 
+        /// <summary>
+        /// Calls a method from inside a static library
+        /// </summary>
+        /// <param name="Class"></param>
+        /// <param name="Method"></param>
+        /// <param name="Params"></param>
+        /// <returns></returns>
         public byte[] CallStaticMethod(string @class, string method, byte[][] Params)
         {
             object[] Objects = new object[Params.Length + 1];

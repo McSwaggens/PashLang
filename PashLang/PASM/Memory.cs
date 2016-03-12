@@ -3,6 +3,9 @@ using System.Collections.Generic;
 
 namespace PASM
 {
+    /// <summary>
+    /// RAM
+    /// </summary>
     public class Memory
     {
         private List<Part> FreeParts = new List<Part>();

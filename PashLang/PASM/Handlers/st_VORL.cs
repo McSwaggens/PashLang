@@ -4,6 +4,11 @@ using System.Collections.Generic;
 using static PASM.Extended;
 namespace PASM.Handlers
 {
+    /// <summary>
+    /// Value Of Retern Library
+    /// Gets the data returned by static library method
+    /// Can accept params
+    /// </summary>
     public class st_VORL : Handler
     {
         int ptr;

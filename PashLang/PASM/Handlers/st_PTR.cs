@@ -4,6 +4,9 @@ using System.Collections.Generic;
 using static PASM.Extended;
 namespace PASM.Handlers
 {
+    /// <summary>
+    /// Sets the given registers address to another registers address
+    /// </summary>
     public class st_PTR : Handler
     {
         string working;
