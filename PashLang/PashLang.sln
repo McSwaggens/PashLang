@@ -15,6 +15,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "stdlib", "stdlib\stdlib.csp
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SnapScript", "SnapScript\SnapScript.csproj", "{76664965-73EF-42B6-9B8A-CF6AFA0F9371}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Puffin", "Puffin\Puffin.csproj", "{69CF5B17-E305-432F-BADC-C47502C4F882}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -71,6 +73,14 @@ Global
 		{76664965-73EF-42B6-9B8A-CF6AFA0F9371}.Release|Any CPU.Build.0 = Release|Any CPU
 		{76664965-73EF-42B6-9B8A-CF6AFA0F9371}.Release|x86.ActiveCfg = Release|Any CPU
 		{76664965-73EF-42B6-9B8A-CF6AFA0F9371}.Release|x86.Build.0 = Release|Any CPU
+		{69CF5B17-E305-432F-BADC-C47502C4F882}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{69CF5B17-E305-432F-BADC-C47502C4F882}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{69CF5B17-E305-432F-BADC-C47502C4F882}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{69CF5B17-E305-432F-BADC-C47502C4F882}.Debug|x86.Build.0 = Debug|Any CPU
+		{69CF5B17-E305-432F-BADC-C47502C4F882}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{69CF5B17-E305-432F-BADC-C47502C4F882}.Release|Any CPU.Build.0 = Release|Any CPU
+		{69CF5B17-E305-432F-BADC-C47502C4F882}.Release|x86.ActiveCfg = Release|Any CPU
+		{69CF5B17-E305-432F-BADC-C47502C4F882}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
