@@ -14,5 +14,6 @@
         FLOAT = 0x09,
         DOUBLE = 0x0A,
         STRING = 0x0B,
+        BOOLEAN = 0x0C,
     }
 }
