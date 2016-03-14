@@ -41,13 +41,10 @@
   <ItemGroup>
     <Reference Include="FastColoredTextBox, Version=2.16.11.0, Culture=neutral, PublicKeyToken=fb8aa12b994ef61b, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>libs\FastColoredTextBox.dll</HintPath>
-    </Reference>
-    <Reference Include="Irony">
-      <HintPath>..\PashLang\PASM\bin\Debug\Irony.dll</HintPath>
+      <HintPath>..\..\FastColoredTextBox\FastColoredTextBox\bin\Debug\FastColoredTextBox.dll</HintPath>
     </Reference>
     <Reference Include="Newtonsoft.Json, Version=8.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
-      <HintPath>libs\Newtonsoft.Json.dll</HintPath>
+      <HintPath>packages\Newtonsoft.Json.8.0.2\lib\net45\Newtonsoft.Json.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="PashRuntime, Version=1.0.5915.16662, Culture=neutral, processorArchitecture=MSIL">
@@ -57,9 +54,6 @@
     <Reference Include="PASM, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\PashLang\PASM\bin\Debug\PASM.dll</HintPath>
-    </Reference>
-    <Reference Include="Snap">
-      <HintPath>..\PashLang\SnapScript\bin\Debug\Snap.exe</HintPath>
     </Reference>
     <Reference Include="SnapScript">
       <HintPath>..\PashLang\SnapScript\bin\Debug\SnapScript.dll</HintPath>
