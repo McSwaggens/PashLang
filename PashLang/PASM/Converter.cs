@@ -20,6 +20,32 @@ namespace PASM
             arr[7] = pi[7];
             return arr;
         }
+
+        public static unsafe byte[] float4(float value)
+        {
+            uint val = *((uint*)&value);
+            return new byte[4] {
+                    (byte)(val & 0xFF),
+                    (byte)((val >> 8) & 0xFF),
+                    (byte)((val >> 16) & 0xFF),
+                    (byte)((val >> 24) & 0xFF) };
+        }
+
+        public static unsafe byte[] double8(double value)
+        {
+            ulong val = *((ulong*)&value);
+            return new byte[8] {
+                    (byte)(val & 0xFF),
+                    (byte)((val >> 8) & 0xFF),
+                    (byte)((val >> 16) & 0xFF),
+                    (byte)((val >> 24) & 0xFF),
+                    (byte)((val >> 32) & 0xFF),
+                    (byte)((val >> 40) & 0xFF),
+                    (byte)((val >> 48) & 0xFF),
+                    (byte)((val >> 56) & 0xFF)
+            };
+        }
+
         public static unsafe byte[] int32(int i)
         {
             byte[] arr = new byte[4];
