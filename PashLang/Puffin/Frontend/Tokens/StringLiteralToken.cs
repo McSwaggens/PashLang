@@ -6,12 +6,12 @@ using System.Threading.Tasks;
 
 namespace Puffin.Frontend.Tokens
 {
-    public class ControlToken : Token
+    public class StringLiteralToken : Token
     {
         private Enum type;
         private string value;
 
-        public ControlToken(string value)
+        public StringLiteralToken(string value)
         {
             this.value = value;
             this.type = ResolveType();
@@ -39,13 +39,7 @@ namespace Puffin.Frontend.Tokens
         /// <returns> the type of this token</returns>
         public override Enum ResolveType()
         {
-            IEnumerable<EnumControlTokens> values = Enum.GetValues(typeof(EnumControlTokens)).Cast<EnumControlTokens>();
-            foreach (EnumControlTokens op in values)
-            {
-                if (value.Equals(op.ToString().ToLower()))
-                    return op;
-            }
-            return null;
+            return EnumLiterals.STRING;
         }
     }
 }

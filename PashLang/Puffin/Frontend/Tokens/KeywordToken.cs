@@ -14,6 +14,7 @@ namespace Puffin.Frontend.Tokens
         public KeywordToken(string value)
         {
             this.value = value;
+            this.type = ResolveType();
         }
 
         public override Enum Type => type;

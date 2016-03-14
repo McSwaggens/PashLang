@@ -43,13 +43,25 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Frontend\Lexer.cs" />
+    <Compile Include="Frontend\Tokens\ByteLiteralToken.cs" />
+    <Compile Include="Frontend\Tokens\CharacterLiteralToken.cs" />
     <Compile Include="Frontend\Tokens\ControlToken.cs" />
+    <Compile Include="Frontend\Tokens\DoubleLiteralToken.cs" />
     <Compile Include="Frontend\Tokens\EnumControlTokens.cs" />
     <Compile Include="Frontend\Tokens\EnumKeywords.cs" />
+    <Compile Include="Frontend\Tokens\EnumLiterals.cs" />
     <Compile Include="Frontend\Tokens\EnumOperators.cs" />
+    <Compile Include="Frontend\Tokens\FloatLiteralToken.cs" />
+    <Compile Include="Frontend\Tokens\IntegerLiteralToken.cs" />
     <Compile Include="Frontend\Tokens\KeywordToken.cs" />
+    <Compile Include="Frontend\Tokens\LongLiteralToken.cs" />
     <Compile Include="Frontend\Tokens\OperatorToken.cs" />
+    <Compile Include="Frontend\Tokens\ShortLiteralToken.cs" />
+    <Compile Include="Frontend\Tokens\StringLiteralToken.cs" />
     <Compile Include="Frontend\Tokens\Token.cs" />
+    <Compile Include="Frontend\Tokens\UnsignedIntegerLiteralToken.cs" />
+    <Compile Include="Frontend\Tokens\UnsignedLongLiteralToken.cs" />
+    <Compile Include="Frontend\Tokens\UnsignedShortLiteralToken.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
