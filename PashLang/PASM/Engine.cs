@@ -17,17 +17,54 @@ namespace PASM
                   Onsight is what we have at the moment, where the engine does cleanup at the end of every method (re)
                 
         */
+
         public int[] points;
         public Memory memory;
         public Register register = new Register(50);
         public  List<FunctionInstance> Returns = new List<FunctionInstance>();
 		public List<Type> ReferencedLibraries = new List<Type> ();
         private Dictionary<string, Type> StaticCache = new Dictionary<string, Type>();
+        public int RegisterSize = 60;
 
         public int CurrentLine = 0;
         
 		private Handler[] Code;
-        
+
+        /// <summary>
+        /// Blank initializer
+        /// You will need to manually set the memory, code and starting line(if needed).
+        /// </summary>
+        public Engine()
+        {
+
+        }
+
+        /// <summary>
+        /// Initializer
+        /// </summary>
+        /// <param name="PASM Code"></param>
+        /// <param name="Memory Size"></param>
+        /// <param name="Starting Line"></param>
+        public Engine(string[] code, int memory = 1024, int startingLine = 0)
+        {
+            Load(code);
+            setMemory(memory);
+            CurrentLine = startingLine;
+        }
+
+        /// <summary>
+        /// Intitializer
+        /// </summary>
+        /// <param name="PASM Code"></param>
+        /// <param name="Memory size"></param>
+        /// <param name="Starting Line"></param>
+        public Engine(string[][] code, int memory = 1024, int startingLine = 0)
+        {
+            foreach (string[] cf in code) Load(cf);
+            setMemory(memory);
+            CurrentLine = startingLine;
+        }
+
         public void Load(string[][] code)
         {
             foreach (string[] c in code) Load(c);
@@ -156,6 +193,25 @@ namespace PASM
         /// </summary>
         public void setMemory(Memory memory) => this.memory = memory;
         
+
+        /// <summary>
+        /// Wipes the current static register and changes it's size.
+        /// </summary>
+        /// <param name="Size"></param>
+        public void setStaticRegisterSize(int Size)
+        {
+            register = new Register(Size);
+        }
+
+        /// <summary>
+        /// Sets the size for new registers that are made.
+        /// </summary>
+        /// <param name="Size"></param>
+        public void setNewRegisterSize(int Size)
+        {
+
+        }
+
 
         /// <summary>
         /// Executes the PASM script that is loaded into the engine instance.

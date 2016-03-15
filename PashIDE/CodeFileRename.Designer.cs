@@ -66,6 +66,7 @@
             this.ShowInTaskbar = false;
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "CodeFileRename";
+            this.Load += new System.EventHandler(this.CodeFileRename_Load);
             this.ResumeLayout(false);
             this.PerformLayout();
 

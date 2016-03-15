@@ -13,6 +13,10 @@ namespace PASM
         public int ReturnLine;
         public bool MethodVariable = false; // Does the pointer have a : ?
         public int ReturnVariablePos; // Variable to set Location
-        public Register register = new Register(50);
+        public Register register;
+        public FunctionInstance(int size)
+        {
+            register = new Register(size);
+        }
     }
 }

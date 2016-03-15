@@ -17,20 +17,34 @@ namespace PashIDE
         public CodeFileRename(CodeFile codeFile)
         {
             this.codeFile = codeFile;
+            
             InitializeComponent();
         }
 
         private void button1_Click(object sender, EventArgs e)
         {
-            ExecuteRename();
+            if (isAllowed(textBox1.Text))
+                ExecuteRename();
+            else MessageBox.Show("Please use alphabetical characters and _ in your names");
+        }
+
+        public char[] AllowedCharacters = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ_".ToCharArray();
+
+        private bool isAllowed(string str)
+        {
+            foreach (char c in str.ToString())
+            {
+                if (!AllowedCharacters.Contains(c)) return false;
+            }
+            return true;
         }
 
         void ExecuteRename()
         {
-            char type = codeFile.HardName.ToCharArray()[codeFile.HardName.Length - 1];
-            File.Move(codeFile.path, codeFile.path.Replace(codeFile.HardName, "") + this.textBox1.Text + "." + type);
-            codeFile.Name = this.textBox1.Text + "." + type;
-            codeFile.path = codeFile.path.Replace(codeFile.HardName, "") + this.textBox1.Text + "." + type;
+            string type = codeFile.HardName.Split('.')[1];
+            File.Move(codeFile.path, codeFile.path.Replace(codeFile.HardName, "") + textBox1.Text + "." + type);
+            codeFile.Name = textBox1.Text + "." + type;
+            codeFile.path = codeFile.path.Replace(codeFile.HardName, "") + textBox1.Text + "." + type;
             Close();
         }
 
@@ -40,7 +54,14 @@ namespace PashIDE
 
         private void textBox1_KeyDown(object sender, KeyEventArgs e)
         {
-            if (e.KeyCode == Keys.Enter) ExecuteRename();
+            if (e.KeyCode == Keys.Enter && isAllowed(textBox1.Text)) ExecuteRename();
+        }
+
+        private void CodeFileRename_Load(object sender, EventArgs e)
+        {
+            textBox1.Text = codeFile.Name.Split('.')[0];
+            textBox1.Focus();
+            textBox1.SelectAll();
         }
     }
 }
