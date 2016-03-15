@@ -74,6 +74,6 @@ namespace PASM.Handlers
             foreach (char c in MathCharacters) if (op == c) return true;
             return false;
         }
-        public static char[] MathCharacters = { '+', '-', '*', '/', '%' };
+        public static char[] MathCharacters = { '*', '+', '/', '-', '%' };
     }
 }

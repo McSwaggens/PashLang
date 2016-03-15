@@ -10,12 +10,12 @@ namespace PASM.Handlers
     /// </summary>
     public class st_INT16 : Handler
     {
-        short set;
+        ushort set;
         string ptr;
         public st_INT16(string[] args, Engine inst) : base(inst)
         {
             ptr = args[1];
-            set = Converter.ParseStringToShort(args[3]);
+            set = Converter.ParseStringToUShort(args[3]);
         }
 
         public override void Execute()

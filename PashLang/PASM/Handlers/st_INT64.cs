@@ -9,12 +9,12 @@ namespace PASM.Handlers
     /// </summary>
     public class st_INT64 : Handler
     {
-        long set;
+        ulong set;
         string ptr;
         public st_INT64(string[] args, Engine inst) : base(inst)
         {
             ptr = args[1];
-            set = Converter.ParseStringToLong(args[3]);
+            set = Converter.ParseStringToULong(args[3]);
         }
 
         public override void Execute()

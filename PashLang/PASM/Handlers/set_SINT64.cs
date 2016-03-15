@@ -1,20 +1,20 @@
-using System;
-using System.Linq;
+﻿using System;
 using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 using static PASM.Extended;
+
 namespace PASM.Handlers
 {
-    /// <summary>
-    /// Sets the given register to a 4 byte unsigned integer
-    /// </summary>
-    public class st_INT32 : Handler
+    public class set_SINT64 : Handler
     {
-        uint set;
+        long set;
         string ptr;
-        public st_INT32(string[] args, Engine inst) : base(inst)
+        public set_SINT64(string[] args, Engine inst) : base(inst)
         {
             ptr = args[1];
-            set = Converter.ParseStringToUInt(args[3]);
+            set = Converter.ParseStringToLong_NEG_CHECK(args[3]);
         }
 
         public override void Execute()
