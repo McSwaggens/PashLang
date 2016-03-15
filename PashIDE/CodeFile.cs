@@ -34,7 +34,7 @@ namespace PashIDE
             string lang = Path.GetExtension(path);
             if (lang == ".p") language = Language.PASM;
             else
-            if (lang == ".s") language = Language.SnapScript;
+            if (lang == ".puf") language = Language.PUFFIN;
             else language = Language.UNKNOWN;
             Log("CodeFile Language set to " + language + " for CodeFile " + Name);
         }
@@ -45,7 +45,7 @@ namespace PashIDE
             rep.Invoke(new MethodInvoker(delegate { rep.Refresh(); }));
             Thread.Sleep(50);
             try {
-                if (language == Language.SnapScript)
+                if (language == Language.PUFFIN)
                 {
                     if (!File.Exists(Main.inst.Explorer.WorkingDirectory + "/" + Name + ".p"))
                     {

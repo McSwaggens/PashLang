@@ -121,9 +121,6 @@
   <data name="Add" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\Add.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
-  <data name="ASM" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\ASM.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
   <data name="Build" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\Build.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
@@ -132,9 +129,6 @@
   </data>
   <data name="Gears" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\Gears.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="PASM" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\PASM.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
   <data name="Pause" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\Pause.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
@@ -159,5 +153,17 @@
   </data>
   <data name="Start" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\Icon_Play_FireRed.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="ExtendedIcon_Pash_Assembly" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\ExtendedIcon_Pash_Assembly.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="ExtendedIcon_Puffin" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\ExtendedIcon_Puffin.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="ASM" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\PashLang_Icon_P_White.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="Puffin" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\PashLang_Icon_PUFF_White.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
 </root>

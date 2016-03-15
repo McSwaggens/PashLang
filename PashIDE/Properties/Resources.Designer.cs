@@ -103,6 +103,26 @@ namespace PashIDE.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
+        internal static System.Drawing.Bitmap ExtendedIcon_Pash_Assembly {
+            get {
+                object obj = ResourceManager.GetObject("ExtendedIcon_Pash_Assembly", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap ExtendedIcon_Puffin {
+            get {
+                object obj = ResourceManager.GetObject("ExtendedIcon_Puffin", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
         internal static System.Drawing.Bitmap Gears {
             get {
                 object obj = ResourceManager.GetObject("Gears", resourceCulture);
@@ -113,9 +133,9 @@ namespace PashIDE.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap PASM {
+        internal static System.Drawing.Bitmap Pause {
             get {
-                object obj = ResourceManager.GetObject("PASM", resourceCulture);
+                object obj = ResourceManager.GetObject("Pause", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
@@ -123,9 +143,9 @@ namespace PashIDE.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap Pause {
+        internal static System.Drawing.Bitmap Puffin {
             get {
-                object obj = ResourceManager.GetObject("Pause", resourceCulture);
+                object obj = ResourceManager.GetObject("Puffin", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
