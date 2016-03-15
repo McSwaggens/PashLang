@@ -218,6 +218,11 @@
   <ItemGroup>
     <Content Include="FireBird_ICON_BLACK.png.ico" />
     <Content Include="PashLang_FireBird_Circle.ico" />
+    <None Include="Resources\PashLang_Icon_PUFF_White.png" />
+    <None Include="Resources\PashLang_Icon_ASM_White.png" />
+    <None Include="Resources\PashLang_Icon_P_White.png" />
+    <None Include="Resources\ExtendedIcon_Puffin.png" />
+    <None Include="Resources\ExtendedIcon_Pash_Assembly.png" />
     <None Include="Resources\Settings icon.png" />
     <None Include="Resources\Icon_Play_FireRed.png" />
     <None Include="Resources\Status_Circle_Yellow_Dots.png" />
