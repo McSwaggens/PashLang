@@ -11,7 +11,6 @@ namespace PASM.Handlers
     public class st_VOR : Handler
     {
         string ptr;
-        int method;
         string[] args;
         public st_VOR(string[] args, Engine inst) : base(inst)
         {

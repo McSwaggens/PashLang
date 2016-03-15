@@ -10,7 +10,6 @@ namespace PASM.Handlers
     /// </summary>
     public class re : Handler
     {
-        string returnval;
         string[] args;
         public re(string[] args, Engine inst) : base(inst)
         {

@@ -38,11 +38,11 @@ namespace PashRuntime
                 WriteWarning("Aborting...");
 				return;
             }
-            Main(File.ReadAllLines(args[0]), args);
+            Entry(File.ReadAllLines(args[0]), args);
             Console.ReadLine();
         }
 
-        public static void Main(string[] code, string[] args)
+        public static void Entry(string[] code, string[] args)
         {
             if (args.Length > 1)
             {
