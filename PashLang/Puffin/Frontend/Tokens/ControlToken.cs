@@ -8,8 +8,8 @@ namespace Puffin.Frontend.Tokens
 {
     public class ControlToken : Token
     {
-        private Enum type;
-        private string value;
+        
+        
 
         public ControlToken(string value)
         {

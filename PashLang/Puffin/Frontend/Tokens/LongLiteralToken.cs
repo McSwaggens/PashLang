@@ -8,8 +8,8 @@ namespace Puffin.Frontend.Tokens
 {
     public class LongLiteralToken : Token
     {
-        private Enum type;
-        private string value;
+        
+        
 
         public LongLiteralToken(string value)
         {

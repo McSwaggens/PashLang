@@ -8,8 +8,8 @@ namespace Puffin.Frontend.Tokens
 {
     public class KeywordToken : Token
     {
-        private Enum type;
-        private string value;
+        
+        
 
         public KeywordToken(string value)
         {

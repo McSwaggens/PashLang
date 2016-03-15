@@ -8,8 +8,8 @@ namespace Puffin.Frontend.Tokens
 {
     public class OperatorToken : Token
     {
-        private Enum type;
-        private string value;
+        
+        
 
         public OperatorToken(string value)
         {

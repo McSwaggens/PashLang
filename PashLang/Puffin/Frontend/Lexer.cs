@@ -53,11 +53,10 @@ namespace Puffin.Frontend
                 Console.ResetColor();
                 return false;
             }
-            PrintTokens();
             return true;
         }
 
-        private void PrintTokens()
+        public void PrintTokens()
         {
             foreach (Token tok in tokens)
             {

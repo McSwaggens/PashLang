@@ -53,6 +53,7 @@
     <Compile Include="Frontend\Tokens\EnumLiterals.cs" />
     <Compile Include="Frontend\Tokens\EnumOperators.cs" />
     <Compile Include="Frontend\Tokens\FloatLiteralToken.cs" />
+    <Compile Include="Frontend\Tokens\IdentifierToken.cs" />
     <Compile Include="Frontend\Tokens\IntegerLiteralToken.cs" />
     <Compile Include="Frontend\Tokens\KeywordToken.cs" />
     <Compile Include="Frontend\Tokens\LongLiteralToken.cs" />
@@ -68,6 +69,9 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
+    <None Include="Test Files\test.puff">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\PashRuntime\PashRuntime.csproj">
@@ -86,7 +90,6 @@
   <ItemGroup>
     <Folder Include="Backend\" />
     <Folder Include="Frontend\AST\" />
-    <Folder Include="Test Files\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

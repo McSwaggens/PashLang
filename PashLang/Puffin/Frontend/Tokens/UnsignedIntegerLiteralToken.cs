@@ -8,9 +8,6 @@ namespace Puffin.Frontend.Tokens
 {
     public class UnsignedIntegerLiteralToken : Token
     {
-        private Enum type;
-        private string value;
-
         public UnsignedIntegerLiteralToken(string value)
         {
             this.value = value;

@@ -8,8 +8,8 @@ namespace Puffin.Frontend.Tokens
 {
     public abstract class Token
     {
-        private Enum type;
-        private string value;
+        protected Enum type;
+        protected string value;
 
         /// <summary>
         /// Property for the tokens type
