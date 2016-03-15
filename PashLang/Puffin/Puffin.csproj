@@ -43,6 +43,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Frontend\Lexer.cs" />
+    <Compile Include="Frontend\Tokens\BooleanLiteralToken.cs" />
     <Compile Include="Frontend\Tokens\ByteLiteralToken.cs" />
     <Compile Include="Frontend\Tokens\CharacterLiteralToken.cs" />
     <Compile Include="Frontend\Tokens\ControlToken.cs" />

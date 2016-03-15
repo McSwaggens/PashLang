@@ -30,9 +30,9 @@ namespace Puffin
                 Console.ResetColor();
                 Console.ReadKey();
             }
-            for (int i = 0; i < lexical.TokenStrings.Length; i++)
+            for (int i = 0; i < lexical.TokenStrings.Count; i++)
             {
-                Console.WriteLine(lexical.TokenStrings[i]);
+                Console.WriteLine(lexical.TokenStrings.ElementAt(i));
             }
             Console.ReadKey();
         }

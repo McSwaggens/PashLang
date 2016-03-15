@@ -41,6 +41,17 @@ namespace Puffin.Frontend.Tokens
         {
             return EnumLiterals.BYTE;
         }
+
+        /// <summary>
+        /// Returns a string that represents the current object.
+        /// </summary>
+        /// <returns>
+        /// A string that represents the current object.
+        /// </returns>
+        public override string ToString()
+        {
+            return this.value + " : " + this.type.ToString();
+        }
         /// <summary>
         /// Custom additon operator for byte literal
         /// </summary>
