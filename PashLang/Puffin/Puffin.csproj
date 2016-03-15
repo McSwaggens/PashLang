@@ -43,6 +43,17 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Frontend\Lexer.cs" />
+    <Compile Include="Frontend\Symbols\ArraySymbol.cs" />
+    <Compile Include="Frontend\Symbols\ClassSymbol.cs" />
+    <Compile Include="Frontend\Symbols\EnumSymbol.cs" />
+    <Compile Include="Frontend\Symbols\EnumSymbolType.cs" />
+    <Compile Include="Frontend\Symbols\FunctionSymbol.cs" />
+    <Compile Include="Frontend\Symbols\InterafceSymbol.cs" />
+    <Compile Include="Frontend\Symbols\NamespaceSymbol.cs" />
+    <Compile Include="Frontend\Symbols\Scope.cs" />
+    <Compile Include="Frontend\Symbols\StructSymbol.cs" />
+    <Compile Include="Frontend\Symbols\SymbolTable.cs" />
+    <Compile Include="Frontend\Symbols\VariableSymbol.cs" />
     <Compile Include="Frontend\Tokens\BooleanLiteralToken.cs" />
     <Compile Include="Frontend\Tokens\ByteLiteralToken.cs" />
     <Compile Include="Frontend\Tokens\CharacterLiteralToken.cs" />
@@ -53,6 +64,7 @@
     <Compile Include="Frontend\Tokens\EnumLiterals.cs" />
     <Compile Include="Frontend\Tokens\EnumOperators.cs" />
     <Compile Include="Frontend\Tokens\FloatLiteralToken.cs" />
+    <Compile Include="Frontend\Symbols\Symbol.cs" />
     <Compile Include="Frontend\Tokens\IdentifierToken.cs" />
     <Compile Include="Frontend\Tokens\IntegerLiteralToken.cs" />
     <Compile Include="Frontend\Tokens\KeywordToken.cs" />

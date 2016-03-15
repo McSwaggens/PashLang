@@ -9,8 +9,6 @@ namespace Puffin.Frontend.Tokens
     public class ControlToken : Token
     {
         
-        
-
         public ControlToken(string value)
         {
             this.value = value;
@@ -68,7 +66,6 @@ namespace Puffin.Frontend.Tokens
                 default:
                     return null;
             }
-            return null;
         }
 
         /// <summary>

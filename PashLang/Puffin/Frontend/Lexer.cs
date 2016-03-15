@@ -4,6 +4,7 @@ using System.Diagnostics.Eventing.Reader;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Puffin.Frontend.Symbols;
 using Puffin.Frontend.Tokens;
 
 namespace Puffin.Frontend
@@ -12,7 +13,13 @@ namespace Puffin.Frontend
     {
         private string input;
         private LinkedList<string> tokenStrings;
-        private LinkedList<Token> tokens; 
+        private LinkedList<Token> tokens;
+        private SymbolTable symbolTable;
+
+        public Lexer()
+        {
+            symbolTable = new SymbolTable();
+        }
 
         public string Input
         {
@@ -45,6 +52,7 @@ namespace Puffin.Frontend
                 return false;
             }
             tokenStrings = new LinkedList<string>(tokenStrings.Where(str => !string.IsNullOrWhiteSpace(str)));
+            //tokenStrings = new LinkedList<string>(tokenStrings.Where(str => !str.Equals("\n") || !str.Equals("\t")));
             tokens = GenerateTokens();
             if (tokens == null)
             {
@@ -196,9 +204,16 @@ namespace Puffin.Frontend
                 }
                 else
                 {
-                    Console.WriteLine("TODO Identifiers will be parsed here");
-                    //StringLiteralToken tok = new StringLiteralToken("TODO Identifiers will be parsed here");
-                    //temp.AddLast(tok);
+                    if (node.Next != null && node.Next.Value == ";")
+                    {
+                        IdentifierToken tok = new IdentifierToken(node.Value);
+                        temp.AddLast(tok);
+                    }
+                    else
+                    {
+                        IdentifierToken tok = new IdentifierToken(node.Value);
+                        temp.AddLast(tok);
+                    }
                 }
                 if (node != null) node = node.Next;
             }
@@ -209,9 +224,10 @@ namespace Puffin.Frontend
         {
             LinkedList<string> strings = new LinkedList<string>();
             StringBuilder sb = new StringBuilder();
-            foreach (char ch in input.ToCharArray())
+           
+            foreach (char ch in input)
             {
-                if (ch == '\t' || ch == '\0' || ch == '\n' || ch == '\r')
+                if (ch == '\t' || ch == '\0')
                 {
                     //strings.AddLast(sb.ToString());
                     //sb.Clear();
@@ -220,7 +236,7 @@ namespace Puffin.Frontend
                 
                 
                 if (ch == ' ' || ch == '(' || ch == ')' || ch == '[' || ch == ']' || ch == '{' ||
-                    ch == '}' || ch == ',' || ch == ':' || ch == ';')
+                    ch == '}' || ch == ',' || ch == ':' || ch == ';' || ch == '\r' || ch == '\n')
                 {
 
                     strings.AddLast(sb.ToString());
