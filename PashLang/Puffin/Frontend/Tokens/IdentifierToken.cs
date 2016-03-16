@@ -8,9 +8,6 @@ namespace Puffin.Frontend.Tokens
 {
     public class IdentifierToken : Token
     {
-        private Enum type;
-        private string value;
-
         public IdentifierToken(string value)
         {
             this.value = value;
