@@ -3,19 +3,20 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Puffin.Frontend.Symbols.TypeInfo;
 using Puffin.Frontend.Tokens;
 
 namespace Puffin.Frontend.Symbols
 {
-    public abstract class Symbol<T> : Token
+    public abstract class Symbol<T> : Token where T : Information
     {
         protected string identifierName;
         protected T identifierValue;
         protected EnumSymbolType identifierType;
         protected bool isConstant;
         protected bool isPointer;
-        private Enum type;
-        private string value;
+        protected new Enum type;
+        protected new string value;
 
         /// <summary>
         ///  Returns whether the symbol is a function
@@ -80,6 +81,45 @@ namespace Puffin.Frontend.Symbols
         public static bool operator !=(Symbol<T> lhs, Symbol<T> rhs)
         {
             return !(lhs == rhs);
+        }
+
+        /// <summary>
+        /// Determines whether the specified object is equal to the current object.
+        /// </summary>
+        /// <returns>
+        /// true if the specified object  is equal to the current object; otherwise, false.
+        /// </returns>
+        /// <param name="obj">The object to compare with the current object. </param>
+        public override bool Equals(object obj)
+        {
+            if (!(obj is Symbol<Information>))
+                return false;
+            Symbol<Information> sym = obj as Symbol<Information>;
+            if (this == sym)
+                return true;
+            return false;
+        }
+
+        /// <summary>
+        /// Serves as the default hash function. 
+        /// </summary>
+        /// <returns>
+        /// A hash code for the current object.
+        /// </returns>
+        public override int GetHashCode()
+        {
+            return this.IdentifierName.GetHashCode() + this.IdentifierValue.GetHashCode()*31;
+        }
+
+        /// <summary>
+        /// Returns a string that represents the current object.
+        /// </summary>
+        /// <returns>
+        /// A string that represents the current object.
+        /// </returns>
+        public override string ToString()
+        {
+            return this.IdentifierName + " : " + this.IdentifierType + " : " + this.IdentifierValue;
         }
 
         /// <summary>

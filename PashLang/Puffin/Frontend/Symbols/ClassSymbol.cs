@@ -3,10 +3,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Puffin.Frontend.Symbols.TypeInfo;
 
 namespace Puffin.Frontend.Symbols
 {
-    public class ClassSymbol<T> : Symbol<T>
+    public class ClassSymbol<T> : Symbol<T> where T : Information
     {
         /// <summary>
         ///  Returns whether the symbol is a function

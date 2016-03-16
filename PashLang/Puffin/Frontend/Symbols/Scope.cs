@@ -11,7 +11,7 @@ namespace Puffin.Frontend.Symbols
         public static readonly Scope GLOBAL_SCOPE = new Scope();
         private Scope parentScope;
         private LinkedList<Scope> childScopes;
-        private Symbol<dynamic> ownerSymbol; 
+        private Symbol<Information> ownerSymbol; 
 
         private Scope()
         {
@@ -19,7 +19,7 @@ namespace Puffin.Frontend.Symbols
             this.ownerSymbol = null;
         }
 
-        public Scope(Scope parent, Symbol<dynamic> owner)
+        public Scope(Scope parent, Symbol<Information> owner)
         {
             if (parent == null)
             {

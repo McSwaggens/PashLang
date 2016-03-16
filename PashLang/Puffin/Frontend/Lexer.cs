@@ -14,12 +14,12 @@ namespace Puffin.Frontend
         private string input;
         private LinkedList<string> tokenStrings;
         private LinkedList<Token> tokens;
-        private SymbolTable symbolTable;
+        //private SymbolTable symbolTable;
 
-        public Lexer()
-        {
-            symbolTable = new SymbolTable();
-        }
+        //public Lexer()
+        //{
+        //    symbolTable = new SymbolTable();
+        //}
 
         public string Input
         {

@@ -3,10 +3,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Puffin.Frontend.Symbols.TypeInfo;
 
 namespace Puffin.Frontend.Symbols
 {
-    public class ArraySymbol<T> : Symbol<T>
+    public class ArraySymbol<T> : Symbol<T> where T : Information
     {
         protected T[] values;
 

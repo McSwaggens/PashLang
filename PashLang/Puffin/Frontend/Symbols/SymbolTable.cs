@@ -6,21 +6,21 @@ using System.Threading.Tasks;
 
 namespace Puffin.Frontend.Symbols
 {
-    public class SymbolTable
+    public abstract class SymbolTable<T>
     {
-        private List<Symbol<dynamic>> symbols;
+        private List<Symbol<Information>> symbols;
 
-        public List<Symbol<dynamic>> Symbols
+        public List<Symbol<Information>> Symbols
         {
             get { return symbols; }
         }
 
         public SymbolTable()
         {
-            symbols = new List<Symbol<dynamic>>();
+            symbols = new List<Symbol<Information>>();
         }
 
-        public SymbolTable(List<Symbol<dynamic>> symbols)
+        public SymbolTable(List<Symbol<Information>> symbols)
         {
             this.symbols = symbols;
         }
