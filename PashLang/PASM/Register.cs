@@ -23,8 +23,9 @@ namespace PASM
         public class Pointer
         {
             public int ReferenceCount = 1;
-            public int address, size;
-            public Pointer(int address, int size)
+            public uint address;
+            public uint size;
+            public Pointer(uint address, uint size)
             {
                 this.address = address;
                 this.size = size;

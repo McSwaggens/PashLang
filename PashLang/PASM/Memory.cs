@@ -12,18 +12,19 @@ namespace PASM
         private List<Part> UsedParts = new List<Part>();
         public Part[] PartAddressStack;
         public byte[] Data;
-        public int DataLength => Data.Length;
+        public uint DataLength;
 
-        public Memory(int size)
+        public Memory(uint size)
         {
             Data = new byte[size];
             PartAddressStack = new Part[size];
             Part StartBlock = new Part(0, size);
             FreeParts.Add(StartBlock);
+            DataLength = size;
             PartAddressStack[0] = StartBlock;
         }
 
-        public int Allocate(int size)
+        public uint Allocate(uint size)
         {
             Part AllocatedPart = getFreeBlock(size);
             if (AllocatedPart.Size > size)
@@ -31,6 +32,7 @@ namespace PASM
                 Part pt = new Part(AllocatedPart.Address + size, AllocatedPart.Size - size);
                 FreeParts.Insert(0, pt);
                 PartAddressStack[pt.Address] = pt;
+                //Check if it is possible for another address to be above it, if so, set the part above's BackAddress.
 				if (pt.Address+pt.Size < PartAddressStack.Length)
                 	PartAddressStack[pt.Address+pt.Size].BackAddress = pt.Size;
                 AllocatedPart.Size = size;
@@ -43,7 +45,7 @@ namespace PASM
             return AllocatedPart.Address;
         }
 
-        private Part getFreeBlock(int requiredSize)
+        private Part getFreeBlock(uint requiredSize)
         {
             foreach (Part p in FreeParts)
                 if (p.Size >= requiredSize)
@@ -51,7 +53,7 @@ namespace PASM
             throw new MemoryException("Unable to allocate " + requiredSize + " bytes of memory to RAM, Out of memory?");
         }
 
-        public void Free(int Address)
+        public void Free(uint Address)
         {
             Part p = PartAddressStack[Address];
             p.Used = false;
@@ -60,64 +62,64 @@ namespace PASM
             Stitch(Address);
         }
 
-        private void Stitch(int currentAddress)
+        private void Stitch(uint currentAddress)
         {
             Part currentBlock = PartAddressStack[currentAddress];
-            int nextAddress = NextBlock(currentAddress);
+            uint nextAddress = NextBlock(currentAddress);
             Part nextBlock = PartAddressStack[nextAddress];
             if (!nextBlock.Used)
             {
                 currentBlock.Size += nextBlock.Size;
                 FreeParts.Remove(nextBlock);
                 PartAddressStack[nextAddress] = null;
-                PartAddressStack[currentAddress+currentBlock.Size].BackAddress = currentBlock.Size;
+                if (currentAddress + currentBlock.Size < PartAddressStack.Length)
+                    PartAddressStack[currentAddress + currentBlock.Size].BackAddress = currentBlock.Address;
             }
             if (currentAddress != 0)
             {
-                int previousAddress = PreviousBlock(currentAddress);
+                uint previousAddress = PreviousBlock(currentAddress);
                 Part previousBlock = PartAddressStack[previousAddress];
                 if (!previousBlock.Used)
                 {
                     previousBlock.Size += currentBlock.Size;
                     FreeParts.Remove(currentBlock);
                     PartAddressStack[currentAddress] = null;
-                    PartAddressStack[previousBlock.Size].BackAddress = previousBlock.Size;
+                    if (currentAddress + currentBlock.Size < PartAddressStack.Length)
+                        PartAddressStack[nextAddress].BackAddress = previousAddress;
                 }
             }
         }
 
-        private int NextBlock(int currentAddress) => PartAddressStack[PartAddressStack[currentAddress].getNextAddress()].Address;
+        private uint NextBlock(uint currentAddress) => PartAddressStack[PartAddressStack[currentAddress].getNextAddress()].Address;
 
 
         //Get the previous block location from another block
-        private int PreviousBlock(int currentAddress)
+        private uint PreviousBlock(uint currentAddress)
         {
-            Part current = PartAddressStack[currentAddress];
-            Part prevAdr = PartAddressStack[current.Address-current.BackAddress];
-            return prevAdr.Address;
+            return PartAddressStack[currentAddress].BackAddress;
         }
 
         //Writes & reads
-        public void write(byte[] data, int address)
+        public void write(byte[] data, uint address)
         {
-            for (int i = 0; i < data.Length; i++)
+            for (uint i = 0; i < data.Length; i++)
             {
                 Data[address + i] = data[i];
             }
         }
 
         //Read the data from a given address.
-        public byte[] read(int address, int size)
+        public byte[] read(uint address, uint size)
         {
             byte[] data = new byte[size];
-            for (int i = 0; i < size; i++)
+            for (uint i = 0; i < size; i++)
             {
                 data[i] = Data[address + i];
             }
             return data;
         }
         //Write the data at the address given to 0 (null)
-        public void clean(int address, int size)
+        public void clean(uint address, uint size)
         {
             write(new byte[size], address);
         }
@@ -125,12 +127,12 @@ namespace PASM
         public class Part
         {
             //13 Bytes per part
-            public int BackAddress;
+            public uint BackAddress;
             public bool Used;
-            public int Address, Size;
+            public uint Address, Size;
             
-            public int getNextAddress() => Address + Size;
-            public Part(int Address, int Size)
+            public uint getNextAddress() => Address + Size;
+            public Part(uint Address, uint Size)
             {
                 this.Address = Address;
                 this.Size = Size;

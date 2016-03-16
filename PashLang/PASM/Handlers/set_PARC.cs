@@ -24,8 +24,8 @@ namespace PASM.Handlers
         int cpy_ptr;
 
         //Ranges we want to copy with
-        int startingRange;
-        int endingRange;
+        uint startingRange;
+        uint endingRange;
 
         public set_PARC(string[] args, Engine inst) : base(inst)
         {
@@ -33,8 +33,8 @@ namespace PASM.Handlers
 
             cpy_isMethodPtr = isMethodPointer(args[3], out cpy_ptr);
 
-            startingRange = Converter.ParseStringToInt(args[4]);
-            endingRange = Converter.ParseStringToInt(args[5]);
+            startingRange = (uint)Converter.ParseStringToInt(args[4]);
+            endingRange = (uint)Converter.ParseStringToInt(args[5]);
 
         }
 

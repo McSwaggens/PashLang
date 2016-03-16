@@ -45,7 +45,7 @@ namespace PASM
         /// <param name="PASM Code"></param>
         /// <param name="Memory Size"></param>
         /// <param name="Starting Line"></param>
-        public Engine(string[] code, int memory = 1024, int startingLine = 0)
+        public Engine(string[] code, uint memory = 1024, int startingLine = 0)
         {
             Load(code);
             setMemory(memory);
@@ -58,7 +58,7 @@ namespace PASM
         /// <param name="PASM Code"></param>
         /// <param name="Memory size"></param>
         /// <param name="Starting Line"></param>
-        public Engine(string[][] code, int memory = 1024, int startingLine = 0)
+        public Engine(string[][] code, uint memory = 1024, int startingLine = 0)
         {
             foreach (string[] cf in code) Load(cf);
             setMemory(memory);
@@ -196,7 +196,7 @@ namespace PASM
         /// Sets the amount of memory the engine is allowed to use
         /// Also known as memory allocation
         /// </summary>
-        public void setMemory(int size) => memory = new Memory(size);
+        public void setMemory(uint size) => memory = new Memory(size);
 
         /// <summary>
         /// Sets the amount of memory the engine is allowed to use
@@ -317,9 +317,21 @@ namespace PASM
         /// <param name="Register"></param>
         /// <param name="Pointer"></param>
         /// <param name="Size"></param>
-        public void malloc(Register register, int ptr, int size)
+        public void malloc(Register register, int ptr, uint size)
         {
             Register.Pointer pointer = new Register.Pointer(memory.Allocate(size), size);
+            register[ptr] = pointer;
+        }
+
+        /// <summary>
+        /// Allocate memory at an address location
+        /// </summary>
+        /// <param name="Register"></param>
+        /// <param name="Pointer"></param>
+        /// <param name="Size"></param>
+        public void malloc(Register register, int ptr, int size)
+        {
+            Register.Pointer pointer = new Register.Pointer(memory.Allocate((uint)size), (uint)size);
             register[ptr] = pointer;
         }
 
@@ -485,7 +497,7 @@ namespace PASM
             if (register[ptr] == null)
             {
                 register[ptr] = new Register.Pointer();
-                malloc(register, ptr, set.Length);
+                malloc(register, ptr, (uint)set.Length);
                 memory.write(set, register[ptr].address);
             }
             else
