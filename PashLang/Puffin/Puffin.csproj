@@ -71,6 +71,7 @@
     <Compile Include="Frontend\Symbols\TypeInfo\InterfaceInformation.cs" />
     <Compile Include="Frontend\Symbols\TypeInfo\MethodInformation.cs" />
     <Compile Include="Frontend\Symbols\TypeInfo\ClassInformation.cs" />
+    <Compile Include="Frontend\Symbols\TypeInfo\ParameterInformation.cs" />
     <Compile Include="Frontend\Symbols\TypeInfo\StructInformation.cs" />
     <Compile Include="Frontend\Symbols\TypeArgumentInfo\TypeArgumentInformation.cs" />
     <Compile Include="Frontend\Symbols\VariableSymbol.cs" />
