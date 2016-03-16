@@ -14,22 +14,65 @@ namespace Puffin.Frontend.Symbols.TypeInfo
         protected object defaultValue;
         protected bool isPrimitive;
         protected bool isNullable;
-        protected EnumOperators[] validOperators;
+        protected List<EnumOperators> validOperators;
         protected ClassInformation superClass;
-        protected InterfaceInformation[] implementedInterfaces;
-        protected MethodInformation[] implementedMethods;
-        protected MethodInformation[] overridedMethods;
-        protected MethodInformation[] inheritedMethods;
-        protected FieldInformation[] definedFields;
-        protected FieldInformation[] inheritedFields;
-        protected EnumInformation[] innerEnums;
-        protected ClassInformation[] innerClasses;
-        protected StructInformation[] innerStructs;
-        protected InterfaceInformation[] innerInterfaces;
-        protected ClassTypeArgumentInformation<ClassInformation>[] classTypeArguments;
-        protected InterfaceTypeArgumentInformation<InterfaceInformation>[] interfaceTypeArguments;
-        protected StructTypeArgumentInformation<StructInformation>[] structTypeArguments;
-        protected EnumTypeArgumentInformation<EnumInformation>[] enumTypeArguments;
+        protected List<InterfaceInformation> implementedInterfaces;
+        protected List<MethodInformation> implementedMethods;
+        protected List<MethodInformation> overridedMethods;
+        protected List<MethodInformation> inheritedMethods;
+        protected List<FieldInformation> definedFields;
+        protected List<FieldInformation> inheritedFields;
+        protected List<EnumInformation> innerEnums;
+        protected List<ClassInformation> innerClasses;
+        protected List<StructInformation> innerStructs;
+        protected List<InterfaceInformation> innerInterfaces;
+        protected List<ClassTypeArgumentInformation<ClassInformation>> classTypeArguments;
+        protected List<InterfaceTypeArgumentInformation<InterfaceInformation>> interfaceTypeArguments;
+        protected List<StructTypeArgumentInformation<StructInformation>> structTypeArguments;
+        protected List<EnumTypeArgumentInformation<EnumInformation>> enumTypeArguments;
+
+        /// <summary>
+        /// Constructor for class information
+        /// </summary>
+        /// <param name="name">the name of the class </param>
+        /// <param name="defaultValue">the default value of this classes object</param>
+        /// <param name="isPrimitive"> whether this class is a primitive type</param>
+        /// <param name="isNullable"> whether this class is nullable</param>
+        public ClassInformation(string name, object defaultValue, bool isPrimitive, bool isNullable = true)
+        {
+            this.name = name;
+            this.defaultValue = defaultValue;
+            this.isPrimitive = isPrimitive;
+            this.isNullable = isNullable;
+
+            this.modifiers = new List<Modifier>();
+            this.validOperators = new List<EnumOperators>();
+            this.superClass = null;
+            this.implementedInterfaces = new List<InterfaceInformation>();
+            this.implementedMethods = new List<MethodInformation>();
+            this.overridedMethods = new List<MethodInformation>();
+            this.inheritedMethods = new List<MethodInformation>();
+            this.definedFields = new List<FieldInformation>();
+            this.inheritedFields = new List<FieldInformation>();
+            this.innerEnums = new List<EnumInformation>();
+            this.innerClasses = new List<ClassInformation>();
+            this.innerStructs = new List<StructInformation>();
+            this.innerInterfaces = new List<InterfaceInformation>();
+            this.classTypeArguments = new List<ClassTypeArgumentInformation<ClassInformation>>();
+            this.interfaceTypeArguments = new List<InterfaceTypeArgumentInformation<InterfaceInformation>>();
+            this.structTypeArguments = new List<StructTypeArgumentInformation<StructInformation>>();
+            this.enumTypeArguments = new List<EnumTypeArgumentInformation<EnumInformation>>();
+        }
+
+        /// <summary>
+        /// Returns whether this class has the specified modifier
+        /// </summary>
+        /// <param name="modifier"> the modifier</param>
+        /// <returns> true if this class has the modifier false if not </returns>
+        public bool HasModifier(Modifier modifier)
+        {
+            return Modifiers.Contains(modifier);
+        }
 
         /// <summary>
         /// Returns whether this class extends the specified type
@@ -218,7 +261,7 @@ namespace Puffin.Frontend.Symbols.TypeInfo
         /// <summary>
         /// Property for the operators which are valid for this type
         /// </summary>
-        public virtual EnumOperators[] ValidOperators
+        public virtual List<EnumOperators> ValidOperators
         {
             get { return validOperators; }
         }
@@ -234,7 +277,7 @@ namespace Puffin.Frontend.Symbols.TypeInfo
         /// <summary>
         /// Property for the interfaces that this class implements
         /// </summary>
-        public virtual InterfaceInformation[] ImplementedInterfaces
+        public virtual List<InterfaceInformation> ImplementedInterfaces
         {
             get { return implementedInterfaces; }
         }
@@ -242,7 +285,7 @@ namespace Puffin.Frontend.Symbols.TypeInfo
         /// <summary>
         /// Property for the methods this class implements
         /// </summary>
-        public virtual MethodInformation[] ImplementedMethods
+        public virtual List<MethodInformation> ImplementedMethods
         {
             get { return implementedMethods; }
         }
@@ -250,15 +293,15 @@ namespace Puffin.Frontend.Symbols.TypeInfo
         /// <summary>
         /// Property for the methods that this class overrides
         /// </summary>
-        public virtual MethodInformation[] OverridedMethods
+        public virtual List<MethodInformation> OverridedMethods
         {
             get { return overridedMethods; }
         }
 
         /// <summary>
-        /// Property for the class that this method inherits
+        /// Property for the class that this class inherits
         /// </summary>
-        public virtual MethodInformation[] InheritedMethods
+        public virtual List<MethodInformation> InheritedMethods
         {
             get { return inheritedMethods; }
         }
@@ -266,15 +309,15 @@ namespace Puffin.Frontend.Symbols.TypeInfo
         /// <summary>
         /// Property for the fields that this class defines
         /// </summary>
-        public virtual FieldInformation[] DefinedFields
+        public virtual List<FieldInformation> DefinedFields
         {
             get { return definedFields; }
         }
 
         /// <summary>
-        /// Property for the methods that this method inherits
+        /// Property for the methods that this class inherits
         /// </summary>
-        public virtual FieldInformation[] InheritedFields
+        public virtual List<FieldInformation> InheritedFields
         {
             get { return inheritedFields; }
         }
@@ -282,7 +325,7 @@ namespace Puffin.Frontend.Symbols.TypeInfo
         /// <summary>
         /// Property for the inner enums that this class defines
         /// </summary>
-        public virtual EnumInformation[] InnerEnums
+        public virtual List<EnumInformation> InnerEnums
         {
             get { return innerEnums; }
         }
@@ -290,7 +333,7 @@ namespace Puffin.Frontend.Symbols.TypeInfo
         /// <summary>
         /// Property for the inner classes that this class defines
         /// </summary>
-        public virtual ClassInformation[] InnerClasses
+        public virtual List<ClassInformation> InnerClasses
         {
             get { return innerClasses; }
         }
@@ -298,7 +341,7 @@ namespace Puffin.Frontend.Symbols.TypeInfo
         /// <summary>
         /// Property for the inner structs that this class defines
         /// </summary>
-        public virtual StructInformation[] InnerStructs
+        public virtual List<StructInformation> InnerStructs
         {
             get { return innerStructs; }
         }
@@ -306,7 +349,7 @@ namespace Puffin.Frontend.Symbols.TypeInfo
         /// <summary>
         /// Property for the inner interfaces this class defines
         /// </summary>
-        protected InterfaceInformation[] InnerInterfaces
+        protected List<InterfaceInformation> InnerInterfaces
         {
             get { return innerInterfaces; }
             set { innerInterfaces = value; }
@@ -314,7 +357,7 @@ namespace Puffin.Frontend.Symbols.TypeInfo
         /// <summary>
         /// Property for the class type arguments that this class takes
         /// </summary>
-        public virtual ClassTypeArgumentInformation<ClassInformation>[] ClassTypeArguments
+        public virtual List<ClassTypeArgumentInformation<ClassInformation>> ClassTypeArguments
         {
             get { return classTypeArguments; }
         }
@@ -322,7 +365,7 @@ namespace Puffin.Frontend.Symbols.TypeInfo
         /// <summary>
         /// Property for the interface type arguments that this class takes
         /// </summary>
-        public virtual InterfaceTypeArgumentInformation<InterfaceInformation>[] InterfaceTypeArguments
+        public virtual List<InterfaceTypeArgumentInformation<InterfaceInformation>> InterfaceTypeArguments
         {
             get { return interfaceTypeArguments; }
         }
@@ -330,7 +373,7 @@ namespace Puffin.Frontend.Symbols.TypeInfo
         /// <summary>
         /// Property for the struct type arguments that this class takes
         /// </summary>
-        public virtual StructTypeArgumentInformation<StructInformation>[] StructTypeArguments
+        public virtual List<StructTypeArgumentInformation<StructInformation>> StructTypeArguments
         {
             get { return structTypeArguments; }
         }
@@ -338,7 +381,7 @@ namespace Puffin.Frontend.Symbols.TypeInfo
         /// <summary>
         /// Property for the enum type arguments that this class takes
         /// </summary>
-        public virtual EnumTypeArgumentInformation<EnumInformation>[] EnumTypeArguments
+        public virtual List<EnumTypeArgumentInformation<EnumInformation>> EnumTypeArguments
         {
             get { return enumTypeArguments; }
         }
@@ -346,7 +389,7 @@ namespace Puffin.Frontend.Symbols.TypeInfo
         /// <summary>
         /// Property for the access modifiers that this class has
         /// </summary>
-        public virtual Modifier[] AccessModifiers
+        public virtual List<Modifier> AccessModifiers
         {
             get { return modifiers; }
         }

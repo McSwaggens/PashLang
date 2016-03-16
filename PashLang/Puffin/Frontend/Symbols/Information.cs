@@ -9,11 +9,11 @@ namespace Puffin.Frontend.Symbols
 {
     public abstract class Information
     {
-        protected Modifier[] modifiers;
+        protected List<Modifier> modifiers;
         protected string name;
         protected Scope definitionScope;
 
-        public virtual Modifier[] Modifiers
+        public virtual List<Modifier> Modifiers
         {
             get { return modifiers; }
         }
