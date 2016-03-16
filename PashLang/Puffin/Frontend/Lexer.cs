@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics.Eventing.Reader;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using Puffin.Frontend.Symbols;
 using Puffin.Frontend.Tokens;
@@ -51,7 +52,7 @@ namespace Puffin.Frontend
                 Console.ResetColor();
                 return false;
             }
-            tokenStrings = new LinkedList<string>(tokenStrings.Where(str => !string.IsNullOrWhiteSpace(str)));
+            tokenStrings = new LinkedList<string>(tokenStrings.Where(str => !Regex.IsMatch(str, @"[^\S\r\n]+") && !string.IsNullOrEmpty(str)));
             //tokenStrings = new LinkedList<string>(tokenStrings.Where(str => !str.Equals("\n") || !str.Equals("\t")));
             tokens = GenerateTokens();
             if (tokens == null)
@@ -68,7 +69,10 @@ namespace Puffin.Frontend
         {
             foreach (Token tok in tokens)
             {
-                Console.WriteLine(tok.ToString());
+                if(tok.Value.Equals("\n"))
+                    Console.WriteLine(tok.Type.ToString());
+                else
+                    Console.WriteLine(tok.ToString());
             }
         }
 
@@ -227,7 +231,7 @@ namespace Puffin.Frontend
            
             foreach (char ch in input)
             {
-                if (ch == '\t' || ch == '\0')
+                if (ch == '\t' || ch == '\0' || ch == '\r')
                 {
                     //strings.AddLast(sb.ToString());
                     //sb.Clear();
@@ -236,7 +240,7 @@ namespace Puffin.Frontend
                 
                 
                 if (ch == ' ' || ch == '(' || ch == ')' || ch == '[' || ch == ']' || ch == '{' ||
-                    ch == '}' || ch == ',' || ch == ':' || ch == ';' || ch == '\r' || ch == '\n')
+                    ch == '}' || ch == ',' || ch == ':' || ch == ';' || ch == '\n')
                 {
 
                     strings.AddLast(sb.ToString());
