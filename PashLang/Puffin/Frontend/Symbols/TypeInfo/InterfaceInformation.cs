@@ -8,5 +8,6 @@ namespace Puffin.Frontend.Symbols.TypeInfo
 {
     public class InterfaceInformation : Information
     {
+
     }
 }
