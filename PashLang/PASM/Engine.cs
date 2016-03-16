@@ -113,14 +113,25 @@ namespace PASM
             for (int i = 0; i < Code.Length; i++)
             {
                 string st = Code[i];
-                if (st.StartsWith("set"))
-                    this.Code[i] = set_Parser(st.Split(' '), st);
-                else {
-                    string[] args = st.Split(' ');
-                    string g = args[0];
-                    foreach (Type t in Handler.Handlers) if (t.Name == g) this.Code[i] = (Handler)Activator.CreateInstance(t, args, this);
-                }
+                this.Code[i] = ParseLine(st);
             }
+        }
+
+        /// <summary>
+        /// Parses the line string into a Handler
+        /// </summary>
+        /// <param name="Line"></param>
+        /// <returns></returns>
+        public Handler ParseLine(string line)
+        {
+            if (line.StartsWith("set"))
+                return set_Parser(line.Split(' '), line);
+            else {
+                string[] args = line.Split(' ');
+                string g = args[0];
+                foreach (Type t in Handler.Handlers) if (t.Name == g) return (Handler)Activator.CreateInstance(t, args, this);
+            }
+            return null;
         }
 
         /// <summary>
@@ -230,7 +241,7 @@ namespace PASM
         /// <summary>
         /// Executes the PASM script that is loaded into the engine and starts the 
         /// </summary>
-        /// <param name="startingln"></param>
+        /// <param name="Starting line"></param>
         public void Execute(int startingln)
         {
             CurrentLine = startingln;
@@ -240,7 +251,43 @@ namespace PASM
                 CurrentLine++;
             }
         }
-        
+
+        /// <summary>
+        /// Parses the currentline before it's executed.
+        /// </summary>
+        /// <param name="Code"></param>
+        public void ExecuteNoPreParse(string[] code)
+        {
+            Dictionary<int, int> points = new Dictionary<int, int>();
+            int maxPointNum = 0;
+
+            for (int i = 0; i < Code.Length; i++)
+            {
+                string st = code[i];
+                if (st.StartsWith("pt"))
+                {
+                    string[] args = code[i].Split(' ');
+                    int c = Converter.ParseStringToInt(args[1]);
+                    int point = i;
+                    points.Add(c, point);
+                    if (c > maxPointNum) maxPointNum = c;
+                }
+            }
+
+            this.points = new int[maxPointNum + 1];
+            foreach (KeyValuePair<int, int> pair in points)
+            {
+                this.points[pair.Key] = pair.Value;
+            }
+            Code = new Handler[code.Length];
+            while (CurrentLine < Code.Length)
+            {
+                if (Code[CurrentLine] == null) Code[CurrentLine] = ParseLine(code[CurrentLine]);
+                Code[CurrentLine].Execute();
+                CurrentLine++;
+            }
+        }
+
         /// <summary>
         /// Executes the current code loaded into the engine in a debug mode
         /// This "Debug mode" will throw more detailed information and allowes for break points (not currently implemented)
