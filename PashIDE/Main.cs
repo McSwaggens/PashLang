@@ -215,7 +215,7 @@ namespace PashIDE
 
             switch (cf.language)
             {
-                case Language.SnapScript:
+                case Language.PUFFIN:
                     Code.Language = FastColoredTextBoxNS.Language.Puffin;
                     break;
                 case Language.PASM:
