@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-
+using static Puffin.Logger;
 namespace Puffin.Frontend.Tokens
 {
     public class IntegerLiteralToken : Token
@@ -101,9 +101,7 @@ namespace Puffin.Frontend.Tokens
             }
             catch (DivideByZeroException ex)
             {
-                Console.ForegroundColor = ConsoleColor.Red;
-                Console.WriteLine("ERROR: You know you should never divide by zero!!!");
-                Console.ResetColor();
+                WriteError("You know you should never divide by zero!!!");
                 return null;
             }
         }

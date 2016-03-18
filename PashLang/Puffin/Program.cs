@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Puffin.Frontend;
+using static Puffin.Logger;
 
 namespace Puffin
 {
@@ -15,9 +16,7 @@ namespace Puffin
             Console.WriteLine("Puffin Compiler");
             if (args.Length < 1)
             {
-                Console.ForegroundColor = ConsoleColor.Red;
-                Console.WriteLine("Error No input file");
-                Console.ResetColor();
+                WriteError("No input file");
                 Console.ReadKey();
                 return;
             }
@@ -25,9 +24,7 @@ namespace Puffin
             Lexer lexical = new Lexer(inputString);
             if (!lexical.Start())
             {
-                Console.ForegroundColor = ConsoleColor.Red;
-                Console.WriteLine("Error occurred during lexing");
-                Console.ResetColor();
+                WriteError("Error occurred during lexing");
                 Console.ReadKey();
             }
             Console.WriteLine("Begin source input ================");

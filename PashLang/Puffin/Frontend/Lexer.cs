@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 using Puffin.Frontend.Symbols;
 using Puffin.Frontend.Symbols.TypeInfo;
 using Puffin.Frontend.Tokens;
-
+using static Puffin.Logger;
 namespace Puffin.Frontend
 {
     public class Lexer
@@ -48,9 +48,7 @@ namespace Puffin.Frontend
             tokenStrings = TokenizeInput();
             if (tokenStrings.Count == 0)
             {
-                Console.ForegroundColor = ConsoleColor.Red;
-                Console.WriteLine("An error occurred while tokenizing the input");
-                Console.ResetColor();
+                WriteError("An error occurred while tokenizing the input");
                 return false;
             }
             tokenStrings = new LinkedList<string>(tokenStrings.Where(str => !Regex.IsMatch(str, @"[^\S\r\n]+") && !string.IsNullOrEmpty(str)));
@@ -58,9 +56,7 @@ namespace Puffin.Frontend
             tokens = GenerateTokens();
             if (tokens == null)
             {
-                Console.ForegroundColor = ConsoleColor.Red;
-                Console.WriteLine("An error occurred while generating tokens");
-                Console.ResetColor();
+                WriteError("An error occured while generating tokens");
                 return false;
             }
             return true;
@@ -171,9 +167,7 @@ namespace Puffin.Frontend
                     }
                     else
                     {
-                        Console.ForegroundColor = ConsoleColor.Red;
-                        Console.WriteLine("ERROR Found Invalid Character Literal " + node.Value);
-                        Console.ResetColor();
+                        WriteError("Found Invalid Character Literal " + node.Value);
                         return null;
                     }
                 }
@@ -182,18 +176,14 @@ namespace Puffin.Frontend
                     string outstr = String.Empty;
                     if (node.Value.Length <= 1)
                     {
-                        Console.ForegroundColor = ConsoleColor.Red;
-                        Console.WriteLine("ERROR Found Stray \" in Program ");
-                        Console.ResetColor();
+                        WriteError("Found Stray \" in Program");
                         return null;
                     }
                     while (!outstr.EndsWith("\""))
                     {
                         if (node == null || (node != null && node.Value == null))
                         {
-                            Console.ForegroundColor = ConsoleColor.Red;
-                            Console.WriteLine("ERROR Found Unterminated String literal " + outstr);
-                            Console.ResetColor();
+                            WriteError("ERROR Found Unterminated String literal " + outstr);
                             return null;
                         }
                         outstr += node.Value;
@@ -228,7 +218,7 @@ namespace Puffin.Frontend
                         }
                         else
                         {
-                            Console.WriteLine("ERROR Invalid return type");
+                            WriteError("Invalid return type");
                             return null;
                         }
                     }
