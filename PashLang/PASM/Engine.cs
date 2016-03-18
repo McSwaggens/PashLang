@@ -151,7 +151,8 @@ namespace PASM
             if (args[2] == "FLOAT"  )    return new set_FLOAT    (args, this);
             if (args[2] == "DOUBLE" )    return new set_DOUBLE   (args, this);
             if (args[2] == "INT64"  )    return new st_INT64     (args, this);
-            if (args[2] == "INT16"  )    return new st_INT16     (args, this);
+            if (args[2] == "ADR"    )    return new set_ADR      (args, this);
+            if (args[2] == "VORL"   )    return new st_VORL      (args, this);
             if (args[2] == "PAR"    )    return new set_PAR      (args, this);
             if (args[2] == "PARC"   )    return new set_PAR      (args, this);
             if (args[2] == "VOR"    )    return new st_VOR       (args, this);
@@ -380,6 +381,27 @@ namespace PASM
         }
 
         /// <summary>
+        /// Write a 4 byte integer to an address
+        /// </summary>
+        /// <param name="Pointer"></param>
+        /// <param name="isMethodPointer"></param>
+        /// <param name="DataSet"></param>
+        public void set(int ptr, bool isMethodPtr, uint set) //INT32
+        {
+            Register register = isMethodPtr ? Returns.Last().register : this.register;
+            if (register[ptr] == null)
+            {
+                register[ptr] = new Register.Pointer();
+                malloc(register, ptr, 4);
+                memory.write(Converter.int32(set), register[ptr].address);
+            }
+            else
+            {
+                memory.write(Converter.int32(set), register[ptr].address);
+            }
+        }
+
+        /// <summary>
         /// Write a 4 byte float to an address
         /// </summary>
         /// <param name="Pointer"></param>
@@ -391,12 +413,12 @@ namespace PASM
             if (register[ptr] == null)
             {
                 register[ptr] = new Register.Pointer();
-                malloc(register, ptr, 8);
-                memory.write(Converter.double8(set), register[ptr].address);
+                malloc(register, ptr, 4);
+                memory.write(Converter.float4(set), register[ptr].address);
             }
             else
             {
-                memory.write(Converter.double8(set), register[ptr].address);
+                memory.write(Converter.float4(set), register[ptr].address);
             }
         }
 
@@ -407,6 +429,27 @@ namespace PASM
         /// <param name="isMethodPointer"></param>
         /// <param name="DataSet"></param>
         public void set(int ptr, bool isMethodPtr, long set) //INT64
+        {
+            Register register = isMethodPtr ? Returns.Last().register : this.register;
+            if (register[ptr] == null)
+            {
+                register[ptr] = new Register.Pointer();
+                malloc(register, ptr, 8);
+                memory.write(Converter.int64(set), register[ptr].address);
+            }
+            else
+            {
+                memory.write(Converter.int64(set), register[ptr].address);
+            }
+        }
+
+        /// <summary>
+        /// Write a 8 byte integer to an address
+        /// </summary>
+        /// <param name="Pointer"></param>
+        /// <param name="isMethodPointer"></param>
+        /// <param name="DataSet"></param>
+        public void set(int ptr, bool isMethodPtr, ulong set) //INT64
         {
             Register register = isMethodPtr ? Returns.Last().register : this.register;
             if (register[ptr] == null)
@@ -483,7 +526,6 @@ namespace PASM
                 memory.write(new byte[] { set }, register[ptr].address);
             }
         }
-
 
         /// <summary>
         /// Writes a set of data to a given address

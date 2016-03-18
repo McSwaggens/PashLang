@@ -102,7 +102,7 @@ namespace PashRuntime
                 engine.Execute();
                 sw.Stop();
             }
-        }
+        } 
 
         public static void WriteColor(string text, ConsoleColor color)
         {
