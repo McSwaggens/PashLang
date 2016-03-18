@@ -6,6 +6,7 @@ using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using Puffin.Frontend.Symbols;
+using Puffin.Frontend.Symbols.TypeInfo;
 using Puffin.Frontend.Tokens;
 
 namespace Puffin.Frontend
@@ -208,15 +209,28 @@ namespace Puffin.Frontend
                 }
                 else
                 {
-                    if (node.Next != null && node.Next.Value == ";")
+                    if (node.Next != null && node.Next.Value.Equals(";"))
                     {
                         IdentifierToken tok = new IdentifierToken(node.Value);
                         temp.AddLast(tok);
                     }
-                    else
+                    else if(node.Next != null && node.Next.Value.Equals("("))
                     {
                         IdentifierToken tok = new IdentifierToken(node.Value);
                         temp.AddLast(tok);
+                        if (node.Previous != null)
+                        {
+                            MethodSymbol<MethodInformation> function = new MethodSymbol<MethodInformation>(
+                                new MethodInformation(node.Value,
+                                new ClassInformation(node.Previous.Value,null,true,true), 
+                                new ParameterInformation[0]));
+                            Console.WriteLine(function.IdentifierName + " : " + function.ValueType.Name);
+                        }
+                        else
+                        {
+                            Console.WriteLine("ERROR Invalid return type");
+                            return null;
+                        }
                     }
                 }
                 if (node != null) node = node.Next;

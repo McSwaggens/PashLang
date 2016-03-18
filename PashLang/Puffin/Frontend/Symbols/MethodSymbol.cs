@@ -7,8 +7,23 @@ using Puffin.Frontend.Symbols.TypeInfo;
 
 namespace Puffin.Frontend.Symbols
 {
-    public class FunctionSymbol<T> : Symbol<T> where T : Information
+    public class MethodSymbol<T> : Symbol<T> where T : Information
     {
+        private MethodInformation info;
+
+        public MethodSymbol(MethodInformation info)
+        {
+            this.info = info;
+            this.identifierName = info.Name;
+            this.ValueType = info.ReturnType;
+        }
+
+        public MethodInformation Info
+        {
+            get { return info; }
+            set { info = value; }
+        }
+
         /// <summary>
         ///  Returns whether the symbol is a function
         /// </summary>

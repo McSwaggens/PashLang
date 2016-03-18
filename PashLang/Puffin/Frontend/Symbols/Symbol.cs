@@ -15,7 +15,7 @@ namespace Puffin.Frontend.Symbols
         protected EnumSymbolType identifierType;
         protected bool isConstant;
         protected bool isPointer;
-        protected new Enum type;
+        protected new Information type;
         protected new string value;
 
         /// <summary>
@@ -189,5 +189,10 @@ namespace Puffin.Frontend.Symbols
             get { return isPointer; }
         }
 
+        public Information ValueType
+        {
+            get { return type; }
+            set { type = value; }
+        }
     }
 }
