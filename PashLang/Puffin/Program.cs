@@ -36,7 +36,8 @@ namespace Puffin
            Console.WriteLine("Begin token output ================");
             lexical.PrintTokens();
             Console.WriteLine("End token output ==================");
-
+            Parser parse = new Parser(lexical);
+            parse.Start();
             Console.WriteLine("Compilation Complete");
             Console.ReadKey();
         }

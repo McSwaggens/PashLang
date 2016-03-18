@@ -97,6 +97,8 @@
     <Compile Include="Frontend\Tokens\UnsignedIntegerLiteralToken.cs" />
     <Compile Include="Frontend\Tokens\UnsignedLongLiteralToken.cs" />
     <Compile Include="Frontend\Tokens\UnsignedShortLiteralToken.cs" />
+    <Compile Include="Frontend\AST\Statement.cs"/>
+    <Compile Include="Frontend\Parser.cs"/>
     <Compile Include="Logger.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

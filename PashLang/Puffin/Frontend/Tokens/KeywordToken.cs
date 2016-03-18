@@ -8,9 +8,6 @@ namespace Puffin.Frontend.Tokens
 {
     public class KeywordToken : Token
     {
-        
-        
-
         public KeywordToken(string value)
         {
             this.value = value;
