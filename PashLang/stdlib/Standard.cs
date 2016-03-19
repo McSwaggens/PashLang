@@ -5,6 +5,11 @@ namespace stdlib
 {
 	public class Standard
 	{
+        public static byte[] test(Engine engine)
+        {
+            return Converter.int32(123);
+        }
+
 		public static void cout_num(Engine engine, byte[] m)
 		{
             object num = null;

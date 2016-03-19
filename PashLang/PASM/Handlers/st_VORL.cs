@@ -23,14 +23,17 @@ namespace PASM.Handlers
         public override void Execute()
         {
             byte[][] Params;
-            List<string> v = args.ToList();
-            v.RemoveRange(0, 5);
-            Params = new byte[v.Count][];
-            for (int i = 0; i < v.Count; i++)
+            List<string> b = args.ToList();
+            b.RemoveRange(0, 5);
+            string[] s = b.ToArray();
+            Params = new byte[s.Length][];
+            for (int i = 0; i < s.Length; i++)
             {
-                Params[i] = inst.ResolveData(v[i]);
+                Params[i] = inst.ResolveData(s[i]);
             }
-            inst.set(ptr, isMethod, inst.CallStaticMethod(args[3], args[4].Trim(':'), Params));
+            byte[] returnData = inst.CallStaticMethod(args[3], args[4], Params);
+            if (returnData != null)
+                inst.set(ptr, isMethod, returnData);
         }
     }
 }
