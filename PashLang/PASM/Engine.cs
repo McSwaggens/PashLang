@@ -724,7 +724,7 @@ namespace PASM
             Objects[0] = this;
             for (int i = 0; i < Params.Length; i++) Objects[i + 1] = Params[i];
             foreach (KeyValuePair<string, Type> i in StaticCache.Where(i => i.Key == @class))
-                return (byte[])(i.Value.GetMethod(method, BindingFlags.Static | BindingFlags.Public).Invoke(i.Value, Objects));
+                Convert.ToString(i.Value.GetMethod(method, BindingFlags.Static | BindingFlags.Public).Invoke(i.Value, Objects));
             return null;
         }
     }
