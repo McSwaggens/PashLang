@@ -13,19 +13,18 @@ namespace PASM
             ideas:
                 Memory Cleanup:
                   Make a boolean flag for manual and onsight memory cleanup
-                  Manual meaning the host of the PASM engine will trigger the cleanup stack (Stack being the cached Register)
+                  Manual meaning the host of the PASM engine will trigger the cleanup stack (Stack being the cached Raster)
                   Onsight is what we have at the moment, where the engine does cleanup at the end of every method (re)
                 
         */
 
         public int[] points;
         public Memory memory;
-        public Register register = new Register(50);
+        public Raster raster = new Raster(50);
         public  List<FunctionInstance> Returns = new List<FunctionInstance>();
 		public List<Type> ReferencedLibraries = new List<Type> ();
         private Dictionary<string, Type> StaticCache = new Dictionary<string, Type>();
-        public int RegisterSize = 60;
-
+        public int RasterSize = 60;
         public int CurrentLine = 0;
         
 		private Handler[] Code;
@@ -211,18 +210,18 @@ namespace PASM
         /// Wipes the current static register and changes it's size.
         /// </summary>
         /// <param name="Size"></param>
-        public void setStaticRegisterSize(int Size)
+        public void setStaticRasterSize(int Size)
         {
-            register = new Register(Size);
+			raster = new Raster(Size);
         }
 
         /// <summary>
         /// Sets the size for new registers that are made.
         /// </summary>
         /// <param name="Size"></param>
-        public void setNewRegisterSize(int Size)
+        public void setNewRasterSize(int Size)
         {
-
+            
         }
 
 
@@ -316,24 +315,24 @@ namespace PASM
         /// <summary>
         /// Allocate memory at an address location
         /// </summary>
-        /// <param name="Register"></param>
+        /// <param name="Raster"></param>
         /// <param name="Pointer"></param>
         /// <param name="Size"></param>
-        public void malloc(Register register, int ptr, uint size)
+        public void malloc(Raster register, int ptr, uint size)
         {
-            Register.Pointer pointer = new Register.Pointer(memory.Allocate(size), size);
+            Raster.Register pointer = new Raster.Register(memory.Allocate(size), size);
             register[ptr] = pointer;
         }
 
         /// <summary>
         /// Allocate memory at an address location
         /// </summary>
-        /// <param name="Register"></param>
+        /// <param name="Raster"></param>
         /// <param name="Pointer"></param>
         /// <param name="Size"></param>
-        public void malloc(Register register, int ptr, int size)
+        public void malloc(Raster register, int ptr, int size)
         {
-            Register.Pointer pointer = new Register.Pointer(memory.Allocate((uint)size), (uint)size);
+            Raster.Register pointer = new Raster.Register(memory.Allocate((uint)size), (uint)size);
             register[ptr] = pointer;
         }
 
@@ -345,10 +344,10 @@ namespace PASM
         /// <param name="DataSet"></param>
         public void set(int ptr, bool isMethodPtr, double set) //FLOAT
         {
-            Register register = isMethodPtr ? Returns.Last().register : this.register;
+			Raster register = isMethodPtr ? Returns.Last().register : this.raster;
             if (register[ptr] == null)
             {
-                register[ptr] = new Register.Pointer();
+                register[ptr] = new Raster.Register();
                 malloc(register, ptr, 8);
                 memory.write(Converter.double8(set), register[ptr].address);
             }
@@ -368,10 +367,10 @@ namespace PASM
         /// <param name="DataSet"></param>
         public void set(int ptr, bool isMethodPtr, int set) //INT32
         {
-            Register register = isMethodPtr ? Returns.Last().register : this.register;
+            Raster register = isMethodPtr ? Returns.Last().register : this.raster;
             if (register[ptr] == null)
             {
-                register[ptr] = new Register.Pointer();
+                register[ptr] = new Raster.Register();
                 malloc(register, ptr, 4);
                 memory.write(Converter.int32(set), register[ptr].address);
             }
@@ -389,10 +388,10 @@ namespace PASM
         /// <param name="DataSet"></param>
         public void set(int ptr, bool isMethodPtr, uint set) //INT32
         {
-            Register register = isMethodPtr ? Returns.Last().register : this.register;
+			Raster register = isMethodPtr ? Returns.Last().register : this.raster;
             if (register[ptr] == null)
             {
-                register[ptr] = new Register.Pointer();
+                register[ptr] = new Raster.Register();
                 malloc(register, ptr, 4);
                 memory.write(Converter.int32(set), register[ptr].address);
             }
@@ -410,10 +409,10 @@ namespace PASM
         /// <param name="DataSet"></param>
         public void set(int ptr, bool isMethodPtr, float set) //FLOAT
         {
-            Register register = isMethodPtr ? Returns.Last().register : this.register;
+			Raster register = isMethodPtr ? Returns.Last().register : this.raster;
             if (register[ptr] == null)
             {
-                register[ptr] = new Register.Pointer();
+                register[ptr] = new Raster.Register();
                 malloc(register, ptr, 4);
                 memory.write(Converter.float4(set), register[ptr].address);
             }
@@ -431,10 +430,10 @@ namespace PASM
         /// <param name="DataSet"></param>
         public void set(int ptr, bool isMethodPtr, long set) //INT64
         {
-            Register register = isMethodPtr ? Returns.Last().register : this.register;
+			Raster register = isMethodPtr ? Returns.Last().register : this.raster;
             if (register[ptr] == null)
             {
-                register[ptr] = new Register.Pointer();
+                register[ptr] = new Raster.Register();
                 malloc(register, ptr, 8);
                 memory.write(Converter.int64(set), register[ptr].address);
             }
@@ -452,10 +451,10 @@ namespace PASM
         /// <param name="DataSet"></param>
         public void set(int ptr, bool isMethodPtr, ulong set) //INT64
         {
-            Register register = isMethodPtr ? Returns.Last().register : this.register;
+			Raster register = isMethodPtr ? Returns.Last().register : this.raster;
             if (register[ptr] == null)
             {
-                register[ptr] = new Register.Pointer();
+                register[ptr] = new Raster.Register();
                 malloc(register, ptr, 8);
                 memory.write(Converter.int64(set), register[ptr].address);
             }
@@ -473,10 +472,10 @@ namespace PASM
         /// <param name="DataSet"></param>
         public void set(int ptr, bool isMethodPtr, ushort set) //INT16
         {
-            Register register = isMethodPtr ? Returns.Last().register : this.register;
+			Raster register = isMethodPtr ? Returns.Last().register : this.raster;
             if (register[ptr] == null)
             {
-                register[ptr] = new Register.Pointer();
+                register[ptr] = new Raster.Register();
                 malloc(register, ptr, 2);
                 memory.write(Converter.int16(set), register[ptr].address);
             }
@@ -494,10 +493,10 @@ namespace PASM
         /// <param name="DataSet"></param>
         public void set(int ptr, bool isMethodPtr, short set) //INT16
         {
-            Register register = isMethodPtr ? Returns.Last().register : this.register;
+			Raster register = isMethodPtr ? Returns.Last().register : this.raster;
             if (register[ptr] == null)
             {
-                register[ptr] = new Register.Pointer();
+                register[ptr] = new Raster.Register();
                 malloc(register, ptr, 2);
                 memory.write(Converter.int16(set), register[ptr].address);
             }
@@ -515,10 +514,10 @@ namespace PASM
         /// <param name="DataSet"></param>
         public void set(int ptr, bool isMethodPtr, byte set)
         {
-            Register register = isMethodPtr ? Returns.Last().register : this.register;
+			Raster register = isMethodPtr ? Returns.Last().register : this.raster;
             if (register[ptr] == null)
             {
-                register[ptr] = new Register.Pointer();
+                register[ptr] = new Raster.Register();
                 malloc(register, ptr, 1);
                 memory.write(new byte[] { set }, register[ptr].address);
             }
@@ -536,10 +535,10 @@ namespace PASM
         /// <param name="DataSet"></param>
         public void set(int ptr, bool isMethodPtr, byte[] set)
         {
-            Register register = isMethodPtr ? Returns.Last().register : this.register;
+			Raster register = isMethodPtr ? Returns.Last().register : this.raster;
             if (register[ptr] == null)
             {
-                register[ptr] = new Register.Pointer();
+                register[ptr] = new Raster.Register();
                 malloc(register, ptr, (uint)set.Length);
                 memory.write(set, register[ptr].address);
             }
@@ -553,7 +552,7 @@ namespace PASM
         /// Free an address if it's not being used by another register
         /// </summary>
         /// <param name="p"></param>
-        public void TryFreeRegister(Register.Pointer p)
+        public void TryFreeRaster(Raster.Register p)
         {
             Memory.Part part = memory.PartAddressStack[p.address];
             if (p.ReferenceCount == 0) memory.Free(part.Address);
@@ -563,7 +562,7 @@ namespace PASM
         /// Will free the registers address even if the address is being used by another register, try not to use this tho...
         /// </summary>
         /// <param name="p"></param>
-        public void ForceFreeRegister(Register.Pointer p)
+        public void ForceFreeRaster(Raster.Register p)
         {
             memory.Free(p.address);
         }
@@ -573,7 +572,7 @@ namespace PASM
         /// </summary>
         /// <param name="isMethod"></param>
         /// <returns></returns>
-        public Register GetRegister(bool isMethod) => isMethod ? Returns.Last().register : register;
+		public Raster GetRaster(bool isMethod) => isMethod ? Returns.Last().register : raster;
 
         /// <summary>
         /// Returns a 2 byte integer from a string
@@ -584,7 +583,7 @@ namespace PASM
         {
             int reg;
             bool isMethod = isMethodPointer(sptr, out reg);
-            byte[] data = memory.read(register[reg].address, 2);
+			byte[] data = memory.read(raster[reg].address, 2);
             return BitConverter.ToInt16(data, 0);
         }
 
@@ -597,7 +596,7 @@ namespace PASM
         {
             int reg;
             bool isMethod = isMethodPointer(sptr, out reg);
-            byte[] data = memory.read(register[reg].address, 4);
+			byte[] data = memory.read(raster[reg].address, 4);
             return BitConverter.ToInt32(data, 0);
         }
 
@@ -610,7 +609,7 @@ namespace PASM
         {
             int reg;
             bool isMethod = isMethodPointer(sptr, out reg);
-            Register register = isMethod ? Returns.Last().register : this.register;
+			Raster register = isMethod ? Returns.Last().register : this.raster;
             byte[] data = memory.read(register[reg].address, 8);
             return BitConverter.ToInt64(data, 0);
         }
@@ -619,11 +618,11 @@ namespace PASM
         /// Returns a 2 byte integer from a given address
         /// </summary>
         /// <param name="isMethodPtr"></param>
-        /// <param name="Register"></param>
+        /// <param name="Raster"></param>
         /// <returns></returns>
         public short ResolveINT16(bool isMethodPtr, int reg)
         {
-            Register register = isMethodPtr ? Returns.Last().register : this.register;
+			Raster register = isMethodPtr ? Returns.Last().register : this.raster;
             byte[] data = memory.read(register[reg].address, 2);
             return BitConverter.ToInt16(data, 0);
         }
@@ -632,11 +631,11 @@ namespace PASM
         /// Returns a 4 byte integer from a given address
         /// </summary>
         /// <param name="isMethodPtr"></param>
-        /// <param name="Register"></param>
+        /// <param name="Raster"></param>
         /// <returns></returns>
         public int ResolveINT32(bool isMethodPtr, int reg)
         {
-            Register register = isMethodPtr ? Returns.Last().register : this.register;
+			Raster register = isMethodPtr ? Returns.Last().register : this.raster;
             byte[] data = memory.read(register[reg].address, 4);
             return BitConverter.ToInt32(data, 0);
         }
@@ -645,11 +644,11 @@ namespace PASM
         /// Returns a 8 byte integer from a given address
         /// </summary>
         /// <param name="isMethodPtr"></param>
-        /// <param name="Register"></param>
+        /// <param name="Raster"></param>
         /// <returns></returns>
         public long ResolveINT64(bool isMethodPtr, int reg)
         {
-            Register register = isMethodPtr ? Returns.Last().register : this.register;
+			Raster register = isMethodPtr ? Returns.Last().register : this.raster;
             byte[] data = memory.read(register[reg].address, 8);
             return BitConverter.ToInt64(data, 0);
         }
@@ -663,7 +662,7 @@ namespace PASM
         {
             int reg;
             bool isMethod = isMethodPointer(sptr, out reg);
-            Register register = isMethod ? Returns.Last().register : this.register;
+			Raster register = isMethod ? Returns.Last().register : this.raster;
             byte[] data = memory.read(register[reg].address, register[reg].size);
             switch (register[reg].size)
             {
@@ -680,11 +679,11 @@ namespace PASM
         /// </summary>
         /// <param name="string"></param>
         /// <returns></returns>
-        public Register.Pointer ResolvePointer(string sptr)
+        public Raster.Register ResolvePointer(string sptr)
         {
             int reg;
             bool isMethod = isMethodPointer(sptr, out reg);
-            return isMethod ? Returns.Last().register[reg] : register[reg];
+			return isMethod ? Returns.Last().register[reg] : raster[reg];
         }
 
         /// <summary>
@@ -696,7 +695,7 @@ namespace PASM
         {
             int reg;
             bool isMethod = isMethodPointer(sptr, out reg);
-            Register register = isMethod ? Returns.Last().register : this.register;
+			Raster register = isMethod ? Returns.Last().register : this.raster;
             return memory.read(register[reg].address, register[reg].size);
         }
 
@@ -707,7 +706,7 @@ namespace PASM
         /// <returns></returns>
         public byte[] ResolveData(int ptr, bool isMethodPtr)
         {
-            Register register = isMethodPtr ? Returns.Last().register : this.register;
+			Raster register = isMethodPtr ? Returns.Last().register : this.raster;
             return memory.read(register[ptr].address, register[ptr].size);
         }
 

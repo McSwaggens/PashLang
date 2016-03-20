@@ -25,9 +25,9 @@ namespace PASM.Handlers
 
         public override void Execute()
         {
-            Register register = inst.GetRegister(set_isMethodPtr);
-            if (register[set_register] == null) register[set_register] = new Register.Pointer(address, (uint)size);
-            else inst.GetRegister(set_isMethodPtr)[set_register].address = address;
+			Raster register = inst.GetRaster(set_isMethodPtr);
+			if (register[set_register] == null) register[set_register] = new Raster.Register(address, (uint)size);
+            else inst.GetRaster(set_isMethodPtr)[set_register].address = address;
         }
     }
 }

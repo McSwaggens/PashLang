@@ -19,7 +19,7 @@ namespace PASM.Handlers
 
         public override void Execute()
         {
-            FunctionInstance func = new FunctionInstance(inst.RegisterSize);
+			FunctionInstance func = new FunctionInstance(inst.RasterSize);
             func.doesReturnValue = false;
             func.ReturnLine = inst.CurrentLine;
             inst.CurrentLine = inst.points[Converter.ParseStringToInt(args[1])];

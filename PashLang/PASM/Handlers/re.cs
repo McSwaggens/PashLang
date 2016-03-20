@@ -18,8 +18,8 @@ namespace PASM.Handlers
 
         public override void Execute()
         {
-            foreach (Register.Pointer p in inst.Returns.Last().register.Stack.Where(p => p != null))
-                inst.TryFreeRegister(p);
+			foreach (Raster.Register p in inst.Returns.Last().register.Stack.Where(p => p != null))
+				inst.TryFreeRaster(p);
             if (args.Length > 0)
             {
                 FunctionInstance func = inst.Returns.Last();
@@ -27,7 +27,7 @@ namespace PASM.Handlers
                 {
                     if (func.MethodVariable)
                         inst.Returns[inst.Returns.Count - 2].register[func.ReturnVariablePos] = inst.ResolvePointer(args[1]);
-                    else inst.register[func.ReturnVariablePos] = inst.ResolvePointer(args[1]);
+					else inst.raster[func.ReturnVariablePos] = inst.ResolvePointer(args[1]);
                 }
             }
             inst.CurrentLine = inst.Returns.Last().ReturnLine;

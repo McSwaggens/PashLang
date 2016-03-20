@@ -6,31 +6,31 @@ using System.Threading.Tasks;
 
 namespace PASM
 {
-    public class Register
+    public class Raster
     {
-        private Pointer[] pointers;
-        public Pointer[] Stack => pointers;
+        private Register[] registers;
+        public Register[] Stack => registers;
 
-        public Register(int size)
+        public Raster(int size)
         {
-            pointers = new Pointer[size];
+            registers = new Register[size];
         }
-        public Pointer this[int index] {
-            get { return pointers[index]; }
-            set { pointers[index] = value; }
+        public Register this[int index] {
+            get { return registers[index]; }
+            set { registers[index] = value; }
         }
 
-        public class Pointer
+        public class Register
         {
             public int ReferenceCount = 1;
             public uint address;
             public uint size;
-            public Pointer(uint address, uint size)
+            public Register(uint address, uint size)
             {
                 this.address = address;
                 this.size = size;
             }
-            public Pointer()
+            public Register()
             {
 
             }

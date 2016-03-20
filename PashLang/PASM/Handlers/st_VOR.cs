@@ -20,7 +20,7 @@ namespace PASM.Handlers
 
         public override void Execute()
         {
-            FunctionInstance func = new FunctionInstance(inst.RegisterSize);
+			FunctionInstance func = new FunctionInstance(inst.RasterSize);
             func.ReturnLine = inst.CurrentLine;
             if (args.Length > 3)
             {

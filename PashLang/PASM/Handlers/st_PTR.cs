@@ -20,10 +20,10 @@ namespace PASM.Handlers
         public override unsafe void Execute()
         {
             int workerPtr;
-            Register workerRegister = inst.GetRegister(isMethodPointer(working, out workerPtr));
+			Raster workerRegister = inst.GetRaster(isMethodPointer(working, out workerPtr));
 
             int setterPtr;
-            Register setterRegister = inst.GetRegister(isMethodPointer(setter, out setterPtr));
+			Raster setterRegister = inst.GetRaster(isMethodPointer(setter, out setterPtr));
 
             workerRegister[workerPtr] = setterRegister[setterPtr];
             setterRegister[setterPtr].ReferenceCount++;

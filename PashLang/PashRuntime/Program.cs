@@ -20,9 +20,12 @@ namespace PashRuntime
 
         public static void Main(string[] args)
         {
+			
 			#if DEBUG
-			args = new[] {"/Users/" + Environment.UserName + "/Documents/Pash Projects/test/main.p"};
-			Console.WriteLine("Using debug mode");
+			if (args.Length == 0){
+				args = new[] {"/Users/" + Environment.UserName + "/Documents/Scripts/PASM_test.p"};
+				Console.WriteLine("Using debug mode");
+			}
 			#endif
             if (args.Length == 0)
             {
@@ -39,7 +42,10 @@ namespace PashRuntime
 				return;
             }
             Entry(File.ReadAllLines(args[0]), args);
-            Console.ReadLine();
+            
+			#if DEBUG
+			Console.ReadLine();
+			#endif
         }
 
         public static void Entry(string[] code, string[] args)

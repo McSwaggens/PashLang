@@ -25,7 +25,7 @@ namespace PASM.Handlers
             int setterPtr;
             bool isMethodSetterPtr = isMethodPointer(setterPointer, out setterPtr);
 
-            inst.malloc(inst.GetRegister(isMethodWorkingPtr), workPtr, inst.ResolveData(setterPointer).Length);
+			inst.malloc(inst.GetRaster(isMethodWorkingPtr), workPtr, inst.ResolveData(setterPointer).Length);
         }
     }
 }

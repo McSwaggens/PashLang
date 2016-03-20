@@ -20,8 +20,8 @@ namespace PASM.Handlers
         {
             int ptr;
             bool isMethodPtr = isMethodPointer(tf, out ptr);
-            Register.Pointer pointer = isMethodPtr ? inst.Returns.Last().register.Stack[ptr] : inst.register.Stack[ptr];
-            inst.ForceFreeRegister(pointer);
+			Raster.Register pointer = isMethodPtr ? inst.Returns.Last().register.Stack[ptr] : inst.raster.Stack[ptr];
+			inst.ForceFreeRaster(pointer);
             pointer = null;
         }
     }

@@ -25,7 +25,7 @@ namespace PASM.Handlers
         {
             int ptr;
             bool isMethodPtr = isMethodPointer(ts_ptr, out ptr);
-            inst.malloc(inst.GetRegister(isMethodPtr), ptr, inst.ResolveINT32(isMethodPtr, ptr));
+			inst.malloc(inst.GetRaster(isMethodPtr), ptr, inst.ResolveINT32(isMethodPtr, ptr));
         }
     }
 }
