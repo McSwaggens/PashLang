@@ -13,5 +13,11 @@ namespace Puffin.Frontend.Symbols.Modifiers
             this.value = value;
         }
         protected EnumModifiers value;
+
+        public EnumModifiers Value
+        {
+            get { return value; }
+            set { this.value = value; }
+        }
     }
 }

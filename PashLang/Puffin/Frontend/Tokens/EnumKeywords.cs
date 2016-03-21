@@ -48,6 +48,7 @@ namespace Puffin.Frontend.Tokens
         UBYTE = 0x31,
         ULONG = 0x32,
         USHORT = 0x33,
-        EXTENDS = 0x44
+        EXTENDS = 0x44,
+        OBJECT = 0x45,
     }
 }

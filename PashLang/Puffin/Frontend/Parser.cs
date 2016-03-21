@@ -41,6 +41,7 @@ namespace Puffin.Frontend
                     
                 }
                 Statement stm = new Statement(new List<Token>(temp.ToList()), true, true);
+                stm.DefineSymbols();
                 statements.AddLast(stm);
                 node = node?.Next;
                 temp.Clear();

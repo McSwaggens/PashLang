@@ -198,12 +198,7 @@ namespace Puffin.Frontend
                 }
                 else
                 {
-                    if (node.Next != null && node.Next.Value.Equals(";"))
-                    {
-                        IdentifierToken tok = new IdentifierToken(node.Value);
-                        temp.AddLast(tok);
-                    }
-                    else if(node.Next != null && node.Next.Value.Equals("("))
+                    if (node.Next != null && node.Next.Value.Equals("("))
                     {
                         IdentifierToken tok = new IdentifierToken(node.Value);
                         temp.AddLast(tok);
@@ -220,6 +215,11 @@ namespace Puffin.Frontend
                             WriteError("Invalid return type");
                             return null;
                         }
+                    }
+                    else
+                    {
+                        IdentifierToken tok = new IdentifierToken(node.Value);
+                        temp.AddLast(tok);
                     }
                 }
                 if (node != null) node = node.Next;
