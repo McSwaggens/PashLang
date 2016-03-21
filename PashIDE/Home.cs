@@ -141,6 +141,20 @@ namespace PashIDE
         {
 
         }
+
+        private void Open_Click(object sender, EventArgs e)
+        {
+            FolderBrowserDialog dialog = new FolderBrowserDialog();
+            DialogResult result = dialog.ShowDialog();
+
+            if (result == DialogResult.OK)
+            {
+                string path = dialog.SelectedPath;
+                string name = Path.GetDirectoryName(path);
+                ProjectPreload project = new ProjectPreload(name, path);
+                OpenProject(project);
+            }
+        }
     }
     public class ProjectPreload
     {

@@ -32,12 +32,12 @@
             this.L_NoProjects = new System.Windows.Forms.Label();
             this.L_Projects = new System.Windows.Forms.Label();
             this.panel1 = new System.Windows.Forms.Panel();
+            this.Open = new Client.Components.XButton();
+            this.Create = new Client.Components.XButton();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
             this.MainPanel = new System.Windows.Forms.Panel();
             this.Loading_Title = new System.Windows.Forms.Label();
             this.pictureBox1 = new System.Windows.Forms.PictureBox();
-            this.Open = new Client.Components.XButton();
-            this.Create = new Client.Components.XButton();
             this.panel1.SuspendLayout();
             this.groupBox1.SuspendLayout();
             this.MainPanel.SuspendLayout();
@@ -76,6 +76,38 @@
             this.panel1.Name = "panel1";
             this.panel1.Size = new System.Drawing.Size(712, 87);
             this.panel1.TabIndex = 4;
+            // 
+            // Open
+            // 
+            this.Open.BackColor = System.Drawing.Color.Transparent;
+            this.Open.ButtonColor = System.Drawing.Color.FromArgb(((int)(((byte)(15)))), ((int)(((byte)(152)))), ((int)(((byte)(210)))));
+            this.Open.DisabledColor = System.Drawing.Color.LightGray;
+            this.Open.Font = new System.Drawing.Font("Corbel", 20.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.Open.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(250)))), ((int)(((byte)(250)))), ((int)(((byte)(250)))));
+            this.Open.HoverColor = System.Drawing.Color.FromArgb(((int)(((byte)(17)))), ((int)(((byte)(142)))), ((int)(((byte)(200)))));
+            this.Open.Location = new System.Drawing.Point(358, 14);
+            this.Open.Name = "Open";
+            this.Open.PressedColor = System.Drawing.Color.FromArgb(((int)(((byte)(21)))), ((int)(((byte)(74)))), ((int)(((byte)(124)))));
+            this.Open.Size = new System.Drawing.Size(338, 51);
+            this.Open.TabIndex = 1;
+            this.Open.Text = "Open Existing Project";
+            this.Open.Click += new System.EventHandler(this.Open_Click);
+            // 
+            // Create
+            // 
+            this.Create.BackColor = System.Drawing.Color.Transparent;
+            this.Create.ButtonColor = System.Drawing.Color.FromArgb(((int)(((byte)(15)))), ((int)(((byte)(152)))), ((int)(((byte)(210)))));
+            this.Create.DisabledColor = System.Drawing.Color.LightGray;
+            this.Create.Font = new System.Drawing.Font("Corbel", 20.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.Create.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(250)))), ((int)(((byte)(250)))), ((int)(((byte)(250)))));
+            this.Create.HoverColor = System.Drawing.Color.FromArgb(((int)(((byte)(17)))), ((int)(((byte)(142)))), ((int)(((byte)(200)))));
+            this.Create.Location = new System.Drawing.Point(14, 14);
+            this.Create.Name = "Create";
+            this.Create.PressedColor = System.Drawing.Color.FromArgb(((int)(((byte)(21)))), ((int)(((byte)(74)))), ((int)(((byte)(124)))));
+            this.Create.Size = new System.Drawing.Size(338, 51);
+            this.Create.TabIndex = 0;
+            this.Create.Text = "Create New Project";
+            this.Create.Click += new System.EventHandler(this.Create_Click);
             // 
             // groupBox1
             // 
@@ -120,37 +152,6 @@
             this.pictureBox1.SizeMode = System.Windows.Forms.PictureBoxSizeMode.AutoSize;
             this.pictureBox1.TabIndex = 7;
             this.pictureBox1.TabStop = false;
-            // 
-            // Open
-            // 
-            this.Open.BackColor = System.Drawing.Color.Transparent;
-            this.Open.ButtonColor = System.Drawing.Color.FromArgb(((int)(((byte)(15)))), ((int)(((byte)(152)))), ((int)(((byte)(210)))));
-            this.Open.DisabledColor = System.Drawing.Color.LightGray;
-            this.Open.Font = new System.Drawing.Font("Corbel", 20.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.Open.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(250)))), ((int)(((byte)(250)))), ((int)(((byte)(250)))));
-            this.Open.HoverColor = System.Drawing.Color.FromArgb(((int)(((byte)(17)))), ((int)(((byte)(142)))), ((int)(((byte)(200)))));
-            this.Open.Location = new System.Drawing.Point(358, 14);
-            this.Open.Name = "Open";
-            this.Open.PressedColor = System.Drawing.Color.FromArgb(((int)(((byte)(21)))), ((int)(((byte)(74)))), ((int)(((byte)(124)))));
-            this.Open.Size = new System.Drawing.Size(338, 51);
-            this.Open.TabIndex = 1;
-            this.Open.Text = "Open Existing Project";
-            // 
-            // Create
-            // 
-            this.Create.BackColor = System.Drawing.Color.Transparent;
-            this.Create.ButtonColor = System.Drawing.Color.FromArgb(((int)(((byte)(15)))), ((int)(((byte)(152)))), ((int)(((byte)(210)))));
-            this.Create.DisabledColor = System.Drawing.Color.LightGray;
-            this.Create.Font = new System.Drawing.Font("Corbel", 20.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.Create.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(250)))), ((int)(((byte)(250)))), ((int)(((byte)(250)))));
-            this.Create.HoverColor = System.Drawing.Color.FromArgb(((int)(((byte)(17)))), ((int)(((byte)(142)))), ((int)(((byte)(200)))));
-            this.Create.Location = new System.Drawing.Point(14, 14);
-            this.Create.Name = "Create";
-            this.Create.PressedColor = System.Drawing.Color.FromArgb(((int)(((byte)(21)))), ((int)(((byte)(74)))), ((int)(((byte)(124)))));
-            this.Create.Size = new System.Drawing.Size(338, 51);
-            this.Create.TabIndex = 0;
-            this.Create.Text = "Create New Project";
-            this.Create.Click += new System.EventHandler(this.Create_Click);
             // 
             // Home
             // 
