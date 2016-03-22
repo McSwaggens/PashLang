@@ -57,6 +57,8 @@ namespace Puffin.Frontend.Tokens
                     return EnumControlTokens.OPEN_BRACKET;
                 case ")":
                     return EnumControlTokens.CLOSE_BRACKET;
+                case ";":
+                    return EnumControlTokens.SEMICOLON;
                 case "\n":
                     return EnumControlTokens.NEW_LINE;
                 case "\t":

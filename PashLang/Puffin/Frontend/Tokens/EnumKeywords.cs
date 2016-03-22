@@ -8,6 +8,7 @@ namespace Puffin.Frontend.Tokens
 {
     public enum EnumKeywords
     {
+        NO_KEYWORD = -0x01,
         PUBLIC = 0x00,
         PRIVATE = 0x01,
         PROTECTED = 0x02,
@@ -50,5 +51,6 @@ namespace Puffin.Frontend.Tokens
         USHORT = 0x33,
         EXTENDS = 0x44,
         OBJECT = 0x45,
+        STRING = 0x46,
     }
 }

@@ -14,6 +14,7 @@ namespace Puffin.Frontend
     {
         private Lexer lexical;
         private LinkedList<Statement> statements; 
+        
 
         public Parser(Lexer lexical)
         {
@@ -34,14 +35,31 @@ namespace Puffin.Frontend
             while (node != null)
             {
                 LinkedList<Token> temp = new LinkedList<Token>();
-                while (node != null && !(node.Value.Value.Equals(";") || node.Value.Value.Equals("}")))
+                while (node != null && !(node.Value.Value.Equals(";") || node.Value.Value.Equals("(") || node.Value.Value.Equals(")") 
+                    || node.Value.Value.Equals(",") || node.Value.Value.Equals("}") || node.Value.Value.Equals("{")))
                 {
+                    if (node.Value.Value.Equals("\r") || node.Value.Value.Equals("\n"))
+                    {
+                        node = node.Next;
+                        continue;
+                    }
                     temp.AddLast(node.Value);
                     node = node.Next;
                     
                 }
+                if(node == null)
+                    break;
+                temp.AddLast(node?.Value);
                 Statement stm = new Statement(new List<Token>(temp.ToList()), true, true);
                 stm.DefineSymbols();
+                if (stm.StatementTokens.Count == 1 &&
+                    stm.StatementTokens[0].Type.Equals((Enum) EnumControlTokens.NEW_LINE))
+                {
+                    node = node?.Next;
+                    temp.Clear();
+                    continue;
+                }
+                    
                 statements.AddLast(stm);
                 node = node?.Next;
                 temp.Clear();

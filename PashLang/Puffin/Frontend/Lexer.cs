@@ -15,6 +15,7 @@ namespace Puffin.Frontend
         private string input;
         private LinkedList<string> tokenStrings;
         private LinkedList<Token> tokens;
+        public static readonly List<string> operators = new List<string>(new string[] { "=", "!=", "==", "+", "-", "*", "/", "++#", "++", "--#", "--", ">", "<", ">=", "<=", "&&", "&", "||", "|", "!", "~", "^", "+=", "-=", "*=", "/=", "<<", ">>", "%=", "&=", "|=", "^=", "<<=", ">>=", "?:", ".", "," });
         //private SymbolTable symbolTable;
 
         //public Lexer()
@@ -92,22 +93,7 @@ namespace Puffin.Frontend
                 float outf;
                 bool outbool;
 
-                if (Enum.TryParse<EnumKeywords>(node.Value.ToUpper(), out outk))
-                {
-                    KeywordToken tok = new KeywordToken(node.Value);
-                    temp.AddLast(tok);
-                }
-                else if (Enum.TryParse<EnumOperators>(node.Value.ToUpper(), out outo))
-                {
-                    OperatorToken tok = new OperatorToken(node.Value);
-                    temp.AddLast(tok);
-                }
-                else if (Enum.TryParse<EnumControlTokens>(node.Value.ToUpper(), out outc))
-                {
-                    ControlToken tok = new ControlToken(node.Value);
-                    temp.AddLast(tok);
-                }
-                else if (byte.TryParse(node.Value, out outb))
+                if (byte.TryParse(node.Value, out outb))
                 {
                     ByteLiteralToken tok = new ByteLiteralToken(node.Value);
                     temp.AddLast(tok);
@@ -157,6 +143,27 @@ namespace Puffin.Frontend
                     BooleanLiteralToken tok = new BooleanLiteralToken(node.Value);
                     temp.AddLast(tok);
                 }
+                else if (Enum.TryParse<EnumKeywords>(node.Value.ToUpper(), out outk))
+                {
+                    //Logger.Write(Enum.Parse(typeof(EnumKeywords),node.Value.ToUpper()).ToString());
+                    KeywordToken tok = new KeywordToken(node.Value);
+                    temp.AddLast(tok);
+                }
+                else if (Enum.TryParse<EnumOperators>(node.Value.ToUpper(), out outo))
+                {
+                    OperatorToken tok = new OperatorToken(node.Value);
+                    temp.AddLast(tok);
+                }
+                else if (ResolveOperator(node.Value.ToUpper()) != EnumOperators.NO_OPERATOR)
+                {
+                    OperatorToken tok = new OperatorToken(node.Value);
+                    temp.AddLast(tok);
+                }
+                else if (Enum.TryParse<EnumControlTokens>(node.Value.ToUpper(), out outc))
+                {
+                    ControlToken tok = new ControlToken(node.Value);
+                    temp.AddLast(tok);
+                }
                 else if ((node.Value.StartsWith("'") && node.Value.EndsWith("'")))
                 {
                     if (node.Value.Length == 3 && node.Value.Replace("'", string.Empty).Length == 1)
@@ -172,6 +179,7 @@ namespace Puffin.Frontend
                 }
                 else if (node.Value.StartsWith("\""))
                 {
+                    int times = 0;
                     string outstr = String.Empty;
                     if (node.Value.Length <= 1)
                     {
@@ -185,13 +193,25 @@ namespace Puffin.Frontend
                             WriteError("ERROR Found Unterminated String literal " + outstr);
                             return null;
                         }
+                        outstr += " ";
                         outstr += node.Value;
                         node = node.Next;
+                        times++;
                     }
+                    //outstr = outstr.Substring(0, outstr.LastIndexOf('\"') + 1);
+                    //Logger.WriteWarning(outstr);
+                    //string nextTok = outstr.Substring(outstr.LastIndexOf('\"'), outstr.Length - 1);
+                    //Logger.WriteWarning(nextTok);
+                    StringLiteralToken tok = new StringLiteralToken(outstr);
+                    temp.AddLast(tok);
+                    if (times >= 1)
+                        node = node.Previous; // if we have advanced the lexer move it back one so no tokens are skipped
+
                 }
                 else if (node.Value.Equals("{") || node.Value.Equals("}") || node.Value.Equals("[") ||
                          node.Value.Equals("]") || node.Value.Equals("(") || node.Value.Equals(")") ||
-                         node.Value.Equals("\0") || node.Value.Equals("\t") || node.Value.Equals("\n"))
+                         node.Value.Equals("\0")|| node.Value.Equals(";")|| node.Value.Equals("\t") || 
+                         node.Value.Equals("\n"))
                 {
                     ControlToken tok = new ControlToken(node.Value);
                     temp.AddLast(tok);
@@ -259,6 +279,18 @@ namespace Puffin.Frontend
             }
             strings.AddLast(sb.ToString());
             return strings;
+        }
+
+        private EnumOperators ResolveOperator(string value)
+        {
+            for (int i = 0; i < operators.Count; i++)
+            {
+                if (value.Equals(operators[i]))
+                {
+                    return (EnumOperators) i;
+                }
+            }
+            return EnumOperators.NO_OPERATOR;
         }
     }
 }

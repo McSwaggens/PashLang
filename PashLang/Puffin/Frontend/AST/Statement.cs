@@ -44,7 +44,7 @@ namespace Puffin.Frontend.AST
                       }
                     modifiers.Add(new Modifier((EnumModifiers) Enum.Parse(typeof(EnumModifiers),ty.ToString().ToUpper())));
                 }
-                else if (((int)ty >= 0x04 && (int)ty <= 0x0F) || ((int)ty >= 0x30 && (int)ty <= 0x33) || (int) ty == 0x45)
+                else if (((int)ty >= 0x04 && (int)ty <= 0x0F) || ((int)ty >= 0x30 && (int)ty <= 0x33) || (int) ty == 0x45 || (int) ty == 0x46)
                 {
                     if (typeInformation != null)
                     {
@@ -95,6 +95,9 @@ namespace Puffin.Frontend.AST
                         case EnumKeywords.OBJECT:
                             typeInformation = new ClassInformation(nameof(Object), null,true,true);
                             break;
+                        case EnumKeywords.STRING:
+                            typeInformation = new ClassInformation(nameof(String),"",true,true);
+                            break;
                         case EnumKeywords.VOID:
                             typeInformation = new StructInformation(typeof(void).ToString(),null,true,true);
                             break;
@@ -112,6 +115,31 @@ namespace Puffin.Frontend.AST
 
             //    node = node.Next;
             //}
+        }
+
+        public List<Token> StatementTokens
+        {
+            get { return statementTokens; }
+        }
+
+        public List<Modifier> Modifiers
+        {
+            get { return modifiers; }
+        }
+
+        public bool ValueStatement
+        {
+            get { return valueStatement; }
+        }
+
+        public bool IsTerminated
+        {
+            get { return isTerminated; }
+        }
+
+        public Information TypeInformation
+        {
+            get { return typeInformation; }
         }
     }
 }

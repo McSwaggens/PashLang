@@ -12,6 +12,7 @@
         TAB = 0x07,
         NULL_CHARACTER = 0x08,
         IDENTIFIER = 0x09,
+        SEMICOLON = 0x0A,
 
     }
 }

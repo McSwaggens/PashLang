@@ -14,7 +14,12 @@ namespace Puffin.Frontend.Tokens
         public OperatorToken(string value)
         {
             this.value = value;
-            this.type = ResolveType();
+            if ((this.type = ResolveType()) == null)
+            {
+                this.type = ResolveOperator();
+                if(this.type.Equals((Enum)EnumOperators.NO_OPERATOR)) 
+                    Logger.WriteError("This token is not an operator: " + this.value);
+            }
         }
 
         public override Enum Type => type;
@@ -40,6 +45,18 @@ namespace Puffin.Frontend.Tokens
         public override string ToString()
         {
             return this.value + " : " + this.type.ToString();
+        }
+
+        private EnumOperators ResolveOperator()
+        {
+            for (int i = 0; i < Lexer.operators.Count; i++)
+            {
+                if (value.Equals(Lexer.operators[i]))
+                {
+                    return (EnumOperators)i;
+                }
+            }
+            return EnumOperators.NO_OPERATOR;
         }
     }
 }
