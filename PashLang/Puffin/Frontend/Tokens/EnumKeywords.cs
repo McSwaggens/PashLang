@@ -52,5 +52,7 @@ namespace Puffin.Frontend.Tokens
         EXTENDS = 0x44,
         OBJECT = 0x45,
         STRING = 0x46,
+        OUT = 0x47,
+        REF = 0x48,
     }
 }

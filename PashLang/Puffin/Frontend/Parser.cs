@@ -2,6 +2,7 @@
 using System.CodeDom.Compiler;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.InteropServices.ComTypes;
 using System.Text;
 using System.Threading.Tasks;
 using Puffin.Frontend.AST;
@@ -124,6 +125,7 @@ namespace Puffin.Frontend
             do
             {
                 ParameterInformation parameterInformation;
+                ParameterData data = new ParameterData();
                 Information typeInformation = null;
                 EnumKeywords ty;
                 string name;
@@ -266,8 +268,13 @@ namespace Puffin.Frontend
                     {
                         name = node.Value.StatementTokens[index].Value;
                     }
-                    ArrayInformation arrayInfo = new ArrayInformation(name,typeInformation,false,(int)items,null);
-                    ArraySymbol<Information> arraySymbol = new ArraySymbol<Information>(arrayInfo);
+                    data.isOut = isOut;
+                    data.isReference = isRef;
+                    data.isPointer = isPointer;
+                    data.name = name;
+                    data.type = typeInformation;
+                    ArrayParameterInformation arrayInfo = new ArrayParameterInformation(data.name,typeInformation,data.isReference,data.isPointer,data.isOptional,data.isOut,null);
+                    ArrayParameterSymbol<Information> arraySymbol = new ArrayParameterSymbol<Information>(arrayInfo);
                     arraySymbol.IdentifierType = EnumSymbolType.ARRAY;
                     arrayInfo.DefinitionScope = currrentScope;
                     symbolTable.Symbols.Add(arraySymbol);
@@ -295,8 +302,7 @@ namespace Puffin.Frontend
                     Logger.WriteError("a symbol named: " + name + " Is already defined in this scope");
                     return null;
                 }
-                    ParameterData data = new ParameterData();
-
+                    
                 if (node.Value.StatementTokens.Count - 1 == index)
                 {
                     data.isOptional = false;

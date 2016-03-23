@@ -1,4 +1,4 @@
-public static void main(string[] args = 0, int num = 0)
+public static void main(ref string[] args = 0, out int num = 0)
 {
     int i = 0;
     string str = "Hello World";

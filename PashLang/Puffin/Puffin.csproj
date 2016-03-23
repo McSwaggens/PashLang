@@ -43,6 +43,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Frontend\Lexer.cs" />
+    <Compile Include="Frontend\Symbols\ArrayParameterSymbol.cs" />
     <Compile Include="Frontend\Symbols\ArraySymbol.cs" />
     <Compile Include="Frontend\Symbols\ClassInfo\Class.cs" />
     <Compile Include="Frontend\Symbols\ClassSymbol.cs" />
@@ -68,6 +69,7 @@
     <Compile Include="Frontend\Symbols\TypeArgumentInfo\InterfaceTypeArgumentInformation.cs" />
     <Compile Include="Frontend\Symbols\TypeArgumentInfo\StructTypeArgumentInformation.cs" />
     <Compile Include="Frontend\Symbols\TypeInfo\ArrayInformation.cs" />
+    <Compile Include="Frontend\Symbols\TypeInfo\ArrayParameterInformation.cs" />
     <Compile Include="Frontend\Symbols\TypeInfo\DataStructs\MethodData.cs" />
     <Compile Include="Frontend\Symbols\TypeInfo\DataStructs\ParameterData.cs" />
     <Compile Include="Frontend\Symbols\TypeInfo\EnumInformation.cs" />
