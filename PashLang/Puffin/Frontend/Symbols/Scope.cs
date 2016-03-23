@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Puffin.Frontend.Symbols.TypeInfo;
 
 namespace Puffin.Frontend.Symbols
 {
@@ -11,7 +12,9 @@ namespace Puffin.Frontend.Symbols
         public static readonly Scope GLOBAL_SCOPE = new Scope();
         private Scope parentScope;
         private LinkedList<Scope> childScopes;
-        private Symbol<Information> ownerSymbol; 
+        private Symbol<Information> ownerSymbol;
+        private Scope currrentScope;
+        private MethodInformation fnInfo;
 
         private Scope()
         {
@@ -31,6 +34,35 @@ namespace Puffin.Frontend.Symbols
             childScopes = new LinkedList<Scope>();
         }
 
+        public Scope(Scope currrentScope, MethodInformation fnInfo)
+        {
+            this.currrentScope = currrentScope;
+            this.fnInfo = fnInfo;
+        }
 
+        public Scope ParentScope
+        {
+            get { return parentScope; }
+        }
+
+        public LinkedList<Scope> ChildScopes
+        {
+            get { return childScopes; }
+        }
+
+        public Symbol<Information> OwnerSymbol
+        {
+            get { return ownerSymbol; }
+        }
+
+        public Scope CurrrentScope
+        {
+            get { return currrentScope; }
+        }
+
+        public MethodInformation FnInfo
+        {
+            get { return fnInfo; }
+        }
     }
 }

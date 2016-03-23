@@ -58,6 +58,7 @@
     <Compile Include="Frontend\Symbols\Modifiers\EnumModifiers.cs" />
     <Compile Include="Frontend\Symbols\Modifiers\Modifier.cs" />
     <Compile Include="Frontend\Symbols\NamespaceSymbol.cs" />
+    <Compile Include="Frontend\Symbols\ParameterSymbol.cs" />
     <Compile Include="Frontend\Symbols\Scope.cs" />
     <Compile Include="Frontend\Symbols\StructInfo\Struct.cs" />
     <Compile Include="Frontend\Symbols\StructSymbol.cs" />
@@ -66,6 +67,9 @@
     <Compile Include="Frontend\Symbols\TypeArgumentInfo\EnumTypeArgumentInformation.cs" />
     <Compile Include="Frontend\Symbols\TypeArgumentInfo\InterfaceTypeArgumentInformation.cs" />
     <Compile Include="Frontend\Symbols\TypeArgumentInfo\StructTypeArgumentInformation.cs" />
+    <Compile Include="Frontend\Symbols\TypeInfo\ArrayInformation.cs" />
+    <Compile Include="Frontend\Symbols\TypeInfo\DataStructs\MethodData.cs" />
+    <Compile Include="Frontend\Symbols\TypeInfo\DataStructs\ParameterData.cs" />
     <Compile Include="Frontend\Symbols\TypeInfo\EnumInformation.cs" />
     <Compile Include="Frontend\Symbols\TypeInfo\FieldInformation.cs" />
     <Compile Include="Frontend\Symbols\TypeInfo\InterfaceInformation.cs" />
@@ -97,8 +101,8 @@
     <Compile Include="Frontend\Tokens\UnsignedIntegerLiteralToken.cs" />
     <Compile Include="Frontend\Tokens\UnsignedLongLiteralToken.cs" />
     <Compile Include="Frontend\Tokens\UnsignedShortLiteralToken.cs" />
-    <Compile Include="Frontend\AST\Statement.cs"/>
-    <Compile Include="Frontend\Parser.cs"/>
+    <Compile Include="Frontend\AST\Statement.cs" />
+    <Compile Include="Frontend\Parser.cs" />
     <Compile Include="Logger.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -125,7 +129,6 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Backend\" />
-    <Folder Include="Frontend\AST\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

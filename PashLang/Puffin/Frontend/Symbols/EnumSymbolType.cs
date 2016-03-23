@@ -16,5 +16,6 @@ namespace Puffin.Frontend.Symbols
         FUNCTION = 0x05,
         VARIABLE = 0x06,
         ARRAY = 0x07,
+        PARAMETER = 0x08,
     }
 }

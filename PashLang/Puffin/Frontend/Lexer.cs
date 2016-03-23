@@ -67,9 +67,9 @@ namespace Puffin.Frontend
             foreach (Token tok in tokens)
             {
                 if(tok.Value.Equals("\n"))
-                    Console.WriteLine(tok.Type.ToString());
+                    Logger.WriteColor(tok.Type.ToString(),ConsoleColor.Magenta);
                 else
-                    Console.WriteLine(tok.ToString());
+                    Logger.WriteColor(tok.ToString(),ConsoleColor.Magenta);
             }
         }
 

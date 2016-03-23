@@ -12,6 +12,7 @@ namespace Puffin.Frontend.Symbols
         protected List<Modifier> modifiers;
         protected string name;
         protected Scope definitionScope;
+        protected Information type;
 
         public virtual List<Modifier> Modifiers
         {
@@ -26,6 +27,13 @@ namespace Puffin.Frontend.Symbols
         public virtual Scope DefinitionScope
         {
             get { return definitionScope; }
+            set { definitionScope = value;}
+        }
+
+        public virtual Information IdentifierType
+        {
+            get { return type; }
+            set { type = value; }
         }
     }
 }

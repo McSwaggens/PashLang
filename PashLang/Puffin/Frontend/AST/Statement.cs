@@ -117,6 +117,22 @@ namespace Puffin.Frontend.AST
             //}
         }
 
+        /// <summary>
+        /// Returns a string that represents the current object.
+        /// </summary>
+        /// <returns>
+        /// A string that represents the current object.
+        /// </returns>
+        public override string ToString()
+        {
+            string str = "Statement: ";
+            foreach (Token tok in this.statementTokens)
+            {
+                str += tok.ToString() + " ";
+            }
+            return str;
+        }
+
         public List<Token> StatementTokens
         {
             get { return statementTokens; }

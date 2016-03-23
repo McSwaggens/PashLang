@@ -9,7 +9,6 @@ namespace Puffin.Frontend.Symbols.TypeInfo
 {
     public class FieldInformation : Information
     {
-        protected Information type;
         protected Information initialValue;
         protected bool isConstant;
         protected bool isInitialised;

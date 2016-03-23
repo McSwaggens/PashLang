@@ -8,13 +8,13 @@ namespace Puffin.Frontend.Symbols.TypeInfo
 {
     public class ParameterInformation : Information
     {
-        Information type;
         bool isOptional;
         bool isReference;
         bool isPointer;
         bool isOut;
+        object defaultValue;
 
-        public ParameterInformation(string name, Information type, bool isReference, bool isPointer, bool isOptional, bool isOut)
+        public ParameterInformation(string name, Information type, bool isReference, bool isPointer, bool isOptional, bool isOut, object defaultValue = null)
         {
             this.name = name;
             this.type = type;
@@ -22,6 +22,7 @@ namespace Puffin.Frontend.Symbols.TypeInfo
             this.isPointer = isPointer;
             this.isOptional = isOptional;
             this.isOut = isOut;
+            this.defaultValue = defaultValue;
         }
 
 

@@ -3,27 +3,14 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Puffin.Frontend.Symbols.TypeInfo;
 
 namespace Puffin.Frontend.Symbols
 {
-    public class ArraySymbol<T> : Symbol<T> where T : Information
+    public class ParameterSymbol<T> : VariableSymbol<T> where T : Information
     {
-        protected T[] values;
-        protected ArrayInformation info;
+        public ParameterSymbol(T info) : base(info)
+        {
 
-        public ArraySymbol(ArrayInformation info)
-        {
-            this.info = info;
-            base.ValueType = info;
-            this.Values = (T[]) info.InitialValue;
-            this.identifierName = info.Name;
-            this.ValueType = info.IdentifierType;
-        } 
-        public T[] Values
-        {
-            get { return values; }
-            set { values = value; }
         }
 
         /// <summary>
@@ -77,7 +64,7 @@ namespace Puffin.Frontend.Symbols
         /// <returns>whether the symbol is a variable</returns>
         public override bool IsVariable()
         {
-            return false;
+            return true;
         }
 
         /// <summary>
@@ -86,7 +73,7 @@ namespace Puffin.Frontend.Symbols
         /// <returns>whether the symbol is a array</returns>
         public override bool IsArray()
         {
-            return true;
+            return false;
         }
 
         /// <summary>

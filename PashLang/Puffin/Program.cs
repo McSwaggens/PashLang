@@ -30,14 +30,25 @@ namespace Puffin
             Console.WriteLine("Begin source input ================");
             for (int i = 0; i < lexical.TokenStrings.Count; i++)
             {
-                Console.WriteLine(lexical.TokenStrings.ElementAt(i));
+                Logger.WriteColor(lexical.TokenStrings.ElementAt(i), ConsoleColor.White);
             }
             Console.WriteLine("End source input ==================");
-           Console.WriteLine("Begin token output ================");
+           Console.WriteLine("Begin token output =================");
             lexical.PrintTokens();
             Console.WriteLine("End token output ==================");
             Parser parse = new Parser(lexical);
-            parse.Start();
+            if (!parse.Start())
+            {
+                Logger.WriteError("An error occured while parsing");
+                Console.ReadKey();
+                return;
+            }
+            Console.WriteLine("Begin Statement output ===========");
+            parse.PrintStatements();
+            Console.WriteLine("End Statement output =============");
+            Console.WriteLine("Begin Symbol output ==============");
+            parse.PrintSymbols();
+            Console.WriteLine("End Symbol output ================");
             Console.WriteLine("Compilation Complete");
             Console.ReadKey();
         }

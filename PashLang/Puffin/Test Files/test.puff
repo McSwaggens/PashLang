@@ -1,15 +1,6 @@
-public static void main(string[] args, int num)
+public static void main(string[] args = 0, int num = 0)
 {
     int i = 0;
     string str = "Hello World";
-    
-    for(i = 0; i < 10; i ++)
-    {
-        int j = i;
-    }
-    
-    if(i < 10)
-    {
-        i = 10;
-    }
+    i += 1;
 }

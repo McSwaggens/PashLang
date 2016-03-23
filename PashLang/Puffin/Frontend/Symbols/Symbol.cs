@@ -66,6 +66,8 @@ namespace Puffin.Frontend.Symbols
         /// <returns>whether the two symbols are equal</returns>
         public static bool operator ==(Symbol<T> lhs, Symbol<T> rhs)
         {
+            if ((object) lhs == null && (object) rhs == null)
+                return true;
             if ((object) lhs == null || (object) rhs == null)
                 return false;
             if (lhs.Value == rhs.Value)
@@ -173,6 +175,7 @@ namespace Puffin.Frontend.Symbols
         public virtual EnumSymbolType IdentifierType
         {
             get { return identifierType; }
+            set { identifierType = value;}
         }
         /// <summary>
         /// Property for whether the symbols value is constant

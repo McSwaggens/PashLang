@@ -10,9 +10,9 @@ namespace Puffin.Frontend.Symbols.TypeInfo
     public class MethodInformation : Information
     {
         Information returnType;
-        ParameterInformation[] parameters;
+        Information[] parameters;
 
-        public MethodInformation(string name, Information returnType, ParameterInformation[] parameters)
+        public MethodInformation(string name, Information returnType, Information[] parameters)
         {
             this.name = name;
             this.parameters = parameters;
@@ -25,7 +25,7 @@ namespace Puffin.Frontend.Symbols.TypeInfo
             return this.returnType.Equals(type);
         }
 
-        public bool HasParameter(ParameterInformation parameter)
+        public bool HasParameter(Information parameter)
         {
             return parameters.Contains(parameter);
         }
@@ -40,9 +40,10 @@ namespace Puffin.Frontend.Symbols.TypeInfo
             get { return returnType; }
         }
 
-        public ParameterInformation[] Parameters
+        public Information[] Parameters
         {
             get { return parameters; }
+            set { parameters = value;}
         }
     }
 }
