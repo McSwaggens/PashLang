@@ -122,7 +122,7 @@ namespace PASM
         /// </summary>
         /// <param name="Line"></param>
         /// <returns></returns>
-        public Handler ParseLine(string line)
+        private Handler ParseLine(string line)
         {
             if (line.StartsWith("set"))
                 return set_Parser(line.Split(' '), line);
@@ -142,23 +142,24 @@ namespace PASM
         /// <returns></returns>
         private Handler set_Parser(string[] args, string ln)
         {
-            if (args[2] == "SINT16" )    return new set_SINT16   (args, this);
-            if (args[2] == "SINT32" )    return new set_SINT32   (args, this);
-            if (args[2] == "SINT64" )    return new set_SINT64   (args, this);
-            if (args[2] == "QMATH"  )    return new st_QMATH     (args, this);
-            if (args[2] == "INT32"  )    return new st_INT32     (args, this);
-            if (args[2] == "BYTE"   )    return new st_INT64     (args, this);
-            if (args[2] == "FLOAT"  )    return new set_FLOAT    (args, this);
-            if (args[2] == "DOUBLE" )    return new set_DOUBLE   (args, this);
-            if (args[2] == "INT64"  )    return new st_INT64     (args, this);
-            if (args[2] == "ADR"    )    return new set_ADR      (args, this);
-            if (args[2] == "VORL"   )    return new st_VORL      (args, this);
-            if (args[2] == "PAR"    )    return new set_PAR      (args, this);
-            if (args[2] == "PARC"   )    return new set_PAR      (args, this);
-            if (args[2] == "VOR"    )    return new st_VOR       (args, this);
-            if (args[2] == "VOP"    )    return new st_VOP       (args, this);
-            if (args[2] == "PTR"    )    return new st_PTR       (args, this);
-            if (args[2] == "VORL"   )    return new st_VORL      (args, this);
+            if (args[2] == "SINT16" )   return new set_SINT16   (args, this);
+            if (args[2] == "SINT32" )   return new set_SINT32   (args, this);
+            if (args[2] == "SINT64" )   return new set_SINT64   (args, this);
+            if (args[2] == "QMATH"  )   return new st_QMATH     (args, this);
+            if (args[2] == "INT32"  )   return new st_INT32     (args, this);
+            if (args[2] == "BYTE"   )   return new st_INT64     (args, this);
+            if (args[2] == "FLOAT"  )   return new set_FLOAT    (args, this);
+            if (args[2] == "DOUBLE" )   return new set_DOUBLE   (args, this);
+            if (args[2] == "INT64"  )   return new st_INT64     (args, this);
+            if (args[2] == "IP"     )   return new set_IP       (args, this);
+            if (args[2] == "ADR"    )   return new set_ADR      (args, this);
+            if (args[2] == "VORL"   )   return new st_VORL      (args, this);
+            if (args[2] == "PAR"    )   return new set_PAR      (args, this);
+            if (args[2] == "PARC"   )   return new set_PAR      (args, this);
+            if (args[2] == "VOR"    )   return new st_VOR       (args, this);
+            if (args[2] == "VOP"    )   return new st_VOP       (args, this);
+            if (args[2] == "PTR"    )   return new st_PTR       (args, this);
+            if (args[2] == "VORL"   )   return new st_VORL      (args, this);
             throw new PException("Unknown set extension " + args[2]);
         }
 
