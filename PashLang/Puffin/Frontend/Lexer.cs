@@ -165,9 +165,21 @@ namespace Puffin.Frontend
                 }
                 else if (node.Value.StartsWith("//"))
                 {
-                    while (!node.Value.Equals("\n"))
+                    while (node != null && !node.Value.Equals("\n"))
                     {
                         node = node.Next;
+                    }
+                }
+                else if (node.Value.StartsWith("/*"))
+                {
+                    while (node != null && !node.Value.EndsWith("*/"))
+                    {
+                        node = node.Next;
+                    }
+                    if (node == null)
+                    {
+                        Logger.WriteError("Unterminated block comment");
+                        return null;
                     }
                 }
                 else if ((node.Value.StartsWith("'") && node.Value.EndsWith("'")))

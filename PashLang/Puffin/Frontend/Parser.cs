@@ -136,6 +136,13 @@ namespace Puffin.Frontend
                         }
                     }
                     else if (node.Value.StatementTokens.Last().Value.Equals("(") &&
+                             (node.Value.StatementTokens.Count == 2 ||
+                              node.Value.StatementTokens.ElementAt(count - 3) is OperatorToken || 
+                              node.Value.StatementTokens.ElementAt(count - 4) is IdentifierToken)) // We have found a function call
+                    {
+                        Logger.WriteWarning("Found Function call");
+                    } 
+                    else if (node.Value.StatementTokens.Last().Value.Equals("(") &&
                              !(node.Value.StatementTokens.ElementAt(count - 2) is OperatorToken))
                         // we have found a function definition
                     {
@@ -144,7 +151,11 @@ namespace Puffin.Frontend
                             return false;
                         symbolTable.Symbols.Add(sym);
                     }
-
+                    else if (node.Value.StatementTokens.Count == 1 &&
+                             node.Value.StatementTokens.First().Value.Equals("}")) // We have found end of a scope
+                    {
+                        currrentScope = currrentScope.ParentScope;
+                    }
                     node = node.Next;
                 }
                 catch (NullReferenceException ex)
@@ -158,6 +169,11 @@ namespace Puffin.Frontend
                     node = node.Next;
                     continue;
                 }
+            }
+            if (currrentScope != Scope.GLOBAL_SCOPE)
+            {
+                Logger.WriteError("Missing }");
+                return false;
             }
             return true;
         }
@@ -415,10 +431,22 @@ namespace Puffin.Frontend
             data.returnType = node.Value.TypeInformation;
             data.parameters = ParseParameters(node);
             if (data.parameters == null)
-                Logger.WriteWarning("function has no parameters");
+            {
+                //Logger.WriteWarning("function has no parameters");
+                MethodInformation functionInfo = new MethodInformation(data.name, data.returnType,new Information[0]);
+                functionInfo.DefinitionScope = currrentScope;
+                currrentScope = new Scope(currrentScope, functionInfo);
+                functionInfo.Modifiers = node.Value.Modifiers;
+                MethodSymbol<Information> functionSymbol = new MethodSymbol<Information>(functionInfo);
+                functionSymbol.IdentifierType = EnumSymbolType.FUNCTION;
+                return functionSymbol;
+
+            }
             MethodInformation fnInfo = new MethodInformation(data.name,data.returnType,null);
+            fnInfo.DefinitionScope = currrentScope;
             currrentScope = new Scope(currrentScope,fnInfo);
             fnInfo.Parameters = data.parameters.ToArray();
+            fnInfo.Modifiers = node.Value.Modifiers;
             MethodSymbol<Information> fnSymbol = new MethodSymbol<Information>(fnInfo);
             fnSymbol.IdentifierType = EnumSymbolType.FUNCTION;
             //currrentScope = currrentScope.ParentScope; // TODO Move this to where we find a statement containing only '}'

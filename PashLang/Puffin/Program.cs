@@ -23,6 +23,7 @@ namespace Puffin
             {
                 WriteError("Error occurred during lexing");
                 Console.ReadKey();
+                return;
             }
             Console.WriteLine("Begin source input ================");
             for (int i = 0; i < lexical.TokenStrings.Count; i++)

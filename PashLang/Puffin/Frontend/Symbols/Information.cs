@@ -13,6 +13,7 @@ namespace Puffin.Frontend.Symbols
         public virtual List<Modifier> Modifiers
         {
             get { return modifiers; }
+            set { modifiers = value;}
         }
 
         public virtual string Name

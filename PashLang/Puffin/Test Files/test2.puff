@@ -14,4 +14,12 @@ public static void main(string[] args, int num1 = 0, long num2 = 0L)
         int k = 0;
         i = 10;
     }
+    int poo = test();
 }
+
+/* Test Block comment */
+
+public static void test()
+{
+    int testvar = 0;
+} 
