@@ -2,7 +2,8 @@ public static void main(string[] args, int num1 = 0, long num2 = 0L)
 {
     string str = "Hello World";
     int i = 0;
-    
+    //string str = "DEAD";
+
     for(i = 0; i < 10; i ++)
     {
         int j = i;

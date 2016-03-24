@@ -2,13 +2,13 @@
 {
     public class VariableSymbol<T> : Symbol<T> where T : Information
     {
-        private T info;
         public VariableSymbol(T info)
         {
-            this.info = info;
+            this.type = info;
             this.identifierName = info.Name;
-            this.ValueType = info.IdentifierType;
-        } 
+            this.ValueType = info;
+        }
+
         /// <summary>
         ///  Returns whether the symbol is a function
         /// </summary>
@@ -79,6 +79,11 @@
         public override bool isNamespace()
         {
             return false;
+        }
+
+        public Information TypeInfo
+        {
+            get { return type; }
         }
     }
 }

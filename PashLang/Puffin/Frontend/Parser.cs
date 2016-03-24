@@ -85,6 +85,11 @@ namespace Puffin.Frontend
                         // we have found a variable local or global
                     {
                         Symbol<Information> sym = ParseVariable(node);
+                        if (sym == null)
+                        {
+                            Logger.WriteError("Invalid variable declaration");
+                            return false;
+                        }
                         symbolTable.Symbols.Add(sym);
                     }
                     else if (node.Value.StatementTokens.Last().Value.Equals("(") &&
@@ -191,6 +196,11 @@ namespace Puffin.Frontend
                     return null;
                 }
                 data.initialvalue = (object) node.Value.StatementTokens.ElementAt(node.Value.Modifiers.Count + 3);
+            }
+            if (isDefinedInScope(data.name))
+            {
+                Logger.WriteError("Variable " + data.name + " is already defined in this scope");
+                return null;
             }
             VariableInformation info = new VariableInformation(data.name, data.type, data.isConstant, data.isPointer, data.initialvalue);
             info.DefinitionScope = currrentScope;
@@ -345,6 +355,14 @@ namespace Puffin.Frontend
                         return true;
                     case EnumOperators.MODULO_ASSIGNMENT:
                         return true;
+                    case EnumOperators.INCREMENT_POSTFIX:
+                        return true;
+                    case EnumOperators.INCREMENT_PREFIX:
+                        return true;
+                    case EnumOperators.DECREMENT_POSTFIX:
+                        return true;
+                    case EnumOperators.DECREMENT_PREFIX:
+                        return true;
                     default:
                         continue;
                 }
@@ -397,10 +415,7 @@ namespace Puffin.Frontend
             data.returnType = node.Value.TypeInformation;
             data.parameters = ParseParameters(node);
             if (data.parameters == null)
-            {
-                Logger.WriteError("There was an error parsing parameters");
-                return null;
-            }
+                Logger.WriteWarning("function has no parameters");
             MethodInformation fnInfo = new MethodInformation(data.name,data.returnType,null);
             currrentScope = new Scope(currrentScope,fnInfo);
             fnInfo.Parameters = data.parameters.ToArray();
