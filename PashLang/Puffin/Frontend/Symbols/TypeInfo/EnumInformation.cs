@@ -1,10 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
 using Puffin.Frontend.Symbols.Modifiers;
-using Puffin.Frontend.Symbols.TypeArgumentInfo;
 
 namespace Puffin.Frontend.Symbols.TypeInfo
 {

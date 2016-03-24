@@ -1,15 +1,6 @@
 ﻿using System;
-using System.CodeDom;
-using System.CodeDom.Compiler;
 using System.Collections.Generic;
 using System.Linq;
-using System.Linq.Expressions;
-using System.Net.Http.Headers;
-using System.Runtime.InteropServices.ComTypes;
-using System.Runtime.Remoting.Messaging;
-using System.Text;
-using System.Threading.Tasks;
-using System.Xml.Linq;
 using Puffin.Frontend.AST;
 using Puffin.Frontend.Symbols;
 using Puffin.Frontend.Symbols.Modifiers;
@@ -97,7 +88,7 @@ namespace Puffin.Frontend
                         symbolTable.Symbols.Add(sym);
                     }
                     else if (node.Value.StatementTokens.Last().Value.Equals("(") &&
-                        node.Value.StatementTokens.ElementAt(count - 2).Type.Equals((Enum) EnumKeywords.FOR))
+                             node.Value.StatementTokens.ElementAt(count - 2).Type.Equals((Enum) EnumKeywords.FOR))
                         // we have found a for loop
                     {
                         node = node.Next;
@@ -129,8 +120,8 @@ namespace Puffin.Frontend
                             return false;
                         }
                     }
-                    else if(node.Value.StatementTokens.Last().Value.Equals("(") &&
-                            node.Value.StatementTokens.ElementAt(count - 2).Type.Equals((Enum)EnumKeywords.IF))
+                    else if (node.Value.StatementTokens.Last().Value.Equals("(") &&
+                             node.Value.StatementTokens.ElementAt(count - 2).Type.Equals((Enum) EnumKeywords.IF))
                     {
                         node = node.Next;
                         if (!ParseIf(node))
@@ -151,7 +142,13 @@ namespace Puffin.Frontend
 
                     node = node.Next;
                 }
-                catch (Exception ex)
+                catch (NullReferenceException ex)
+                {
+                    Logger.WriteError("Critical " + ex.StackTrace);
+                    node = node.Next;
+                    continue;
+                }
+                catch (IndexOutOfRangeException ex2)
                 {
                     node = node.Next;
                     continue;
@@ -162,7 +159,7 @@ namespace Puffin.Frontend
 
         private bool ParseIf(LinkedListNode<Statement> node)
         {
-            Symbol<Information> counterSymbol = new VariableSymbol<Information>(null);
+            Symbol<Information> counterSymbol = new VariableSymbol<Information>(new StructInformation("if",null,true,true));
             Scope ifScope = new Scope(currrentScope, counterSymbol);
             currrentScope = ifScope;
             if (!ParseBoolean(node))
@@ -196,6 +193,7 @@ namespace Puffin.Frontend
                 data.initialvalue = (object) node.Value.StatementTokens.ElementAt(node.Value.Modifiers.Count + 3);
             }
             VariableInformation info = new VariableInformation(data.name, data.type, data.isConstant, data.isPointer, data.initialvalue);
+            info.DefinitionScope = currrentScope;
             VariableSymbol<Information> sym = new VariableSymbol<Information>(info);
             sym.IdentifierType = EnumSymbolType.VARIABLE;
             return sym; //temp
@@ -265,7 +263,7 @@ namespace Puffin.Frontend
 
         private bool ParseFor(LinkedListNode<Statement> counter, LinkedListNode<Statement> condition, LinkedListNode<Statement> iterator)
         {
-            Symbol<Information> counterSymbol = new VariableSymbol<Information>(null);
+            Symbol<Information> counterSymbol = new VariableSymbol<Information>(new StructInformation("if", null, true, true));
             Scope forScope = new Scope(currrentScope,counterSymbol);
             currrentScope = forScope;
             if (ParseType(counter.Value.StatementTokens.First().Type))
@@ -279,9 +277,9 @@ namespace Puffin.Frontend
             }
             else
             {
-                if (!isDefinedInScope(counter.Value.StatementTokens.ElementAt(1).Value))
+                if (!isDefinedInScope(counter.Value.StatementTokens.First().Value))
                 {
-                    Logger.WriteError("Variable " + counter.Value.StatementTokens.ElementAt(1).Value + " is undefined in this scope");
+                    Logger.WriteError("Variable " + counter.Value.StatementTokens.First().Value + " is undefined in this scope");
                     return false;
                 }
             }
@@ -408,7 +406,7 @@ namespace Puffin.Frontend
             fnInfo.Parameters = data.parameters.ToArray();
             MethodSymbol<Information> fnSymbol = new MethodSymbol<Information>(fnInfo);
             fnSymbol.IdentifierType = EnumSymbolType.FUNCTION;
-            currrentScope = currrentScope.ParentScope; // TODO Move this to where we find a statement containing only '}'
+            //currrentScope = currrentScope.ParentScope; // TODO Move this to where we find a statement containing only '}'
             return fnSymbol;
         }
 
@@ -636,7 +634,7 @@ namespace Puffin.Frontend
             while (temp != null)
             {
                 if (symbolTable.Symbols.Any(
-                        x => x.ValueType.Name.Equals(name) && x.ValueType.DefinitionScope.Equals(temp)))
+                        x => x.IdentifierName.Equals(name) && x.ValueType.DefinitionScope.Equals(temp)))
                     return true;
                 temp = temp.ParentScope;
             }

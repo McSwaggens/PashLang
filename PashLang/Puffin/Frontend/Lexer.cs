@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
-using System.Threading.Tasks;
 using Puffin.Frontend.Symbols;
 using Puffin.Frontend.Symbols.TypeInfo;
 using Puffin.Frontend.Tokens;

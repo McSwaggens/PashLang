@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Puffin.Frontend.AST;
+﻿using Puffin.Frontend.AST;
 
 namespace Puffin.Frontend.Symbols.TypeInfo
 {

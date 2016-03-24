@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Puffin.Frontend.Symbols
+﻿namespace Puffin.Frontend.Symbols
 {
     public class ParameterSymbol<T> : VariableSymbol<T> where T : Information
     {
