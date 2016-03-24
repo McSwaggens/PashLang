@@ -9,7 +9,7 @@ namespace Puffin.Frontend.Symbols
 {
     public class ArrayParameterSymbol<T> : ParameterSymbol<T> where T : Information
     {
-        protected new ArrayParameterInformation info;
+        protected ArrayParameterInformation info;
         public ArrayParameterSymbol(T info) : base(info)
         {
             

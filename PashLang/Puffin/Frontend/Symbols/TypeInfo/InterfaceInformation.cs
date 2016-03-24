@@ -15,8 +15,8 @@ namespace Puffin.Frontend.Symbols.TypeInfo
         protected bool isPrimitive;
         protected bool isNullable;
         protected List<InterfaceInformation> extendedInterfaces;
-        protected List<FieldInformation> definedFields;
-        protected List<FieldInformation> inheritedFields;
+        protected List<VariableInformation> definedFields;
+        protected List<VariableInformation> inheritedFields;
         protected List<MethodInformation> definedMethods;
         protected List<MethodInformation> inheritedMethods;
         protected List<ClassTypeArgumentInformation<ClassInformation>> classTypeArguments;
@@ -40,8 +40,8 @@ namespace Puffin.Frontend.Symbols.TypeInfo
 
             this.modifiers = new List<Modifier>();
             this.inheritedMethods = new List<MethodInformation>();
-            this.definedFields = new List<FieldInformation>();
-            this.inheritedFields = new List<FieldInformation>();
+            this.definedFields = new List<VariableInformation>();
+            this.inheritedFields = new List<VariableInformation>();
             this.classTypeArguments = new List<ClassTypeArgumentInformation<ClassInformation>>();
             this.interfaceTypeArguments = new List<InterfaceTypeArgumentInformation<InterfaceInformation>>();
             this.structTypeArguments = new List<StructTypeArgumentInformation<StructInformation>>();
@@ -73,7 +73,7 @@ namespace Puffin.Frontend.Symbols.TypeInfo
         /// </summary>
         /// <param name="fieldInfo"> the field</param>
         /// <returns>true if this interface defines the field false if not</returns>
-        public bool DefinesField(FieldInformation fieldInfo)
+        public bool DefinesField(VariableInformation fieldInfo)
         {
             return DefinedFields.Contains(fieldInfo);
         }
@@ -83,7 +83,7 @@ namespace Puffin.Frontend.Symbols.TypeInfo
         /// </summary>
         /// <param name="fieldInfo"> the field</param>
         /// <returns>true if this interface inherits the field false if not</returns>
-        public bool InheritsField(FieldInformation fieldInfo)
+        public bool InheritsField(VariableInformation fieldInfo)
         {
             return InheritedFields.Contains(fieldInfo);
         }
@@ -162,7 +162,7 @@ namespace Puffin.Frontend.Symbols.TypeInfo
         /// <summary>
         /// Property for the fields that this interface defines
         /// </summary>
-        public virtual List<FieldInformation> DefinedFields
+        public virtual List<VariableInformation> DefinedFields
         {
             get { return definedFields; }
         }
@@ -170,7 +170,7 @@ namespace Puffin.Frontend.Symbols.TypeInfo
         /// <summary>
         /// Property for the methods that this method inherits
         /// </summary>
-        public virtual List<FieldInformation> InheritedFields
+        public virtual List<VariableInformation> InheritedFields
         {
             get { return inheritedFields; }
         }

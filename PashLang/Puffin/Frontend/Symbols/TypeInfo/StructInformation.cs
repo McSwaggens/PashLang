@@ -12,7 +12,7 @@ namespace Puffin.Frontend.Symbols.TypeInfo
         protected object defaultValue;
         protected bool isPrimitive;
         protected bool isNullable;
-        protected List<FieldInformation> definedFields;
+        protected List<VariableInformation> definedFields;
 
         /// <summary>
         /// Constructor for struct information
@@ -29,7 +29,7 @@ namespace Puffin.Frontend.Symbols.TypeInfo
             this.isNullable = isNullable;
 
             this.modifiers = new List<Modifier>();
-            this.definedFields = new List<FieldInformation>();
+            this.definedFields = new List<VariableInformation>();
         }
 
         /// <summary>
@@ -59,7 +59,7 @@ namespace Puffin.Frontend.Symbols.TypeInfo
         /// <summary>
         /// Property for this structs defined fields
         /// </summary>
-        public virtual List<FieldInformation> DefinedFields
+        public virtual List<VariableInformation> DefinedFields
         {
             get { return definedFields; }
         }

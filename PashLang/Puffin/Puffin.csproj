@@ -50,7 +50,7 @@
     <Compile Include="Frontend\Symbols\EnumInfo\Enum.cs" />
     <Compile Include="Frontend\Symbols\EnumSymbol.cs" />
     <Compile Include="Frontend\Symbols\EnumSymbolType.cs" />
-    <Compile Include="Frontend\Symbols\FieldInfo\Field.cs" />
+    <Compile Include="Frontend\Symbols\VariableInfo\Variable.cs" />
     <Compile Include="Frontend\Symbols\MethodSymbol.cs" />
     <Compile Include="Frontend\Symbols\Information.cs" />
     <Compile Include="Frontend\Symbols\InterafceSymbol.cs" />
@@ -72,8 +72,10 @@
     <Compile Include="Frontend\Symbols\TypeInfo\ArrayParameterInformation.cs" />
     <Compile Include="Frontend\Symbols\TypeInfo\DataStructs\MethodData.cs" />
     <Compile Include="Frontend\Symbols\TypeInfo\DataStructs\ParameterData.cs" />
+    <Compile Include="Frontend\Symbols\TypeInfo\DataStructs\VariableData.cs" />
     <Compile Include="Frontend\Symbols\TypeInfo\EnumInformation.cs" />
-    <Compile Include="Frontend\Symbols\TypeInfo\FieldInformation.cs" />
+    <Compile Include="Frontend\Symbols\TypeInfo\VariableInformation.cs" />
+    <Compile Include="Frontend\Symbols\TypeInfo\ForInformation.cs" />
     <Compile Include="Frontend\Symbols\TypeInfo\InterfaceInformation.cs" />
     <Compile Include="Frontend\Symbols\TypeInfo\MethodInformation.cs" />
     <Compile Include="Frontend\Symbols\TypeInfo\ClassInformation.cs" />

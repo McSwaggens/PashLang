@@ -164,6 +164,13 @@ namespace Puffin.Frontend
                     ControlToken tok = new ControlToken(node.Value);
                     temp.AddLast(tok);
                 }
+                else if (node.Value.StartsWith("//"))
+                {
+                    while (!node.Value.Equals("\n"))
+                    {
+                        node = node.Next;
+                    }
+                }
                 else if ((node.Value.StartsWith("'") && node.Value.EndsWith("'")))
                 {
                     if (node.Value.Length == 3 && node.Value.Replace("'", string.Empty).Length == 1)

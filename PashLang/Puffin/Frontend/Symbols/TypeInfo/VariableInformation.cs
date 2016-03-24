@@ -7,13 +7,14 @@ using Puffin.Frontend.Symbols.Modifiers;
 
 namespace Puffin.Frontend.Symbols.TypeInfo
 {
-    public class FieldInformation : Information
+    public class VariableInformation : Information
     {
-        protected Information initialValue;
+        protected object initialValue;
         protected bool isConstant;
         protected bool isInitialised;
+        protected bool isPointer;
 
-        public FieldInformation(string name, Information type, bool isConstant, Information initialvalue = null)
+        public VariableInformation(string name, Information type, bool isConstant, bool isPointer, object initialvalue = null)
         {
             this.name = name;
             this.type = type;

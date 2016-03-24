@@ -20,8 +20,8 @@ namespace Puffin.Frontend.Symbols.TypeInfo
         protected List<MethodInformation> implementedMethods;
         protected List<MethodInformation> overridedMethods;
         protected List<MethodInformation> inheritedMethods;
-        protected List<FieldInformation> definedFields;
-        protected List<FieldInformation> inheritedFields;
+        protected List<VariableInformation> definedFields;
+        protected List<VariableInformation> inheritedFields;
         protected List<EnumInformation> innerEnums;
         protected List<ClassInformation> innerClasses;
         protected List<StructInformation> innerStructs;
@@ -52,8 +52,8 @@ namespace Puffin.Frontend.Symbols.TypeInfo
             this.implementedMethods = new List<MethodInformation>();
             this.overridedMethods = new List<MethodInformation>();
             this.inheritedMethods = new List<MethodInformation>();
-            this.definedFields = new List<FieldInformation>();
-            this.inheritedFields = new List<FieldInformation>();
+            this.definedFields = new List<VariableInformation>();
+            this.inheritedFields = new List<VariableInformation>();
             this.innerEnums = new List<EnumInformation>();
             this.innerClasses = new List<ClassInformation>();
             this.innerStructs = new List<StructInformation>();
@@ -139,7 +139,7 @@ namespace Puffin.Frontend.Symbols.TypeInfo
         /// </summary>
         /// <param name="fieldInfo"> the field</param>
         /// <returns>true if this class defines the field false if not</returns>
-        public bool DefinesField(FieldInformation fieldInfo)
+        public bool DefinesField(VariableInformation fieldInfo)
         {
             return DefinedFields.Contains(fieldInfo);
         }
@@ -149,7 +149,7 @@ namespace Puffin.Frontend.Symbols.TypeInfo
         /// </summary>
         /// <param name="fieldInfo"> the field</param>
         /// <returns>true if this class inherits the field false if not</returns>
-        public bool InheritsField(FieldInformation fieldInfo)
+        public bool InheritsField(VariableInformation fieldInfo)
         {
             return InheritedFields.Contains(fieldInfo);
         }
@@ -309,7 +309,7 @@ namespace Puffin.Frontend.Symbols.TypeInfo
         /// <summary>
         /// Property for the fields that this class defines
         /// </summary>
-        public virtual List<FieldInformation> DefinedFields
+        public virtual List<VariableInformation> DefinedFields
         {
             get { return definedFields; }
         }
@@ -317,7 +317,7 @@ namespace Puffin.Frontend.Symbols.TypeInfo
         /// <summary>
         /// Property for the methods that this class inherits
         /// </summary>
-        public virtual List<FieldInformation> InheritedFields
+        public virtual List<VariableInformation> InheritedFields
         {
             get { return inheritedFields; }
         }

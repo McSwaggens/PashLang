@@ -8,9 +8,6 @@ namespace Puffin.Frontend.Tokens
 {
     public class StringLiteralToken : Token
     {
-        
-        
-
         public StringLiteralToken(string value)
         {
             this.value = value;

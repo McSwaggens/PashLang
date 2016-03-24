@@ -1,12 +1,18 @@
 ﻿using System;
+using System.CodeDom;
 using System.CodeDom.Compiler;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
+using System.Net.Http.Headers;
 using System.Runtime.InteropServices.ComTypes;
+using System.Runtime.Remoting.Messaging;
 using System.Text;
 using System.Threading.Tasks;
+using System.Xml.Linq;
 using Puffin.Frontend.AST;
 using Puffin.Frontend.Symbols;
+using Puffin.Frontend.Symbols.Modifiers;
 using Puffin.Frontend.Symbols.TypeInfo;
 using Puffin.Frontend.Symbols.TypeInfo.DataStructs;
 using Puffin.Frontend.Tokens;
@@ -82,18 +88,308 @@ namespace Puffin.Frontend
             while (node != null)
             {
                 int count = node.Value.StatementTokens.Count;
-                if (node.Value.StatementTokens.Last().Value.Equals("(") &&
-                    !(node.Value.StatementTokens.ElementAt(count - 2) is OperatorToken))
-                    // we have found a function definition
+                try
                 {
-                    Symbol<Information> sym = ParseFunction(node);
-                    if (sym == null)
-                        return false;
-                   symbolTable.Symbols.Add(sym);
+                    if (node.Value.StatementTokens.Last().Value.Equals(";") && GetTypes(node).Count == 1)
+                        // we have found a variable local or global
+                    {
+                        Symbol<Information> sym = ParseVariable(node);
+                        symbolTable.Symbols.Add(sym);
+                    }
+                    else if (node.Value.StatementTokens.Last().Value.Equals("(") &&
+                        node.Value.StatementTokens.ElementAt(count - 2).Type.Equals((Enum) EnumKeywords.FOR))
+                        // we have found a for loop
+                    {
+                        node = node.Next;
+                        LinkedListNode<Statement> counter = node;
+                        if (counter == null)
+                        {
+                            Logger.WriteError("For loop missing counter, condition and iterator");
+                            return false;
+                        }
+                        node = node.Next;
+
+                        LinkedListNode<Statement> condition = node;
+                        if (condition == null)
+                        {
+                            Logger.WriteError("For loop missing condition and iterator");
+                            return false;
+                        }
+
+                        node = node.Next;
+                        LinkedListNode<Statement> iterator = node;
+                        if (iterator == null)
+                        {
+                            Logger.WriteError("For loop missing iterator");
+                            return false;
+                        }
+                        if (!ParseFor(counter, condition, iterator))
+                        {
+                            Logger.WriteError("invalid for statement");
+                            return false;
+                        }
+                    }
+                    else if(node.Value.StatementTokens.Last().Value.Equals("(") &&
+                            node.Value.StatementTokens.ElementAt(count - 2).Type.Equals((Enum)EnumKeywords.IF))
+                    {
+                        node = node.Next;
+                        if (!ParseIf(node))
+                        {
+                            Logger.WriteError("Invalid if statement");
+                            return false;
+                        }
+                    }
+                    else if (node.Value.StatementTokens.Last().Value.Equals("(") &&
+                             !(node.Value.StatementTokens.ElementAt(count - 2) is OperatorToken))
+                        // we have found a function definition
+                    {
+                        Symbol<Information> sym = ParseFunction(node);
+                        if (sym == null)
+                            return false;
+                        symbolTable.Symbols.Add(sym);
+                    }
+
+                    node = node.Next;
                 }
-                node = node.Next;
-            }   
+                catch (Exception ex)
+                {
+                    node = node.Next;
+                    continue;
+                }
+            }
             return true;
+        }
+
+        private bool ParseIf(LinkedListNode<Statement> node)
+        {
+            Symbol<Information> counterSymbol = new VariableSymbol<Information>(null);
+            Scope ifScope = new Scope(currrentScope, counterSymbol);
+            currrentScope = ifScope;
+            if (!ParseBoolean(node))
+            {
+                Logger.WriteError("Invalid if condition");
+                return false;
+            }
+            return true;
+        }
+
+        private List<Token> GetTypes(LinkedListNode<Statement> node)
+        {
+            return node.Value.StatementTokens.Where(x => ParseType(x.Type)).ToList();
+        }
+
+        private Symbol<Information> ParseVariable(LinkedListNode<Statement> node)
+        {
+            VariableData data = new VariableData();
+            data.name = node.Value.StatementTokens.ElementAt(node.Value.Modifiers.Count + 1).Value;
+            data.type = node.Value.TypeInformation;
+            data.isConstant = node.Value.Modifiers.Any(x => x.Value.Equals(EnumModifiers.CONST));
+            data.isPointer = node.Value.StatementTokens.ElementAt(node.Value.Modifiers.Count).Value.EndsWith("*");
+            if (node.Value.StatementTokens.Count >= node.Value.Modifiers.Count + 3)
+            {
+                if (!node.Value.StatementTokens.ElementAt(node.Value.Modifiers.Count + 2)
+                        .Type.Equals((Enum) EnumOperators.ASSIGNMENT))
+                {
+                    Logger.WriteError("Invalid Variable initialiser");
+                    return null;
+                }
+                data.initialvalue = (object) node.Value.StatementTokens.ElementAt(node.Value.Modifiers.Count + 3);
+            }
+            VariableInformation info = new VariableInformation(data.name, data.type, data.isConstant, data.isPointer, data.initialvalue);
+            VariableSymbol<Information> sym = new VariableSymbol<Information>(info);
+            sym.IdentifierType = EnumSymbolType.VARIABLE;
+            return sym; //temp
+        }
+
+        private bool ParseType(Enum ty)
+        {
+            if(ty is EnumKeywords) { 
+            Information info;
+                switch ((EnumKeywords)ty)
+                {
+                    case EnumKeywords.INT:
+                        info = new StructInformation(nameof(Int32), 0, true, false);
+                        return true;
+                    case EnumKeywords.BOOLEAN:
+                        info = new StructInformation(nameof(Boolean), false, true, false);
+                        return true;
+                    case EnumKeywords.LONG:
+                        info = new StructInformation(nameof(Int64), 0L, true, false);
+                        return true;
+                    case EnumKeywords.SHORT:
+                        info = new StructInformation(nameof(Int16), (short) 0, true, false);
+                        return true;
+                    case EnumKeywords.BYTE:
+                        info = new StructInformation(nameof(Byte), (byte) 0, true, false);
+                        return true;
+                    case EnumKeywords.CHAR:
+                        info = new StructInformation(nameof(Char), '\0', true, false);
+                        return true;
+                    case EnumKeywords.FLOAT:
+                        info = new StructInformation(nameof(Single), 0.0f, true, false);
+                        return true;
+                    case EnumKeywords.DOUBLE:
+                        info = new StructInformation(nameof(Double), 0.0, true, false);
+                        return true;
+                    case EnumKeywords.DATASET:
+                        Logger.WriteWarning("Datasets are not dealt with yet");
+                        return true;
+                    case EnumKeywords.UINT:
+                        info = new StructInformation(nameof(UInt32), (uint) 0, true, false);
+                        return true;
+                    case EnumKeywords.UBYTE:
+                        info = new StructInformation(nameof(Byte), (byte) 0, true, false);
+                        return true;
+                    case EnumKeywords.USHORT:
+                        info = new StructInformation(nameof(UInt16), (ushort) 0, true, false);
+                        return true;
+                    case EnumKeywords.ULONG:
+                        info = new StructInformation(nameof(UInt64), 0UL, true, false);
+                        return true;
+                    case EnumKeywords.OBJECT:
+                        info = new ClassInformation(nameof(Object), null, true, true);
+                        return true;
+                    case EnumKeywords.STRING:
+                        info = new ClassInformation(nameof(String), "", true, true);
+                        return true;
+                    case EnumKeywords.VOID:
+                        info = new StructInformation(typeof (void).ToString(), null, true, true);
+                        return true;
+                    default:
+                        Logger.WriteWarning("User Defined types are not dealt with yet");
+                        return false;
+                }
+            }
+            return false;
+        }
+
+        private bool ParseFor(LinkedListNode<Statement> counter, LinkedListNode<Statement> condition, LinkedListNode<Statement> iterator)
+        {
+            Symbol<Information> counterSymbol = new VariableSymbol<Information>(null);
+            Scope forScope = new Scope(currrentScope,counterSymbol);
+            currrentScope = forScope;
+            if (ParseType(counter.Value.StatementTokens.First().Type))
+            {
+                 counterSymbol = ParseVariable(counter);
+                if (counterSymbol == null)
+                {
+                    Logger.WriteError("Invalid counter variable declaration: " + counter.Value.ToString());
+                    return false;
+                }
+            }
+            else
+            {
+                if (!isDefinedInScope(counter.Value.StatementTokens.ElementAt(1).Value))
+                {
+                    Logger.WriteError("Variable " + counter.Value.StatementTokens.ElementAt(1).Value + " is undefined in this scope");
+                    return false;
+                }
+            }
+            if (!ParseBoolean(condition))
+            {
+                Logger.WriteError("For loop condition " + condition.Value.ToString() + " Does not evaluate to bool");
+                return false;
+            }
+            if (!ParseIterator(iterator))
+            {
+                Logger.WriteError("Invalid for loop iterator " + iterator.Value.ToString());
+                return false;
+            }
+            return true;
+        }
+
+        private bool ParseIterator(LinkedListNode<Statement> iterator)
+        {
+            if (!isDefinedInScope(iterator.Value.StatementTokens.First().Value))
+            {
+                Logger.WriteError("Variable " + iterator.Value.StatementTokens.First().Value + " is undefined in this scope");
+                return false;
+            }
+            if (!ParseAssignment(iterator))
+            {
+                Logger.WriteError("Iterator must assign to a variable");
+                return false;
+            }
+            return true;
+        }
+
+        private bool ParseAssignment(LinkedListNode<Statement> iterator)
+        {
+            if (!iterator.Value.StatementTokens.Any(x => x is OperatorToken))
+            {
+                Logger.WriteError("Assignment operations must have at least 1 operator");
+                return false;
+            }
+            List<Token> ops = new List<Token>(iterator.Value.StatementTokens.Where(x => x is OperatorToken));
+            foreach (Token op in ops)
+            {
+                switch ((EnumOperators) op.Type)
+                {
+                    case EnumOperators.ASSIGNMENT:
+                        return true;
+                    case EnumOperators.BITWISE_AND_ASSIGNMENT:
+                        return true;
+                    case EnumOperators.BITWISE_LEFT_SHIFT_ASSIGNMENT:
+                        return true;
+                    case EnumOperators.BITWISE_OR_ASSIGNMENT:
+                        return true;
+                    case EnumOperators.BITWISE_RIGHT_SHIFT_ASSIGNMENT:
+                        return true;
+                    case EnumOperators.BITWISE_XOR_ASSIGNMENT:
+                        return true;
+                    case EnumOperators.ADDITION_ASSIGNMENT:
+                        return true;
+                    case EnumOperators.MULTIPLICATION_ASSIGNMENT:
+                        return true;
+                    case EnumOperators.DIVISION_ASSIGNMENT:
+                        return true;
+                    case EnumOperators.SUBTRACTION_ASSIGNMENT:
+                        return true;
+                    case EnumOperators.MODULO_ASSIGNMENT:
+                        return true;
+                    default:
+                        continue;
+                }
+            }
+            return false;
+        }
+
+        private bool ParseBoolean(LinkedListNode<Statement> condition)
+        {
+            if (condition.Value.StatementTokens.Any(x => x is OperatorToken) &&
+                condition.Value.StatementTokens.Count >= 3)
+            {
+                List<Token> ops = new List<Token>(condition.Value.StatementTokens.Where(x => x is OperatorToken));
+                foreach (Token op in ops)
+                {
+                    switch ((EnumOperators) op.Type)
+                    {
+                        case EnumOperators.EQUALITY:
+                            return true;
+                        case EnumOperators.NOT_EQUAL:
+                            return true;
+                        case EnumOperators.LESS_THAN:
+                            return true;
+                        case EnumOperators.LESS_THAN_AND_EQUAL:
+                            return true;
+                        case EnumOperators.GREATER_THAN:
+                            return true;
+                        case EnumOperators.GREATER_THAN_AND_EQUAL:
+                            return true;
+                        case EnumOperators.LOGICAL_AND:
+                            return true;
+                        case EnumOperators.LOGICAL_NOT:
+                            return true;
+                        case EnumOperators.LOGICAL_OR:
+                            return true;
+                        default:
+                            continue;
+                    }  
+                }
+            }
+            else if (condition.Value.StatementTokens.Last() is BooleanLiteralToken)
+                return true;
+            return false;
         }
 
         private Symbol<Information> ParseFunction(LinkedListNode<Statement> node)
@@ -112,7 +408,7 @@ namespace Puffin.Frontend
             fnInfo.Parameters = data.parameters.ToArray();
             MethodSymbol<Information> fnSymbol = new MethodSymbol<Information>(fnInfo);
             fnSymbol.IdentifierType = EnumSymbolType.FUNCTION;
-            currrentScope = currrentScope.ParentScope;
+            currrentScope = currrentScope.ParentScope; // TODO Move this to where we find a statement containing only '}'
             return fnSymbol;
         }
 
@@ -168,7 +464,7 @@ namespace Puffin.Frontend
                 if (((int) ty >= 0x04 && (int) ty <= 0x0F) || ((int) ty >= 0x30 && (int) ty <= 0x33) || (int) ty == 0x45 ||
                     (int) ty == 0x46)
                 {
-                    switch (ty)
+                    switch ((EnumKeywords)ty)
                     {
                         case EnumKeywords.INT:
                             typeInformation = new StructInformation(nameof(Int32), 0, true, false);
@@ -180,10 +476,10 @@ namespace Puffin.Frontend
                             typeInformation = new StructInformation(nameof(Int64), 0L, true, false);
                             break;
                         case EnumKeywords.SHORT:
-                            typeInformation = new StructInformation(nameof(Int16), (short) 0, true, false);
+                            typeInformation = new StructInformation(nameof(Int16), (short)0, true, false);
                             break;
                         case EnumKeywords.BYTE:
-                            typeInformation = new StructInformation(nameof(Byte), (byte) 0, true, false);
+                            typeInformation = new StructInformation(nameof(Byte), (byte)0, true, false);
                             break;
                         case EnumKeywords.CHAR:
                             typeInformation = new StructInformation(nameof(Char), '\0', true, false);
@@ -198,13 +494,13 @@ namespace Puffin.Frontend
                             Logger.WriteWarning("Datasets are not dealt with yet");
                             break;
                         case EnumKeywords.UINT:
-                            typeInformation = new StructInformation(nameof(UInt32), (uint) 0, true, false);
+                            typeInformation = new StructInformation(nameof(UInt32), (uint)0, true, false);
                             break;
                         case EnumKeywords.UBYTE:
-                            typeInformation = new StructInformation(nameof(Byte), (byte) 0, true, false);
+                            typeInformation = new StructInformation(nameof(Byte), (byte)0, true, false);
                             break;
                         case EnumKeywords.USHORT:
-                            typeInformation = new StructInformation(nameof(UInt16), (ushort) 0, true, false);
+                            typeInformation = new StructInformation(nameof(UInt16), (ushort)0, true, false);
                             break;
                         case EnumKeywords.ULONG:
                             typeInformation = new StructInformation(nameof(UInt64), 0UL, true, false);
@@ -216,7 +512,7 @@ namespace Puffin.Frontend
                             typeInformation = new ClassInformation(nameof(String), "", true, true);
                             break;
                         case EnumKeywords.VOID:
-                            typeInformation = new StructInformation(typeof (void).ToString(), null, true, true);
+                            typeInformation = new StructInformation(typeof(void).ToString(), null, true, true);
                             break;
                         default:
                             Logger.WriteWarning("User Defined types are not dealt with yet");
