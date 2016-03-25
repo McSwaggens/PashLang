@@ -63,6 +63,7 @@
     <Compile Include="Handlers\set_ADR.cs" />
     <Compile Include="Handlers\set_DOUBLE.cs" />
     <Compile Include="Handlers\set_FLOAT.cs" />
+    <Compile Include="Handlers\set_IP.cs" />
     <Compile Include="Handlers\set_PAR.cs" />
     <Compile Include="Handlers\set_PARC.cs" />
     <Compile Include="Handlers\set_SINT16.cs" />
@@ -88,7 +89,6 @@
     <Compile Include="Handlers\st_VOP.cs" />
     <Compile Include="Handlers\st_VOR.cs" />
     <Compile Include="Handlers\st_VORL.cs" />
-    <Compile Include="set_IP.cs" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Properties\Resources.resx">
