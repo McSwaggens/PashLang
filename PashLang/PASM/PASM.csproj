@@ -88,6 +88,7 @@
     <Compile Include="Handlers\st_VOP.cs" />
     <Compile Include="Handlers\st_VOR.cs" />
     <Compile Include="Handlers\st_VORL.cs" />
+    <Compile Include="set_IP.cs" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Properties\Resources.resx">
