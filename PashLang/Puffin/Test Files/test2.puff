@@ -1,3 +1,9 @@
+
+public static void test()
+{
+    int testvar = 0;
+} 
+
 public static void main(string[] args, int num1 = 0, long num2 = 0L)
 {
     string str = "Hello World";
@@ -14,12 +20,12 @@ public static void main(string[] args, int num1 = 0, long num2 = 0L)
         int k = 0;
         i = 10;
     }
-    int poo = test();
+    //int poo = test(i); // Todo implement function calls
 }
 
 /* Test Block comment */
 
-public static void test()
+public static void test(int num)
 {
-    int testvar = 0;
-} 
+    i *= 2;
+}

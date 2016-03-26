@@ -140,7 +140,36 @@ namespace Puffin.Frontend
                               node.Value.StatementTokens.ElementAt(count - 3) is OperatorToken || 
                               node.Value.StatementTokens.ElementAt(count - 4) is IdentifierToken)) // We have found a function call
                     {
+                        List<Information> pars = new List<Information>();
                         Logger.WriteWarning("Found Function call");
+                        if (!isDefinedInScope(node.Value.StatementTokens.ElementAt(
+                                    node.Value.StatementTokens.Count - 2).Value))
+                        {
+                            Logger.WriteError("Function " + node.Value.StatementTokens.ElementAt(
+                                node.Value.StatementTokens.Count - 2).Value
+                                + "Does not exist");
+                            return false;
+                        }
+                            //node = node.Next;
+                        if (node.Value.StatementTokens.Count > 1 &&
+                            !node.Value.StatementTokens.First().Value.Equals(")"))
+                        {
+                            pars = ParseCallingParameters(node);
+
+                            if (!FunctionWithParametersDefined(node.Value.StatementTokens.ElementAt(
+                                node.Value.StatementTokens.Count - 2).Value, pars))
+                            {
+                                string parameterSigniture = "";
+                                foreach (Information par in pars)
+                                {
+                                    if (par is ParameterInformation)
+                                        parameterSigniture += ((ParameterInformation) par).ToString() + ",";
+                                }
+                                Logger.WriteError("Function with parameters " + parameterSigniture +
+                                                  " defined in this scope");
+                            }
+                        }
+
                     } 
                     else if (node.Value.StatementTokens.Last().Value.Equals("(") &&
                              !(node.Value.StatementTokens.ElementAt(count - 2) is OperatorToken))
@@ -176,6 +205,37 @@ namespace Puffin.Frontend
                 return false;
             }
             return true;
+        }
+
+        private List<Information> ParseCallingParameters(LinkedListNode<Statement> node)
+        {
+            if (node.Value.StatementTokens.First() is KeywordToken &&
+                node.Value.StatementTokens.Last().Value.Equals("("))
+                node = node.Next;
+            return null;
+        }
+
+        private bool FunctionWithParametersDefined(string name, List<Information> pars)
+        {
+            List<Symbol<Information>> functions =
+                symbolTable.Symbols.Where(x => x.IdentifierType == EnumSymbolType.FUNCTION).ToList();
+            foreach (Symbol<Information> symbol in functions)
+            {
+                if (symbol is MethodSymbol<Information>)
+                {
+                    MethodSymbol<Information> temp = (MethodSymbol<Information>) symbol;
+                    if (temp.Info.Name.Equals(name))
+                    {
+                        foreach (Information par in pars)
+                        {
+                            if (!temp.Info.HasParameter(par))
+                                return false;
+                        }
+                        return true;
+                    }
+                }
+            }
+            return false;
         }
 
         private bool ParseIf(LinkedListNode<Statement> node)
@@ -676,9 +736,20 @@ namespace Puffin.Frontend
             Scope temp = currrentScope;
             while (temp != null)
             {
-                if (symbolTable.Symbols.Any(
-                        x => x.IdentifierName.Equals(name) && x.ValueType.DefinitionScope.Equals(temp)))
-                    return true;
+                foreach (Symbol<Information> sym in symbolTable.Symbols)
+                {
+                    if (sym is MethodSymbol<Information>)
+                    {
+                        MethodSymbol<Information> tempsym = (MethodSymbol<Information>) sym;
+                        if (tempsym.Info.Name.Equals(name) && tempsym.Info.DefinitionScope.Equals(temp))
+                            return true;
+                    }
+                    else
+                    {
+                        if (sym.IdentifierName.Equals(name) && sym.ValueType.DefinitionScope.Equals(temp))
+                            return true;
+                    }
+                }
                 temp = temp.ParentScope;
             }
             return false;
@@ -698,6 +769,16 @@ namespace Puffin.Frontend
             {
                 Logger.WriteColor(stm.ToString(),ConsoleColor.Cyan);
             }
+        }
+
+        public LinkedList<Statement> Statements
+        {
+            get { return statements; }
+        }
+
+        public SymbolTable<Symbol<Information>> SymbolTable
+        {
+            get { return symbolTable; }
         }
     }
 }
