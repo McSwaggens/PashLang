@@ -6,15 +6,15 @@ using System.Threading.Tasks;
 using Puffin.Frontend.Symbols;
 using Puffin.Frontend.Symbols.TypeInfo;
 
-namespace Puffin.Frontend.AST
+namespace Puffin.Frontend.AST.Nodes
 {
-    public class UnsignedLongASTNode : BaseASTNode
+    public class LongASTNode : BaseASTNode
     {
-        public UnsignedLongASTNode(VariableSymbol<Information> owner, BaseASTNode parent)
+        public LongASTNode(VariableSymbol<Information> owner, BaseASTNode parent)
         {
-            if (owner == null || !owner.TypeInfo.IdentifierType.Name.Equals(nameof(UInt64)))
+            if (owner == null || !owner.TypeInfo.IdentifierType.Name.Equals(nameof(Int64)))
             {
-                Logger.WriteError("Cannot construct an Unsigned Long node without a valid symbol");
+                Logger.WriteError("Cannot construct an long node without a valid symbol");
                 return;
             }
             this.Symbol = owner;
@@ -25,11 +25,11 @@ namespace Puffin.Frontend.AST
 
         }
 
-        public UnsignedLongASTNode(VariableSymbol<Information> owner, BaseASTNode left, BaseASTNode right, BaseASTNode parent)
+        public LongASTNode(VariableSymbol<Information> owner, BaseASTNode left, BaseASTNode right, BaseASTNode parent)
         {
-            if (owner == null || !owner.TypeInfo.IdentifierType.Name.Equals(nameof(UInt64)))
+            if (owner == null || !owner.TypeInfo.IdentifierType.Name.Equals(nameof(Int64)))
             {
-                Logger.WriteError("Cannot construct an Unsigned Long node without a valid symbol");
+                Logger.WriteError("Cannot construct an long node without a valid symbol");
                 return;
             }
             this.Symbol = owner;
@@ -42,11 +42,10 @@ namespace Puffin.Frontend.AST
             this.Parent = parent;
         }
 
-        public override object Evaluate()
+        public override object Evaluate(BaseASTNode node)
         {
             VariableSymbol<Information> info = (VariableSymbol<Information>)Symbol;
             return ((StructInformation)info.ValueType).DefaultValue;
         }
     }
 }
-

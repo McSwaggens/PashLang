@@ -8,6 +8,8 @@ namespace Puffin.Frontend.Tokens
         public UnsignedIntegerLiteralToken(string value)
         {
             this.value = value;
+            if (this.value.EndsWith("UI") || this.value.EndsWith("ui"))
+                this.value = this.value.Substring(0, this.value.Length - 2);
             this.type = ResolveType();
         }
 

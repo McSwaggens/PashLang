@@ -6,15 +6,15 @@ using System.Threading.Tasks;
 using Puffin.Frontend.Symbols;
 using Puffin.Frontend.Symbols.TypeInfo;
 
-namespace Puffin.Frontend.AST
+namespace Puffin.Frontend.AST.Nodes
 {
-    public class ShortASTNode : BaseASTNode
+    public class UnsignedLongASTNode : BaseASTNode
     {
-        public ShortASTNode(VariableSymbol<Information> owner, BaseASTNode parent)
+        public UnsignedLongASTNode(VariableSymbol<Information> owner, BaseASTNode parent)
         {
-            if (owner == null || !owner.TypeInfo.IdentifierType.Name.Equals(nameof(Int16)))
+            if (owner == null || !owner.TypeInfo.IdentifierType.Name.Equals(nameof(UInt64)))
             {
-                Logger.WriteError("Cannot construct an Short node without a valid symbol");
+                Logger.WriteError("Cannot construct an Unsigned Long node without a valid symbol");
                 return;
             }
             this.Symbol = owner;
@@ -25,11 +25,11 @@ namespace Puffin.Frontend.AST
 
         }
 
-        public ShortASTNode(VariableSymbol<Information> owner, BaseASTNode left, BaseASTNode right, BaseASTNode parent)
+        public UnsignedLongASTNode(VariableSymbol<Information> owner, BaseASTNode left, BaseASTNode right, BaseASTNode parent)
         {
-            if (owner == null || !owner.TypeInfo.IdentifierType.Name.Equals(nameof(Int16)))
+            if (owner == null || !owner.TypeInfo.IdentifierType.Name.Equals(nameof(UInt64)))
             {
-                Logger.WriteError("Cannot construct an Short node without a valid symbol");
+                Logger.WriteError("Cannot construct an Unsigned Long node without a valid symbol");
                 return;
             }
             this.Symbol = owner;
@@ -41,11 +41,11 @@ namespace Puffin.Frontend.AST
             Right.Parent = this;
             this.Parent = parent;
         }
-
-        public override object Evaluate()
+        public override object Evaluate(BaseASTNode node)
         {
             VariableSymbol<Information> info = (VariableSymbol<Information>)Symbol;
             return ((StructInformation)info.ValueType).DefaultValue;
         }
     }
 }
+

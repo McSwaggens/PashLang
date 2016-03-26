@@ -6,15 +6,15 @@ using System.Threading.Tasks;
 using Puffin.Frontend.Symbols;
 using Puffin.Frontend.Symbols.TypeInfo;
 
-namespace Puffin.Frontend.AST
+namespace Puffin.Frontend.AST.Nodes
 {
-    public class ByteASTNode : BaseASTNode
+    public class ShortASTNode : BaseASTNode
     {
-        public ByteASTNode(VariableSymbol<Information> owner, BaseASTNode parent)
+        public ShortASTNode(VariableSymbol<Information> owner, BaseASTNode parent)
         {
-            if (owner == null || !owner.TypeInfo.IdentifierType.Name.Equals(nameof(Byte)))
+            if (owner == null || !owner.TypeInfo.IdentifierType.Name.Equals(nameof(Int16)))
             {
-                Logger.WriteError("Cannot construct an Byte node without a valid symbol");
+                Logger.WriteError("Cannot construct an Short node without a valid symbol");
                 return;
             }
             this.Symbol = owner;
@@ -25,11 +25,11 @@ namespace Puffin.Frontend.AST
 
         }
 
-        public ByteASTNode(VariableSymbol<Information> owner, BaseASTNode left, BaseASTNode right, BaseASTNode parent)
+        public ShortASTNode(VariableSymbol<Information> owner, BaseASTNode left, BaseASTNode right, BaseASTNode parent)
         {
-            if (owner == null || !owner.TypeInfo.IdentifierType.Name.Equals(nameof(Byte)))
+            if (owner == null || !owner.TypeInfo.IdentifierType.Name.Equals(nameof(Int16)))
             {
-                Logger.WriteError("Cannot construct an Byte node without a valid symbol");
+                Logger.WriteError("Cannot construct an Short node without a valid symbol");
                 return;
             }
             this.Symbol = owner;
@@ -42,7 +42,7 @@ namespace Puffin.Frontend.AST
             this.Parent = parent;
         }
 
-        public override object Evaluate()
+        public override object Evaluate(BaseASTNode node)
         {
             VariableSymbol<Information> info = (VariableSymbol<Information>)Symbol;
             return ((StructInformation)info.ValueType).DefaultValue;

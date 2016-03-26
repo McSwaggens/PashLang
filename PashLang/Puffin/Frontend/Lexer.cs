@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
@@ -92,22 +93,26 @@ namespace Puffin.Frontend
                 float outf;
                 bool outbool;
 
-                if (byte.TryParse(node.Value, out outb))
+                if ((node.Value.EndsWith("b") || node.Value.EndsWith("B")) 
+                    && byte.TryParse(node.Value.Substring(0,node.Value.Length - 1), out outb))
                 {
                     ByteLiteralToken tok = new ByteLiteralToken(node.Value);
                     temp.AddLast(tok);
                 }
-                else if (ushort.TryParse(node.Value, out outus))
+                else if ((node.Value.EndsWith("us") || node.Value.EndsWith("US"))
+                    && ushort.TryParse(node.Value.Substring(0, node.Value.Length - 2), out outus))
                 {
                     UnsignedShortLiteralToken tok = new UnsignedShortLiteralToken(node.Value);
                     temp.AddLast(tok);
                 }
-                else if (short.TryParse(node.Value, out outs))
+                else if ((node.Value.EndsWith("s") || node.Value.EndsWith("S"))
+                    && short.TryParse(node.Value.Substring(0, node.Value.Length - 1), out outs))
                 {
                     ShortLiteralToken tok = new ShortLiteralToken(node.Value);
                     temp.AddLast(tok);
                 }
-                else if (uint.TryParse(node.Value, out outui))
+                else if ((node.Value.EndsWith("ui") || node.Value.EndsWith("UI"))
+                    && uint.TryParse(node.Value.Substring(0, node.Value.Length - 2), out outui))
                 {
                     UnsignedIntegerLiteralToken tok = new UnsignedIntegerLiteralToken(node.Value);
                     temp.AddLast(tok);
@@ -122,7 +127,8 @@ namespace Puffin.Frontend
                     UnsignedLongLiteralToken tok = new UnsignedLongLiteralToken(node.Value);
                     temp.AddLast(tok);
                 }
-                else if (long.TryParse(node.Value, out outl))
+                else if ((node.Value.EndsWith("l") || node.Value.EndsWith("L"))
+                    && long.TryParse(node.Value.Substring(0, node.Value.Length - 1), out outl))
                 {
                     LongLiteralToken tok = new LongLiteralToken(node.Value);
                     temp.AddLast(tok);
@@ -137,7 +143,7 @@ namespace Puffin.Frontend
                     DoubleLiteralToken tok = new DoubleLiteralToken(node.Value);
                     temp.AddLast(tok);
                 }
-                else if (Boolean.TryParse(node.Value, out outbool))
+                else if (bool.TryParse(node.Value, out outbool))
                 {
                     BooleanLiteralToken tok = new BooleanLiteralToken(node.Value);
                     temp.AddLast(tok);

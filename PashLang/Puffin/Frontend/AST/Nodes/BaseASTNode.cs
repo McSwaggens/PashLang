@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Puffin.Frontend.Symbols;
 
-namespace Puffin.Frontend.AST
+namespace Puffin.Frontend.AST.Nodes
 {
     public class BaseASTNode
     {
@@ -46,13 +46,14 @@ namespace Puffin.Frontend.AST
             set { parent = value; }
         }
 
-        public virtual Object Evaluate()
+        public virtual Object Evaluate(BaseASTNode node)
         {
-            Logger.WriteError("This method must be overridden");
+            Logger.WriteError(nameof(Evaluate) + " must be overridden");
             return null;
         }
         public void Visit(BaseASTNode node)
         {
+            Evaluate(node);
             if (node.Left != null)
             {
                 Visit(node.Left);

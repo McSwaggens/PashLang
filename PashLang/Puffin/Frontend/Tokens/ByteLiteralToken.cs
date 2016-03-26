@@ -4,12 +4,11 @@ namespace Puffin.Frontend.Tokens
 {
     public class ByteLiteralToken : Token
     {
-        
-        
-
         public ByteLiteralToken(string value)
         {
             this.value = value;
+            if (this.value.EndsWith("B") || this.value.EndsWith("b"))
+                this.value = this.value.Substring(0, this.value.Length - 1);
             this.type = ResolveType();
         }
 

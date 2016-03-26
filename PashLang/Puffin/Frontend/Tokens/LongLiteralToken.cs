@@ -5,12 +5,11 @@ namespace Puffin.Frontend.Tokens
 {
     public class LongLiteralToken : Token
     {
-        
-        
-
         public LongLiteralToken(string value)
         {
             this.value = value;
+            if (this.value.EndsWith("L") || this.value.EndsWith("l"))
+                this.value = this.value.Substring(0, this.value.Length - 1);
             this.type = ResolveType();
         }
 

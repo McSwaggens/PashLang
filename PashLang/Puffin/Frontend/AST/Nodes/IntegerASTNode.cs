@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 using Puffin.Frontend.Symbols;
 using Puffin.Frontend.Symbols.TypeInfo;
 
-namespace Puffin.Frontend.AST
+namespace Puffin.Frontend.AST.Nodes
 {
     public class IntegerASTNode : BaseASTNode
     {
@@ -42,10 +42,10 @@ namespace Puffin.Frontend.AST
             this.Parent = parent;
         }
 
-        public override object Evaluate()
+        public override object Evaluate(BaseASTNode node)
         {
-            VariableSymbol<Information> info = (VariableSymbol<Information>) Symbol;
-            return ((StructInformation) info.ValueType).DefaultValue;
+            VariableSymbol<Information> info = (VariableSymbol<Information>)Symbol;
+            return ((StructInformation)info.ValueType).DefaultValue;
         }
     }
 }

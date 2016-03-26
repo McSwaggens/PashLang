@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Puffin.Frontend.AST.Nodes;
 using Puffin.Frontend.Symbols;
 
 namespace Puffin.Frontend.AST
@@ -27,7 +28,7 @@ namespace Puffin.Frontend.AST
             {
                 Symbol<Information> sym =
                     parse.SymbolTable.Symbols.FirstOrDefault(x => x.IdentifierName.Equals(smt.TypeInformation.Name));
-                switch (smt.TypeInformation.IdentifierType.Name)
+                switch (smt.TypeInformation.Name)
                 {
                     case nameof(Int16):
 
@@ -35,6 +36,9 @@ namespace Puffin.Frontend.AST
                         return new IntegerASTNode((VariableSymbol<Information>) sym, null);
                     case nameof(Int64):
                         return new IntegerASTNode((VariableSymbol<Information>)sym, null);
+                    default:
+                        Logger.WriteWarning("Type " + smt.TypeInformation.Name + " Does not have an AST node associated with it yet");
+                        return new BaseASTNode();
                 }
             }
             return null;

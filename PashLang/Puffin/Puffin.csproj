@@ -43,12 +43,13 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Frontend\AST\ASTParser.cs" />
-    <Compile Include="Frontend\AST\BaseASTNode.cs" />
-    <Compile Include="Frontend\AST\ByteASTNode.cs" />
-    <Compile Include="Frontend\AST\IntegerASTNode.cs" />
-    <Compile Include="Frontend\AST\LongASTNode.cs" />
-    <Compile Include="Frontend\AST\ShortASTNode.cs" />
-    <Compile Include="Frontend\AST\UnsignedLongASTNode.cs" />
+    <Compile Include="Frontend\AST\Nodes\BaseASTNode.cs" />
+    <Compile Include="Frontend\AST\Nodes\ByteASTNode.cs" />
+    <Compile Include="Frontend\AST\Nodes\IntegerASTNode.cs" />
+    <Compile Include="Frontend\AST\Nodes\LongASTNode.cs" />
+    <Compile Include="Frontend\AST\Nodes\ShortASTNode.cs" />
+    <Compile Include="Frontend\AST\Nodes\UnsignedLongASTNode.cs" />
+    <Compile Include="Frontend\AST\TypeChecker.cs" />
     <Compile Include="Frontend\Lexer.cs" />
     <Compile Include="Frontend\Symbols\ArrayParameterSymbol.cs" />
     <Compile Include="Frontend\Symbols\ArraySymbol.cs" />
