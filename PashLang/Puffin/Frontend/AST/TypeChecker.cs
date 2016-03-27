@@ -51,6 +51,8 @@ namespace Puffin.Frontend.AST
         {
             if(identTy == null || resultTy == null)
                 return true;
+            if(identTy is ArrayInformation && !(resultTy is ArrayInformation))
+                return false;
             return identTy.Name.Equals(resultTy.Name) && smt != null;
         }
 
@@ -58,7 +60,7 @@ namespace Puffin.Frontend.AST
         {
             EnumKeywords ty;
             bool edited = false;
-
+            bool redited = false;
             if (smt.StatementTokens.Any(x => x is OperatorToken) &&
                 smt.StatementTokens.Any(x => x is IdentifierToken)) // type Checking is required
             {
@@ -66,7 +68,7 @@ namespace Puffin.Frontend.AST
                 {
                     if (tok is IdentifierToken && !edited)
                     {
-                        identTy = symbols.Symbols.First(x => x.IdentifierName.Equals(tok.Value)).IdentifierValue;
+                        identTy = symbols.Symbols.First(x => x.IdentifierName.Equals(tok.Value)).ValueType.IdentifierType;
                         edited = true;
                     }
                     else if (tok is OperatorToken)
@@ -75,7 +77,8 @@ namespace Puffin.Frontend.AST
                     }
                     else if (tok is IdentifierToken && edited)
                     {
-                        resultTy = symbols.Symbols.First(x => x.IdentifierName.Equals(tok.Value)).IdentifierValue;
+                        resultTy = symbols.Symbols.First(x => x.IdentifierName.Equals(tok.Value)).ValueType.IdentifierType;
+                        redited = true;
                     }
                     else if (tok is StringLiteralToken || tok is IntegerLiteralToken ||
                              tok is UnsignedIntegerLiteralToken || tok is ShortLiteralToken ||
@@ -128,6 +131,7 @@ namespace Puffin.Frontend.AST
                                 Logger.WriteWarning("This literal type is not implemented yet");
                                 return false;
                         }
+                        redited = true;
                     }
                     else if (!Enum.TryParse(tok.Value.Replace("*", "").ToUpper(), out ty))
                     {
@@ -136,6 +140,7 @@ namespace Puffin.Frontend.AST
                     else if (((int) ty >= 0x04 && (int) ty <= 0x0F) || ((int) ty >= 0x30 && (int) ty <= 0x33) ||
                              (int) ty == 0x45 ||
                              (int) ty == 0x46)
+                    {
                         switch (ty)
                         {
                             case EnumKeywords.CHAR:
@@ -178,9 +183,12 @@ namespace Puffin.Frontend.AST
                                 identTy = new StructInformation(nameof(UInt64), 0UL, true, false);
                                 break;
                         }
-
+                       
+                    }
                 }
                 edited = false;
+                if (!redited)
+                    resultTy = identTy;
                 if (!EnforceTypes(smt))
                     return false;
             }
