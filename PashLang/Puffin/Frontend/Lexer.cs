@@ -122,7 +122,8 @@ namespace Puffin.Frontend
                     IntegerLiteralToken tok = new IntegerLiteralToken(node.Value);
                     temp.AddLast(tok);
                 }
-                else if (ulong.TryParse(node.Value, out outul))
+                else if ((node.Value.EndsWith("ul") || node.Value.EndsWith("UL"))
+                    && ulong.TryParse(node.Value.Substring(0, node.Value.Length - 2), out outul))
                 {
                     UnsignedLongLiteralToken tok = new UnsignedLongLiteralToken(node.Value);
                     temp.AddLast(tok);
@@ -133,12 +134,14 @@ namespace Puffin.Frontend
                     LongLiteralToken tok = new LongLiteralToken(node.Value);
                     temp.AddLast(tok);
                 }
-                else if (float.TryParse(node.Value, out outf))
+                else if ((node.Value.EndsWith("F") || node.Value.EndsWith("f"))
+                    && float.TryParse(node.Value.Substring(0, node.Value.Length - 1), out outf))
                 {
                     FloatLiteralToken tok = new FloatLiteralToken(node.Value);
                     temp.AddLast(tok);
                 }
-                else if (double.TryParse(node.Value, out outd))
+                else if ((node.Value.EndsWith("D") || node.Value.EndsWith("d"))
+                    && double.TryParse(node.Value.Substring(0, node.Value.Length - 1), out outd))
                 {
                     DoubleLiteralToken tok = new DoubleLiteralToken(node.Value);
                     temp.AddLast(tok);

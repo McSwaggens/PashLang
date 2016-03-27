@@ -57,16 +57,23 @@ namespace Puffin.Frontend.AST
         private bool ParseStatementTypes(Statement smt)
         {
             EnumKeywords ty;
+            bool edited = false;
+
             if (smt.StatementTokens.Any(x => x is OperatorToken) &&
                 smt.StatementTokens.Any(x => x is IdentifierToken)) // type Checking is required
             {
                 foreach (Token tok in smt.StatementTokens)
                 {
-                    if (tok is IdentifierToken && identTy == null)
+                    if (tok is IdentifierToken && !edited)
+                    {
                         identTy = symbols.Symbols.First(x => x.IdentifierName.Equals(tok.Value)).IdentifierValue;
+                        edited = true;
+                    }
                     else if (tok is OperatorToken)
-                        operatorTy = (EnumOperators)tok.Type;
-                    else if (tok is IdentifierToken && identTy != null)
+                    {
+                        operatorTy = (EnumOperators) tok.Type;
+                    }
+                    else if (tok is IdentifierToken && edited)
                     {
                         resultTy = symbols.Symbols.First(x => x.IdentifierName.Equals(tok.Value)).IdentifierValue;
                     }
@@ -76,7 +83,7 @@ namespace Puffin.Frontend.AST
                              tok is UnsignedLongLiteralToken || tok is ByteLiteralToken || tok is FloatLiteralToken ||
                              tok is DoubleLiteralToken || tok is CharacterLiteralToken)
                     {
-                        switch ((EnumLiterals)tok.ResolveType())
+                        switch ((EnumLiterals) tok.ResolveType())
                         {
                             case EnumLiterals.CHAR:
                                 resultTy = new StructInformation(nameof(Char), '\0', true, false);
@@ -100,19 +107,19 @@ namespace Puffin.Frontend.AST
                                 resultTy = new StructInformation(nameof(Int64), 0L, true, false);
                                 break;
                             case EnumLiterals.SHORT:
-                                resultTy = new StructInformation(nameof(Int16), (short)0, true, false);
+                                resultTy = new StructInformation(nameof(Int16), (short) 0, true, false);
                                 break;
                             case EnumLiterals.STRING:
                                 resultTy = new ClassInformation(nameof(String), "", true, true);
                                 break;
                             case EnumLiterals.UINT:
-                                resultTy = new StructInformation(nameof(UInt32), (uint)0, true, false);
+                                resultTy = new StructInformation(nameof(UInt32), (uint) 0, true, false);
                                 break;
                             case EnumLiterals.UBYTE:
-                                resultTy = new StructInformation(nameof(Byte), (byte)0, true, false);
+                                resultTy = new StructInformation(nameof(Byte), (byte) 0, true, false);
                                 break;
                             case EnumLiterals.USHORT:
-                                resultTy = new StructInformation(nameof(UInt16), (ushort)0, true, false);
+                                resultTy = new StructInformation(nameof(UInt16), (ushort) 0, true, false);
                                 break;
                             case EnumLiterals.ULONG:
                                 resultTy = new StructInformation(nameof(UInt64), 0UL, true, false);
@@ -126,8 +133,9 @@ namespace Puffin.Frontend.AST
                     {
                         continue;
                     }
-                    else if (((int)ty >= 0x04 && (int)ty <= 0x0F) || ((int)ty >= 0x30 && (int)ty <= 0x33) || (int)ty == 0x45 ||
-                        (int)ty == 0x46)
+                    else if (((int) ty >= 0x04 && (int) ty <= 0x0F) || ((int) ty >= 0x30 && (int) ty <= 0x33) ||
+                             (int) ty == 0x45 ||
+                             (int) ty == 0x46)
                         switch (ty)
                         {
                             case EnumKeywords.CHAR:
@@ -152,25 +160,27 @@ namespace Puffin.Frontend.AST
                                 identTy = new StructInformation(nameof(Int64), 0L, true, false);
                                 break;
                             case EnumKeywords.SHORT:
-                                identTy = new StructInformation(nameof(Int16), (short)0, true, false);
+                                identTy = new StructInformation(nameof(Int16), (short) 0, true, false);
                                 break;
                             case EnumKeywords.STRING:
                                 identTy = new ClassInformation(nameof(String), "", true, true);
                                 break;
                             case EnumKeywords.UINT:
-                                identTy = new StructInformation(nameof(UInt32), (uint)0, true, false);
+                                identTy = new StructInformation(nameof(UInt32), (uint) 0, true, false);
                                 break;
                             case EnumKeywords.UBYTE:
-                                identTy = new StructInformation(nameof(Byte), (byte)0, true, false);
+                                identTy = new StructInformation(nameof(Byte), (byte) 0, true, false);
                                 break;
                             case EnumKeywords.USHORT:
-                                identTy = new StructInformation(nameof(UInt16), (ushort)0, true, false);
+                                identTy = new StructInformation(nameof(UInt16), (ushort) 0, true, false);
                                 break;
                             case EnumKeywords.ULONG:
                                 identTy = new StructInformation(nameof(UInt64), 0UL, true, false);
                                 break;
                         }
+
                 }
+                edited = false;
                 if (!EnforceTypes(smt))
                     return false;
             }
