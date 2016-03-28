@@ -4,9 +4,6 @@ namespace Puffin.Frontend.Tokens
 {
     public class IntegerLiteralToken : Token
     {
-        
-        
-
         public IntegerLiteralToken(string value)
         {
             this.value = value;

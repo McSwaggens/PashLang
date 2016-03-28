@@ -4,12 +4,11 @@ namespace Puffin.Frontend.Tokens
 {
     public class ShortLiteralToken : Token
     {
-        
-        
-
         public ShortLiteralToken(string value)
         {
             this.value = value;
+            if (this.value.EndsWith("S") || this.value.EndsWith("s"))
+                this.value = this.value.Substring(0, this.value.Length - 1);
             this.type = ResolveType();
         }
 
