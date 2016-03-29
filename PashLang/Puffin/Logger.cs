@@ -29,5 +29,12 @@ namespace Puffin
             Console.WriteLine("(Warning) " + text);
             Console.ResetColor();
         }
+
+        public static void WriteCritical(string text)
+        {
+            Console.ForegroundColor = ConsoleColor.Magenta;
+            Console.WriteLine("(Critical) " + text);
+            Console.ResetColor();
+        }
     }
 }

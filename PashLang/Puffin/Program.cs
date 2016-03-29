@@ -1,6 +1,8 @@
 ﻿using System;
 using System.IO;
 using System.Linq;
+using System.Runtime.Hosting;
+using Puffin.Command_Line_Args;
 using Puffin.Frontend;
 using Puffin.Frontend.AST;
 using Puffin.Frontend.AST.Nodes;
@@ -13,9 +15,10 @@ namespace Puffin
         static void Main(string[] args)
         {
             Console.WriteLine("Puffin Compiler");
-            if (args.Length < 1)
+            CommandLineParser arguments = new CommandLineParser(args);
+            if (!arguments.Start())
             {
-                WriteError("No input file");
+                Logger.WriteError("Invalid Command line arguments");
                 Console.ReadKey();
                 return;
             }
@@ -50,7 +53,7 @@ namespace Puffin
             parse.PrintSymbols();
             Console.WriteLine("End Symbol output ================");
             Console.WriteLine("Begin Type Checker Output ========");
-            TypeChecker tyChecker = new TypeChecker(parse.Statements.ToList(), parse.SymbolTable, 4);
+            TypeChecker tyChecker = new TypeChecker(parse.Statements.ToList(), parse.SymbolTable, arguments.Strictness);
             if (!tyChecker.Start())
             {
                 Logger.WriteError("Type error occurred");

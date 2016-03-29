@@ -1,6 +1,39 @@
-public static void main(ref string[] args = 0, out int num = 0)
+public static void test()
 {
-    int i = 0;
+    int testvar = 0;
+} 
+
+public static void main(string[] args, int num1 = 0, long num2 = 0L)
+{
     string str = "Hello World";
-    i += 1;
+    int i = 0;
+    byte byt = 12B;
+    short srt = 12345S;
+    ushort usrt = 12345US;
+    uint usint = 1234556UI;
+    ulong uslong = 123456789UL;
+    float flt = 1234.567F;
+    double doub = 12345678.9012345D;
+    //int error = 12345US; // Uncomment for type error
+
+    // //string str = "DEAD"; // Uncomment for redefinition error
+    
+    for(i = 0; i < 10; i ++)
+    {
+        int j = i;
+    }
+
+    if(i < 10)
+    {
+        int k = 0;
+        i = 10;
+    }
+    //int poo = test(i); // Todo implement function calls
+    }
+
+    // /* Test Block comment */
+
+public static void test(int num)
+{
+    i *= 2;
 }

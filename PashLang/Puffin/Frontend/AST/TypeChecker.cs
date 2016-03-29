@@ -18,7 +18,10 @@ namespace Puffin.Frontend.AST
         private EnumOperators operatorTy = EnumOperators.NO_OPERATOR;
         private Information resultTy = null;
         private Symbol<Information> identSym;
-        private Symbol<Information> resultSym; 
+        private Symbol<Information> resultSym;
+
+        private string[] numberTypes = new[]
+        {nameof(UInt16), nameof(UInt32), nameof(UInt64), nameof(Byte), nameof(Int16), nameof(Int32), nameof(Int64)};
 
         public TypeChecker(List<Statement> statements, SymbolTable<Symbol<Information>> symbols, int strictness = 4)
         {
@@ -57,6 +60,8 @@ namespace Puffin.Frontend.AST
                 return false;
             if (identSym.ValueType is ArrayParameterInformation || identSym.ValueType is ArrayInformation) // we have found an array declaration
                 return EnforceArrayType(smt);
+            if (strictness < 4 && numberTypes.Contains(identTy.Name))
+                return numberTypes.Contains(identTy.Name) && numberTypes.Contains(resultTy.Name);
             return identTy.Name.Equals(resultTy.Name) && smt != null;
         }
 

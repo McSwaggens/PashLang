@@ -189,12 +189,13 @@ namespace Puffin.Frontend
                 }
                 catch (NullReferenceException ex)
                 {
-                    Logger.WriteError("Critical " + ex.StackTrace);
+                    Logger.WriteCritical(ex.StackTrace);
                     node = node.Next;
                     continue;
                 }
                 catch (IndexOutOfRangeException ex2)
                 {
+                    Logger.WriteCritical(ex2.StackTrace);
                     node = node.Next;
                     continue;
                 }

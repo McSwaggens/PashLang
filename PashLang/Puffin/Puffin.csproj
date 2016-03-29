@@ -42,6 +42,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Command Line Args\CommandLineParser.cs" />
     <Compile Include="Frontend\AST\ASTParser.cs" />
     <Compile Include="Frontend\AST\Nodes\BaseASTNode.cs" />
     <Compile Include="Frontend\AST\Nodes\ByteASTNode.cs" />
@@ -54,6 +55,7 @@
     <Compile Include="Frontend\Symbols\ArrayParameterSymbol.cs" />
     <Compile Include="Frontend\Symbols\ArraySymbol.cs" />
     <Compile Include="Frontend\Symbols\ClassInfo\Class.cs" />
+    <Compile Include="Frontend\Symbols\ClassInfo\PuffinString.cs" />
     <Compile Include="Frontend\Symbols\ClassSymbol.cs" />
     <Compile Include="Frontend\Symbols\EnumInfo\Enum.cs" />
     <Compile Include="Frontend\Symbols\EnumSymbol.cs" />

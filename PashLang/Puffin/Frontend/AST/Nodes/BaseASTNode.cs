@@ -48,7 +48,7 @@ namespace Puffin.Frontend.AST.Nodes
 
         public virtual Object Evaluate(BaseASTNode node)
         {
-            Logger.WriteError(nameof(Evaluate) + " must be overridden");
+            Logger.WriteCritical(nameof(Evaluate) + " must be overridden");
             return null;
         }
         public void Visit(BaseASTNode node)

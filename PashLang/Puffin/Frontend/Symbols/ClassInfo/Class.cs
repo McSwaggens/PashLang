@@ -4,6 +4,7 @@ namespace Puffin.Frontend.Symbols.ClassInfo
 {
     public abstract class Class : ClassInformation
     {
+        public static ClassInformation information;
         /// <summary>
         /// Constructor for class information
         /// </summary>
@@ -15,5 +16,7 @@ namespace Puffin.Frontend.Symbols.ClassInfo
         {
 
         }
+
+        public abstract ClassInformation CreateInformation();
     }
 }
