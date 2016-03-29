@@ -39,7 +39,7 @@ namespace Puffin
             Parser parse = new Parser(lexical);
             if (!parse.Start())
             {
-                Logger.WriteError("An error occured while parsing");
+                Logger.WriteError("An error occurred while parsing");
                 Console.ReadKey();
                 return;
             }

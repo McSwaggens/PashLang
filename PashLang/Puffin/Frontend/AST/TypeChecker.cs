@@ -17,6 +17,8 @@ namespace Puffin.Frontend.AST
         private Information identTy = null;
         private EnumOperators operatorTy = EnumOperators.NO_OPERATOR;
         private Information resultTy = null;
+        private Symbol<Information> identSym;
+        private Symbol<Information> resultSym; 
 
         public TypeChecker(List<Statement> statements, SymbolTable<Symbol<Information>> symbols, int strictness = 4)
         {
@@ -53,7 +55,24 @@ namespace Puffin.Frontend.AST
                 return true;
             if(identTy is ArrayInformation && !(resultTy is ArrayInformation))
                 return false;
+            if (identSym.ValueType is ArrayParameterInformation || identSym.ValueType is ArrayInformation) // we have found an array declaration
+                return EnforceArrayType(smt);
             return identTy.Name.Equals(resultTy.Name) && smt != null;
+        }
+
+        private bool EnforceArrayType(Statement smt)
+        {
+            if (resultSym == null)
+            {
+                int index = smt.StatementTokens.IndexOf(smt.StatementTokens.FirstOrDefault(x => x is OperatorToken && ((EnumOperators)x.Type).Equals(EnumOperators.ASSIGNMENT)));
+                if (index < 0)
+                    return true;
+                resultSym = new ArraySymbol<Information>(new ArrayInformation("",resultTy,false,0,null)); // create temporary symbol
+            }
+            if (!(resultSym.ValueType is ArrayParameterInformation) || !(resultSym.ValueType is ArrayInformation))
+                return false;
+
+            return identSym.ValueType.IdentifierType.Name.Equals(resultSym.ValueType.IdentifierType.Name);
         }
 
         private bool ParseStatementTypes(Statement smt)
@@ -69,6 +88,7 @@ namespace Puffin.Frontend.AST
                     if (tok is IdentifierToken && !edited)
                     {
                         identTy = symbols.Symbols.First(x => x.IdentifierName.Equals(tok.Value)).ValueType.IdentifierType;
+                        identSym = symbols.Symbols.First(x => x.IdentifierName.Equals(tok.Value));
                         edited = true;
                     }
                     else if (tok is OperatorToken)
@@ -78,6 +98,7 @@ namespace Puffin.Frontend.AST
                     else if (tok is IdentifierToken && edited)
                     {
                         resultTy = symbols.Symbols.First(x => x.IdentifierName.Equals(tok.Value)).ValueType.IdentifierType;
+                        resultSym = symbols.Symbols.First(x => x.IdentifierName.Equals(tok.Value));
                         redited = true;
                     }
                     else if (tok is StringLiteralToken || tok is IntegerLiteralToken ||
