@@ -18,7 +18,7 @@ public static void main(string[] args, int num1 = 0, long num2 = 0L)
 
     // //string str = "DEAD"; // Uncomment for redefinition error
     
-    for(i = 0; i < 10; i ++)
+    for(i = 0; i < 10; i ++) // BUG We should not require a ' ' between i and ++
     {
         int j = i;
     }
