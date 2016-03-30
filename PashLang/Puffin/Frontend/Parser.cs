@@ -76,6 +76,8 @@ namespace Puffin.Frontend
         public bool ParseSecondPass()
         {
             LinkedListNode<Statement> node = statements.First;
+            List<Information> pars = new List<Information>();
+            string name = "";
             while (node != null)
             {
                 int count = node.Value.StatementTokens.Count;
@@ -140,10 +142,10 @@ namespace Puffin.Frontend
                               node.Value.StatementTokens.ElementAt(count - 3) is OperatorToken || 
                               node.Value.StatementTokens.ElementAt(count - 4) is IdentifierToken)) // We have found a function call
                     {
-                        List<Information> pars = new List<Information>();
                         Logger.WriteWarning("Found Function call");
-                        if (!isDefinedInScope(node.Value.StatementTokens.ElementAt(
-                                    node.Value.StatementTokens.Count - 2).Value))
+                        name = node.Value.StatementTokens.ElementAt(
+                            node.Value.StatementTokens.Count - 2).Value;
+                        if (!isDefinedInScope(name))
                         {
                             Logger.WriteError("Function " + node.Value.StatementTokens.ElementAt(
                                 node.Value.StatementTokens.Count - 2).Value
@@ -156,8 +158,15 @@ namespace Puffin.Frontend
                         {
                             pars = ParseCallingParameters(node);
 
-                            if (!FunctionWithParametersDefined(node.Value.StatementTokens.ElementAt(
-                                node.Value.StatementTokens.Count - 2).Value, pars))
+                            if (pars.Count == 0)
+                            {
+                                if (!FunctionWithParametersDefined(name, pars))
+                                {
+                                    Logger.WriteError("Function with no parameters" + name + " is not defined in this scope");
+                                    return false;
+                                }
+                            }
+                            if (!FunctionWithParametersDefined(name, pars))
                             {
                                 string parameterSigniture = "";
                                 foreach (Information par in pars)
@@ -166,11 +175,12 @@ namespace Puffin.Frontend
                                         parameterSigniture += ((ParameterInformation) par).ToString() + ",";
                                 }
                                 Logger.WriteError("Function with parameters " + parameterSigniture +
-                                                  " defined in this scope");
+                                                  " not defined in this scope");
+                                return false;
                             }
                         }
 
-                    } 
+                    }
                     else if (node.Value.StatementTokens.Last().Value.Equals("(") &&
                              !(node.Value.StatementTokens.ElementAt(count - 2) is OperatorToken))
                         // we have found a function definition
@@ -210,10 +220,67 @@ namespace Puffin.Frontend
 
         private List<Information> ParseCallingParameters(LinkedListNode<Statement> node)
         {
+            ParameterInformation parameterInformation;
+            ParameterData data = new ParameterData();
+            Information typeInformation = null;
+            EnumKeywords ty;
+            string name;
+            bool isOut = false;
+            bool isRef = false;
+            bool isPointer = false;
+            int index = 0;
+            bool isArray = false;
+            List<Information> pars = new List<Information>();
+
             if (node.Value.StatementTokens.First() is KeywordToken &&
                 node.Value.StatementTokens.Last().Value.Equals("("))
                 node = node.Next;
-            return null;
+            do
+            {
+                if (node != null)
+                {
+                    if (node.Value.StatementTokens[index].Value.Equals(")"))
+                        return new List<Information>();
+
+                    if (node.Value.StatementTokens[index].Value.Equals("out"))
+                    {
+                        isOut = true;
+                        index++;
+                    }
+                    if (node.Value.StatementTokens[index].Value.Equals("ref"))
+                    {
+                        if (isOut)
+                        {
+                            Logger.WriteError("Parameters can not be defined out and ref");
+                            return null;
+                        }
+                        isRef = true;
+                        index++;
+                    }
+                    if (node.Value.StatementTokens[index].Value.EndsWith("*"))
+                    {
+                        if (isOut || isRef)
+                        {
+                            Logger.WriteError("Out or ref parameters can not be pointers");
+                            return null;
+                        }
+                        isPointer = true;
+                    }
+                    index++;
+                    if (node.Value.StatementTokens[index] is IdentifierToken)
+                    {
+                        var symbol = symbolTable.Symbols.FirstOrDefault(
+                            x => x.IdentifierName.Equals(node.Value.StatementTokens[index].Value));
+                        if (symbol != null)
+                        {
+                            Information inf = symbol.ValueType;
+                            pars.Add(inf);
+                        }
+                    }
+                    node = node.Next;
+                }
+            } while (node != null && node.Value.StatementTokens.Last().Value.Equals(","));
+            return pars;
         }
 
         private bool FunctionWithParametersDefined(string name, List<Information> pars)
@@ -227,6 +294,12 @@ namespace Puffin.Frontend
                     MethodSymbol<Information> temp = (MethodSymbol<Information>) symbol;
                     if (temp.Info.Name.Equals(name))
                     {
+                        if (pars.Count != temp.Info.Parameters.Length)
+                        {
+                            Logger.WriteError("Function " + name + " requires " + temp.Info.Parameters.Length + "Parameters found " + pars.Count);
+                            return false;
+                        }
+                        
                         foreach (Information par in pars)
                         {
                             if (!temp.Info.HasParameter(par))
