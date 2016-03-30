@@ -15,6 +15,7 @@ namespace Puffin
         static void Main(string[] args)
         {
             Console.WriteLine("Puffin Compiler");
+            Console.WriteLine(nameof(Single));
             CommandLineParser arguments = new CommandLineParser(args);
             if (!arguments.Start())
             {
@@ -65,6 +66,12 @@ namespace Puffin
             Console.WriteLine("Begin AST Output =================");
             ASTParser ast = new ASTParser(parse);
             BaseASTNode node = ast.ParseAST();
+            if (node == null)
+            {
+                Logger.WriteError("null node encountered while parsing AST");
+                Console.ReadKey();
+                return;
+            }
             Console.WriteLine(node.Evaluate(node));
             Console.WriteLine("End AST Output ===================");
             Console.WriteLine("Compilation Complete");

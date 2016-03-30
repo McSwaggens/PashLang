@@ -16,25 +16,25 @@ namespace Puffin.Frontend.AST.Nodes
         private Information data;
         private Symbol<Information> symbol;
 
-        public virtual BaseASTNode Left
+        public BaseASTNode Left
         {
             get { return left; }
             set { left = value; }
         }
 
-        public virtual BaseASTNode Right
+        public BaseASTNode Right
         {
             get { return right; }
             set { right = value; }
         }
 
-        public virtual Information Data
+        public Information Data
         {
             get { return data; }
             set { data = value; }
         }
 
-        public virtual Symbol<Information> Symbol
+        public Symbol<Information> Symbol
         {
             get { return symbol; }
             set { symbol = value; }
@@ -48,10 +48,10 @@ namespace Puffin.Frontend.AST.Nodes
 
         public virtual Object Evaluate(BaseASTNode node)
         {
-            Logger.WriteCritical(nameof(Evaluate) + " must be overridden");
+            Logger.WriteCritical("BaseASTNode.Evaluate must be overridden");
             return null;
         }
-        public void Visit(BaseASTNode node)
+        public virtual void Visit(BaseASTNode node)
         {
             Evaluate(node);
             if (node.Left != null)

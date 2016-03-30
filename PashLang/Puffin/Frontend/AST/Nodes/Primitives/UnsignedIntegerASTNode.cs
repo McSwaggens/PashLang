@@ -6,15 +6,15 @@ using System.Threading.Tasks;
 using Puffin.Frontend.Symbols;
 using Puffin.Frontend.Symbols.TypeInfo;
 
-namespace Puffin.Frontend.AST.Nodes
+namespace Puffin.Frontend.AST.Nodes.Primitives
 {
-    public class IntegerASTNode : BaseASTNode
+    public class UnsignedIntegerASTNode : BaseASTNode
     {
-        public IntegerASTNode(VariableSymbol<Information> owner, BaseASTNode parent)
+        public UnsignedIntegerASTNode(VariableSymbol<Information> owner, BaseASTNode parent)
         {
-            if (owner == null || !owner.TypeInfo.IdentifierType.Name.Equals(nameof(Int32)))
+            if (owner == null || !owner.TypeInfo.IdentifierType.Name.Equals(nameof(UInt32)))
             {
-                Logger.WriteError("Cannot construct an integer node without a valid symbol");
+                Logger.WriteError("Cannot construct an Unsigned Int node without a valid symbol");
                 return;
             }
             this.Symbol = owner;
@@ -25,11 +25,12 @@ namespace Puffin.Frontend.AST.Nodes
 
         }
 
-        public IntegerASTNode(VariableSymbol<Information> owner, BaseASTNode left, BaseASTNode right, BaseASTNode parent)
+        public UnsignedIntegerASTNode(VariableSymbol<Information> owner, BaseASTNode left, BaseASTNode right,
+            BaseASTNode parent)
         {
-            if (owner == null || !owner.TypeInfo.IdentifierType.Name.Equals(nameof(Int32)))
+            if (owner == null || !owner.TypeInfo.IdentifierType.Name.Equals(nameof(UInt32)))
             {
-                Logger.WriteError("Cannot construct an integer node without a valid symbol");
+                Logger.WriteError("Cannot construct an Unsigned Int node without a valid symbol");
                 return;
             }
             this.Symbol = owner;

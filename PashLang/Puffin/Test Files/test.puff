@@ -30,7 +30,7 @@ public static void main(string[] args, int num1 = 0, long num2 = 0L)
     }
     int vor = test();
     //int vor2 = test(num1); // Uncomment for invalid parameters error
-    }
+}
 
     // /* Test Block comment */
 
