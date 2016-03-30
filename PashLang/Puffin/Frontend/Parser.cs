@@ -157,29 +157,35 @@ namespace Puffin.Frontend
                             !node.Value.StatementTokens.First().Value.Equals(")"))
                         {
                             pars = ParseCallingParameters(node);
-
-                            if (pars.Count == 0)
+                            if (pars != null)
                             {
+                                if (pars.Count == 0)
+                                {
+                                    if (!FunctionWithParametersDefined(name, pars))
+                                    {
+                                        Logger.WriteError("Function with no parameters" + name +
+                                                          " is not defined in this scope");
+                                        return false;
+                                    }
+                                }
                                 if (!FunctionWithParametersDefined(name, pars))
                                 {
-                                    Logger.WriteError("Function with no parameters" + name + " is not defined in this scope");
+                                    string parameterSigniture = "";
+                                    foreach (Information par in pars)
+                                    {
+                                        if (par is ParameterInformation)
+                                            parameterSigniture += ((ParameterInformation) par).IdentifierType.Name + ",";
+                                    }
+                                    Logger.WriteError("Function " + name + " with parameters " + parameterSigniture +
+                                                      " not defined in this scope");
                                     return false;
                                 }
                             }
-                            if (!FunctionWithParametersDefined(name, pars))
+                            else
                             {
-                                string parameterSigniture = "";
-                                foreach (Information par in pars)
-                                {
-                                    if (par is ParameterInformation)
-                                        parameterSigniture += ((ParameterInformation) par).ToString() + ",";
-                                }
-                                Logger.WriteError("Function with parameters " + parameterSigniture +
-                                                  " not defined in this scope");
                                 return false;
                             }
                         }
-
                     }
                     else if (node.Value.StatementTokens.Last().Value.Equals("(") &&
                              !(node.Value.StatementTokens.ElementAt(count - 2) is OperatorToken))
@@ -266,15 +272,22 @@ namespace Puffin.Frontend
                         }
                         isPointer = true;
                     }
-                    index++;
                     if (node.Value.StatementTokens[index] is IdentifierToken)
                     {
-                        var symbol = symbolTable.Symbols.FirstOrDefault(
-                            x => x.IdentifierName.Equals(node.Value.StatementTokens[index].Value));
-                        if (symbol != null)
+                        if (isDefinedInScope(node.Value.StatementTokens[index].Value))
                         {
-                            Information inf = symbol.ValueType;
-                            pars.Add(inf);
+                            var symbol = symbolTable.Symbols.FirstOrDefault(
+                                x => x.IdentifierName.Equals(node.Value.StatementTokens[index].Value));
+                            if (symbol != null)
+                            {
+                                Information inf = symbol.ValueType;
+                                pars.Add(inf);
+                            }
+                        }
+                        else
+                        {
+                            Logger.WriteError("Parameter " + node.Value.StatementTokens[index].Value + " is not defined in this scope");
+                            return null;
                         }
                     }
                     node = node.Next;
@@ -296,7 +309,7 @@ namespace Puffin.Frontend
                     {
                         if (pars.Count != temp.Info.Parameters.Length)
                         {
-                            Logger.WriteError("Function " + name + " requires " + temp.Info.Parameters.Length + "Parameters found " + pars.Count);
+                            Logger.WriteError("Function " + name + " requires " + temp.Info.Parameters.Length + " Parameters found " + pars.Count);
                             return false;
                         }
                         
