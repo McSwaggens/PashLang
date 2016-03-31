@@ -555,8 +555,8 @@ namespace PASM
         /// <param name="p"></param>
         public void TryFreeRaster(Raster.Register p)
         {
-            Memory.Part part = memory.PartAddressStack[p.address];
-            if (p.ReferenceCount == 0) memory.Free(part.Address);
+			if (p.ReferenceCount == 0)
+				memory.Free (p.address);
         }
 
         /// <summary>
