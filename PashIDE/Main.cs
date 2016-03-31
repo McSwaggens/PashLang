@@ -80,7 +80,7 @@ namespace PashIDE
             Explorer.mninst = this;
             Explorer.WorkingDirectory = project.WorkingDirectory;
             Explorer.ScanRoot();
-            Code.SyntaxHighlighter.StaticClasses = "Standard|Threading";
+            Code.SyntaxHighlighter.StaticClasses = "Standard|Threading|GL";
             Code.SyntaxHighlighter.InitPASMRegex();
             Code.Text = "#PashIDE by Daniel Jones\n#Use the explorer on the right side to open a CodeFile.\n#Use the controls above to compile and run your application\n#Happy Coding!";
             Code.ReadOnly = true;
