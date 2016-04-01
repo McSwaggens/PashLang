@@ -12,9 +12,10 @@ namespace PashRuntime
         public static Dictionary<string, bool> Flags = new Dictionary<string, bool>()
         {
             {"d",   false}, //Debug run
+            {"pc",  false}, //Show pasm code
             {"i",   false}, //Debug print information
             {"v",   false},
-            {"t",   true}, // Record and print the execution time...
+            {"t",   true},  // Record and print the execution time...
             {"nostdlib", false}
         };
         
@@ -85,6 +86,18 @@ namespace PashRuntime
 				return;
             }
             string[] code = File.ReadAllLines(args[0]);
+            
+            if (Flags["pc"]) 
+            {
+                //When switched on, will fill the width of the console with a single line, otherwise, we just use 15(x2) as a width.
+                bool fullWidth = false;
+                string wall;
+                if (fullWidth) wall = CharRepeat('-', (Console.BufferWidth/2)-3); else wall = CharRepeat('-', 15);
+                Console.WriteLine($"{wall}[Code]{wall}");
+                for (int i = 0; i < code.Length; i++) Console.WriteLine($"{i}\t{code[i]}");
+                Console.WriteLine($"{wall}[Code]{wall}");
+            }
+            
             Execute(code);
         }
 
@@ -157,6 +170,12 @@ namespace PashRuntime
             Console.ForegroundColor = color;
             Console.WriteLine(text);
             Console.ForegroundColor = norm;
+        }
+        
+        private static string CharRepeat(char c, int times) {
+            string ret = "";
+            for (int i = 0; i < times; i++) ret += c;
+            return ret;
         }
 
         public static void WriteError(string text)
