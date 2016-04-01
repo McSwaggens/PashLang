@@ -77,15 +77,15 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
-    <Compile Include="Handlers\st_BYTE.cs" />
-    <Compile Include="Handlers\st_INT16.cs" />
-    <Compile Include="Handlers\st_INT32.cs" />
-    <Compile Include="Handlers\st_INT64.cs" />
-    <Compile Include="Handlers\st_PTR.cs" />
-    <Compile Include="Handlers\st_QMATH.cs" />
-    <Compile Include="Handlers\st_VOP.cs" />
-    <Compile Include="Handlers\st_VOR.cs" />
-    <Compile Include="Handlers\st_VORL.cs" />
+    <Compile Include="Handlers\set_BYTE.cs" />
+    <Compile Include="Handlers\set_INT16.cs" />
+    <Compile Include="Handlers\set_INT32.cs" />
+    <Compile Include="Handlers\set_INT64.cs" />
+    <Compile Include="Handlers\set_PTR.cs" />
+    <Compile Include="Handlers\set_QMATH.cs" />
+    <Compile Include="Handlers\set_VOP.cs" />
+    <Compile Include="Handlers\set_VOR.cs" />
+    <Compile Include="Handlers\set_VORL.cs" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Properties\Resources.resx">

@@ -8,11 +8,11 @@ namespace PASM.Handlers
     /// Sets the data at the given register to the return of a function call
     /// Captures the return of a call command
     /// </summary>
-    public class st_VOR : Handler
+    public class set_VOR : Handler
     {
         string ptr;
         string[] args;
-        public st_VOR(string[] args, Engine inst) : base(inst)
+        public set_VOR(string[] args, Engine inst) : base(inst)
         {
             ptr = args[1];
             this.args = args;

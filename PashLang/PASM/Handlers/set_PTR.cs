@@ -7,11 +7,11 @@ namespace PASM.Handlers
     /// <summary>
     /// Sets the given registers address to another registers address
     /// </summary>
-    public class st_PTR : Handler
+    public class set_PTR : Handler
     {
         string working;
         string setter;
-        public st_PTR(string[] args, Engine inst) : base(inst)
+        public set_PTR(string[] args, Engine inst) : base(inst)
         {
             working = args[1];
             setter = args[3];

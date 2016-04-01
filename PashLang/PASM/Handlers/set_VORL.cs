@@ -9,12 +9,12 @@ namespace PASM.Handlers
     /// Gets the data returned by static library method
     /// Can accept params
     /// </summary>
-    public class st_VORL : Handler
+    public class set_VORL : Handler
     {
         int ptr;
         bool isMethod;
         string[] args;
-        public st_VORL(string[] args, Engine inst) : base(inst)
+        public set_VORL(string[] args, Engine inst) : base(inst)
         {
             isMethod = isMethodPointer(args[1], out ptr);
             this.args = args;

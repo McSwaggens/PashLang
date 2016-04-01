@@ -9,10 +9,10 @@ namespace PASM.Handlers
     /// Sets the data at the given register to another registers data
     /// Copies the data of another registers data
     /// </summary>
-    public class st_VOP : Handler
+    public class set_VOP : Handler
     {
         private string worker, setter;
-        public st_VOP(string[] args, Engine engine) : base(engine)
+        public set_VOP(string[] args, Engine engine) : base(engine)
         {
             worker = args[1];
             setter = args[3];
