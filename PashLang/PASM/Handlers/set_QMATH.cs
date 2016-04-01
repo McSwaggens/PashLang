@@ -8,11 +8,11 @@ namespace PASM.Handlers
     /// Sets the data at the current address to the result of a mathematical calculation
     /// This command requires the byte context to be disclosed
     /// </summary>
-    public class st_QMATH : Handler
+    public class set_QMATH : Handler
     {
         private string ptr;
         private string Equasion;
-        public st_QMATH(string[] args, Engine inst) : base(inst)
+        public set_QMATH(string[] args, Engine inst) : base(inst)
         {
             ptr = args[1];
             for (int i = 3; i < args.Length; i++) Equasion += args[i];

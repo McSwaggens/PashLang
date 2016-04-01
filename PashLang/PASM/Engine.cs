@@ -145,7 +145,7 @@ namespace PASM
             if (args[2] == "SINT16" )   return new set_SINT16   (args, this);
             if (args[2] == "SINT32" )   return new set_SINT32   (args, this);
             if (args[2] == "SINT64" )   return new set_SINT64   (args, this);
-            if (args[2] == "QMATH"  )   return new st_QMATH     (args, this);
+            if (args[2] == "QMATH"  )   return new set_QMATH     (args, this);
             if (args[2] == "INT32"  )   return new set_INT32     (args, this);
             if (args[2] == "BYTE"   )   return new set_INT64     (args, this);
             if (args[2] == "FLOAT"  )   return new set_FLOAT    (args, this);
