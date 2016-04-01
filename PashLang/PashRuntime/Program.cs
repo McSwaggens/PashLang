@@ -5,6 +5,7 @@ using PASM;
 using System.Diagnostics;
 using static PashRuntime.UtilOut;
 using static PashRuntime.OSInfo;
+using System.Reflection;
 
 namespace PashRuntime
 {
@@ -12,7 +13,12 @@ namespace PashRuntime
     {
         private static Stopwatch sw = new Stopwatch();
         
-        public static Dictionary<string, bool> Flags = new Dictionary<string, bool>()
+        private static List<Type> StandardLibraries = new List<Type>()
+        {
+            typeof (stdlib.Standard), typeof(stdlib.Threading)
+        };
+        
+        private static Dictionary<string, bool> Flags = new Dictionary<string, bool>()
         {
             {"d",   false}, //Debug run
             {"pc",  false}, //Show pasm code
@@ -23,6 +29,57 @@ namespace PashRuntime
             {"it", false}, //Initialize time
             {"nostdlib", false} 
         };
+        
+        private static Dictionary<List<string>, string> TextArguments = new Dictionary<List<string>, string>() {
+            {new List<string>{"h", "help"}, 
+            @"
+--------------------[PashRuntime Help]--------------------
+
+[Usage]
+
+PashRuntime [File] [[- | --] argument] ...
+
+[Description]
+PashRuntime is a collection of tools to, Compile and Execute Puffin or PASM code.
+The first line should always be the location of the file you wish to execute or compile.
+
+[Command Line Arguments]
+Type these in for the desired effect.
+
+-d (debug)
+    run the engine in a debug mode.
+    Defaults the file to ~/Documents/Scripts/PASM_test.p
+    No need for file location argument.
+
+-pc (print code)
+    prints out the PASM code that is about to be executed.
+
+-i (information)
+    prints out process information as it is happening.
+    This gives out Warnings, Errors, fixes, and other info that may be of some use.
+
+-t (time)
+    Will print out execution time of the PASM code.
+    Order: (ms), (ticks), (raw time)
+    
+-nostdlib (no standard library)
+    Disable the standard library from being added in by default.
+
+[Github]
+http://www.Github.com/McSwaggens/PashLang
+
+--------------------[PashRuntime Help]--------------------
+"},
+            {new List<string>{"v", "version"}, 
+$@"
+Using;
+PashRuntime version v1
+PASM version Pre-Release v1
+Puffin - Development phase
+"}
+        };
+        
+        private static bool DO_EXECUTE = true;
         
         #region Preferences
         ///These settings can be toggled off and on at will, will change how the program behaves, and cannot be changed. (readonly)
@@ -36,6 +93,8 @@ namespace PashRuntime
         {
             //Initialize and load the prarameters from the args array, into the Flags dictionary.
             LoadParams(args);
+            
+            if (!DO_EXECUTE) return;
             
             // -i (Information) argument
             if (Flags["i"])
@@ -114,22 +173,31 @@ namespace PashRuntime
             {
                 for (int i = 0; i < args.Length; i++)
                 {
-                    
                     if (args[i].StartsWith("-"))
                     {
+                        
                         ///TODO: make difference between - and --
                         string flag = args[i].StartsWith("--")
                             ? args[i].TrimStart("--".ToCharArray())
                             : args[i].TrimStart("-".ToCharArray());
+                        
                         if (string.IsNullOrWhiteSpace(flag))
                             continue;
-                        if (!Flags.ContainsKey(flag))
-                        {
+                        
+                        string TextOut;
+                        if (ContainsTextArgKey(flag, out TextOut)) {
+                            Console.WriteLine(TextOut);
+                            DO_EXECUTE = false;
+                            return;
+                        }
+                        else
+                        if (Flags.ContainsKey(flag))
+                            Flags[flag] = !Flags[flag];
+                        else {
                             WriteColor("Unknown flag: " + flag, ConsoleColor.Red);
                             WriteColor("Aborting...", ConsoleColor.Yellow);
                             return;
                         }
-                        Flags[flag] = !Flags[flag];
                     }
                 }
                 
@@ -139,13 +207,15 @@ namespace PashRuntime
                 }
             }
         }
-
-        public static List<Type> StandardLibraries = new List<Type>()
-        {
-            typeof (stdlib.Standard), typeof(stdlib.Threading)
-        };
-
-
+        
+        private static bool ContainsTextArgKey(string key, out string value) {
+            value = "";
+            foreach (KeyValuePair<List<string>, string> pair in TextArguments) {
+                foreach (string tKey in pair.Key) if (tKey == key) { value = pair.Value; return true; }
+            }
+            return false;
+        }
+        
         public static void StartRuntime(string[] code)
         {
             Engine engine = new Engine();
