@@ -3,6 +3,7 @@ using System.Collections.Generic;
 
 namespace PASM
 {
+	
     /// <summary>
     /// Virtual memory container for the PASM engine to allocate data to, and also grab data from an address.
     /// </summary>
@@ -10,7 +11,7 @@ namespace PASM
     {
         private List<Part> FreeParts = new List<Part>();
         private List<Part> UsedParts = new List<Part>();
-		private Part[] PartAddressStack;
+		public Part[] PartAddressStack;
         public byte[] Data;
         public uint DataLength;
         

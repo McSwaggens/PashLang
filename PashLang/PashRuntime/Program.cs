@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using PASM;
 using System.Diagnostics;
+using System.Runtime.InteropServices;
 
 namespace PashRuntime
 {
@@ -10,23 +11,65 @@ namespace PashRuntime
     {
         public static Dictionary<string, bool> Flags = new Dictionary<string, bool>()
         {
-            {"d",   false},
-            {"s",   false},
+            {"d",   false}, //Debug run
+            {"i",   false}, //Debug print information
             {"v",   false},
-            {"t",   true}, //Record and print the execution time...
-            {"dr",  false}, // Double run
+            {"t",   true}, // Record and print the execution time...
             {"nostdlib", false}
         };
-
+        
+        [DllImport ("libc")]
+		static extern int uname (IntPtr buf);
+        
+        private static bool IsRunningMac ()
+		{
+			IntPtr buf = IntPtr.Zero;
+			try {
+				buf = Marshal.AllocHGlobal (8192);
+				// This is a hacktastic way of getting sysname from uname ()
+				if (uname (buf) == 0) {
+					string os = Marshal.PtrToStringAnsi (buf);
+					if (os == "Darwin")
+						return true;
+				}
+			} catch {
+			} finally {
+				if (buf != IntPtr.Zero)
+					Marshal.FreeHGlobal (buf);
+			}
+			return false;
+		}
+        
+        private static bool IsRunningUnix() => Environment.OSVersion.Platform == PlatformID.Unix || Environment.OSVersion.Platform == PlatformID.MacOSX;
+        
+        private static readonly bool OS_UNIX = IsRunningUnix();
+        
+        private static bool IsRunningLinux() => OS_UNIX && !IsRunningMac();
+        
+        private static readonly bool OS_LINUX = IsRunningLinux();
+        
+        private static readonly bool OS_OSX = OS_UNIX && IsRunningMac();
+        
+        private static readonly bool OS_WINDOWS = Environment.OSVersion.Platform == PlatformID.Win32Windows;
+        
+        
+        private static readonly string DEBUG_FILE_NAME = "PASM_test.p";
         public static void Main(string[] args)
         {
-			
-			#if DEBUG
-			if (args.Length == 0){
-				args = new[] {"/Users/" + Environment.UserName + "/Documents/Scripts/PASM_test.p"};
-				Console.WriteLine("Using debug mode");
+            LoadParams(args);
+            
+            if (Flags["i"])
+            {
+                Console.WriteLine($"OS_UNIX = {OS_UNIX}");
+                Console.WriteLine($"OS_OSX = {OS_OSX}");
+                Console.WriteLine($"OS_LINUX = {OS_LINUX}");
+                Console.WriteLine($"OS_WINDOWS = {OS_WINDOWS}");
+            }
+            if (Flags["d"])
+            {
+				args = OS_LINUX ? new[] {"/home/" + Environment.UserName + $"/Documents/Scripts/{DEBUG_FILE_NAME}"} : new[] {"/User/" + Environment.UserName + $"/Documents/Scripts/{DEBUG_FILE_NAME}"};
+				WriteWarning("Using debug mode");
 			}
-			#endif
             if (args.Length == 0)
             {
                 WriteError("Please parse in a file to be executed...");
@@ -41,18 +84,29 @@ namespace PashRuntime
                 WriteWarning("Aborting...");
 				return;
             }
-            Entry(File.ReadAllLines(args[0]), args);
-            
-			#if DEBUG
-			Console.ReadLine();
-			#endif
+            string[] code = File.ReadAllLines(args[0]);
+            Execute(code);
         }
 
         public static void Entry(string[] code, string[] args)
         {
-            if (args.Length > 1)
+            LoadParams(args);
+            Execute(code);
+        }
+        
+        private static void Execute(string[] code) {
+            StartRuntime(code);
+            Console.WriteLine("Finished" +
+                              (Flags["t"]
+                                  ? " in " + sw.ElapsedMilliseconds + "ms, " + sw.ElapsedTicks + "ticks (" + sw.Elapsed +
+                                    ")."
+                                  : "..."));
+        }
+        
+        private static void LoadParams(string[] args) {
+            if (args.Length > 0)
             {
-                for (int i = 1; i < args.Length; i++)
+                for (int i = 0; i < args.Length; i++)
                 {
                     ///TODO: make difference between - and --
                     string flag = args[i].StartsWith("--")
@@ -70,16 +124,9 @@ namespace PashRuntime
                 }
                 foreach (KeyValuePair<string, bool> p in Flags)
                 {
-                    Console.WriteLine(p);
+                    //Console.WriteLine(p);
                 }
             }
-            
-            StartRuntime(code);
-            Console.WriteLine("Finished" +
-                              (Flags["t"]
-                                  ? " in " + sw.ElapsedMilliseconds + "ms, " + sw.ElapsedTicks + "ticks (" + sw.Elapsed +
-                                    ")."
-                                  : "..."));
         }
 
         public static List<Type> StandardLibraries = new List<Type>()
@@ -99,15 +146,9 @@ namespace PashRuntime
                 //Reference the Standard library...
                 StandardLibraries.ForEach(t => engine.ReferenceLibrary(t));
             }
-            int runtimes = 1;
-            if (Flags["dr"]) runtimes = 2;
-            for (int i = 0; i < runtimes; i++)
-            {
-                sw.Reset();
-                sw.Start();
-                engine.Execute();
-                sw.Stop();
-            }
+            sw.Start();
+            engine.Execute();
+            sw.Stop();
         } 
 
         public static void WriteColor(string text, ConsoleColor color)
