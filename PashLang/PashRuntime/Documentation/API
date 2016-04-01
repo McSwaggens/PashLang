@@ -1,0 +1,3 @@
+Program.cs:
+    void Main(string[] args) - Main entry point for console applications.
+    void Entry(string[] code, string[] args) - Entry point for other programs that wish to use the runtime.

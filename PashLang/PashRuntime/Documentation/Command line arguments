@@ -1,0 +1,20 @@
+Command Line Arguments
+Type these in for the desired effect.
+If an argument is parsed in twice, the argument is canceled out.
+
+-d (debug)
+    run the engine in a debug mode.
+
+-pc (print code)
+    prints out the PASM code that is about to be executed.
+
+-i (information)
+    prints out process information as it is happening.
+    This gives out Warnings, Errors, fixes, and other info that may be of some use.
+
+-t (time)
+    Will print out execution time of the PASM code.
+    Order: (ms), (ticks), (raw time)
+    
+-nostdlib (no standard library)
+    Disable the standard library from being added in by default.
