@@ -15,8 +15,10 @@ namespace PashRuntime
             {"pc",  false}, //Show pasm code
             {"i",   false}, //Debug print information
             {"v",   false},
-            {"t",   true},  // Record and print the execution time...
-            {"nostdlib", false}
+            {"t",   false},  // Record and print the execution time
+            {"p",   false}, //Pause after execution
+            {"it", false}, //Initialize time
+            {"nostdlib", false} 
         };
         
         [DllImport ("libc")]
@@ -109,11 +111,13 @@ namespace PashRuntime
         
         private static void Execute(string[] code) {
             StartRuntime(code);
-            Console.WriteLine("Finished" +
-                              (Flags["t"]
-                                  ? " in " + sw.ElapsedMilliseconds + "ms, " + sw.ElapsedTicks + "ticks (" + sw.Elapsed +
-                                    ")."
-                                  : "..."));
+            if (Flags["t"])
+                Console.WriteLine($"Execution finished in {sw.ElapsedMilliseconds} ms, {sw.ElapsedTicks} ticks {sw.Elapsed}.");
+            else Console.WriteLine("Execution finished.");
+            if (Flags["p"]) {
+                Console.WriteLine("Press any key to continue...");
+                Console.ReadKey();
+            }
         }
         
         private static void LoadParams(string[] args) {
@@ -153,12 +157,21 @@ namespace PashRuntime
         {
             Engine engine = new Engine();
             engine.setMemory(1024);
+            sw.Reset();
+            sw.Start();
             engine.Load(code);
+            sw.Stop();
+            
+            if (Flags["it"]) {
+                Console.WriteLine($"Initialization took {sw.ElapsedMilliseconds} ms, {sw.ElapsedTicks} ticks {sw.Elapsed}.");
+            }
+            
             if (!Flags["nostdlib"])
             {
                 //Reference the Standard library...
                 StandardLibraries.ForEach(t => engine.ReferenceLibrary(t));
             }
+            sw.Reset();
             sw.Start();
             engine.Execute();
             sw.Stop();
