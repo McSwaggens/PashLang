@@ -3,12 +3,15 @@ using System.Collections.Generic;
 using System.IO;
 using PASM;
 using System.Diagnostics;
-using System.Runtime.InteropServices;
+using static PashRuntime.UtilOut;
+using static PashRuntime.OSInfo;
 
 namespace PashRuntime
 {
     public class MainClass
     {
+        private static Stopwatch sw = new Stopwatch();
+        
         public static Dictionary<string, bool> Flags = new Dictionary<string, bool>()
         {
             {"d",   false}, //Debug run
@@ -21,46 +24,20 @@ namespace PashRuntime
             {"nostdlib", false} 
         };
         
-        [DllImport ("libc")]
-		static extern int uname (IntPtr buf);
-        
-        private static bool IsRunningMac ()
-		{
-			IntPtr buf = IntPtr.Zero;
-			try {
-				buf = Marshal.AllocHGlobal (8192);
-				// This is a hacktastic way of getting sysname from uname ()
-				if (uname (buf) == 0) {
-					string os = Marshal.PtrToStringAnsi (buf);
-					if (os == "Darwin")
-						return true;
-				}
-			} catch {
-			} finally {
-				if (buf != IntPtr.Zero)
-					Marshal.FreeHGlobal (buf);
-			}
-			return false;
-		}
-        
-        private static bool IsRunningUnix() => Environment.OSVersion.Platform == PlatformID.Unix || Environment.OSVersion.Platform == PlatformID.MacOSX;
-        
-        private static readonly bool OS_UNIX = IsRunningUnix();
-        
-        private static bool IsRunningLinux() => OS_UNIX && !IsRunningMac();
-        
-        private static readonly bool OS_LINUX = IsRunningLinux();
-        
-        private static readonly bool OS_OSX = OS_UNIX && IsRunningMac();
-        
-        private static readonly bool OS_WINDOWS = Environment.OSVersion.Platform == PlatformID.Win32Windows;
-        
-        
+        #region Preferences
+        ///These settings can be toggled off and on at will, will change how the program behaves, and cannot be changed. (readonly)
         private static readonly string DEBUG_FILE_NAME = "PASM_test.p";
+        private static readonly bool FULL_WIDTH_WALLS = false;
+        
+        private static readonly uint DEFAULT_MEMORY_SIZE_BYTES = 1024;
+        #endregion 
+        
         public static void Main(string[] args)
         {
+            //Initialize and load the prarameters from the args array, into the Flags dictionary.
             LoadParams(args);
             
+            // -i (Information) argument
             if (Flags["i"])
             {
                 Console.WriteLine($"OS_UNIX = {OS_UNIX}");
@@ -68,41 +45,49 @@ namespace PashRuntime
                 Console.WriteLine($"OS_LINUX = {OS_LINUX}");
                 Console.WriteLine($"OS_WINDOWS = {OS_WINDOWS}");
             }
+            
+            // -d (Debug) argument
             if (Flags["d"])
             {
 				args = OS_LINUX ? new[] {"/home/" + Environment.UserName + $"/Documents/Scripts/{DEBUG_FILE_NAME}"} : new[] {"/User/" + Environment.UserName + $"/Documents/Scripts/{DEBUG_FILE_NAME}"};
 				WriteWarning("Using debug mode");
 			}
+            
+            //Check if there is a file to executed.
             if (args.Length == 0)
             {
                 WriteError("Please parse in a file to be executed...");
                 WriteWarning("Aborting...");
                 return;
             }
+            
+            //Check if the file exists
             if (File.Exists(args[0]))
                 Console.WriteLine("Executing pash code file: " + Path.GetFileName(args[0]) + "...");
             else
             {
+                //Print an error if the file does not exist
                 WriteError("Unknown file: " + args[0]);
                 WriteWarning("Aborting...");
 				return;
             }
             string[] code = File.ReadAllLines(args[0]);
             
+            // Print all the code we have to execute.
             if (Flags["pc"]) 
             {
                 //When switched on, will fill the width of the console with a single line, otherwise, we just use 15(x2) as a width.
-                bool fullWidth = false;
                 string wall;
-                if (fullWidth) wall = CharRepeat('-', (Console.BufferWidth/2)-3); else wall = CharRepeat('-', 15);
+                if (FULL_WIDTH_WALLS) wall = CharRepeat('-', (Console.BufferWidth/2)-3); else wall = CharRepeat('-', 15);
                 Console.WriteLine($"{wall}[Code]{wall}");
                 for (int i = 0; i < code.Length; i++) Console.WriteLine($"{i}\t{code[i]}");
                 Console.WriteLine($"{wall}[Code]{wall}");
             }
             
+            //Begin the process of executing the code.
             Execute(code);
         }
-
+        
         public static void Entry(string[] code, string[] args)
         {
             LoadParams(args);
@@ -111,9 +96,13 @@ namespace PashRuntime
         
         private static void Execute(string[] code) {
             StartRuntime(code);
+            //If the "t" flag is active, print out the execution time.
             if (Flags["t"])
                 Console.WriteLine($"Execution finished in {sw.ElapsedMilliseconds} ms, {sw.ElapsedTicks} ticks {sw.Elapsed}.");
-            else Console.WriteLine("Execution finished.");
+            else
+                Console.WriteLine("Execution finished.");
+            
+            //Pause the program after execution, and wait for a keystroke.
             if (Flags["p"]) {
                 Console.WriteLine("Press any key to continue...");
                 Console.ReadKey();
@@ -125,20 +114,25 @@ namespace PashRuntime
             {
                 for (int i = 0; i < args.Length; i++)
                 {
-                    ///TODO: make difference between - and --
-                    string flag = args[i].StartsWith("--")
-                        ? args[i].TrimStart("--".ToCharArray())
-                        : args[i].TrimStart("-".ToCharArray());
-                    if (string.IsNullOrWhiteSpace(flag))
-                        continue;
-                    if (!Flags.ContainsKey(flag))
+                    
+                    if (args[i].StartsWith("-"))
                     {
-                        WriteColor("Unknown flag: " + flag, ConsoleColor.Red);
-                        WriteColor("Aborting...", ConsoleColor.Yellow);
-                        return;
+                        ///TODO: make difference between - and --
+                        string flag = args[i].StartsWith("--")
+                            ? args[i].TrimStart("--".ToCharArray())
+                            : args[i].TrimStart("-".ToCharArray());
+                        if (string.IsNullOrWhiteSpace(flag))
+                            continue;
+                        if (!Flags.ContainsKey(flag))
+                        {
+                            WriteColor("Unknown flag: " + flag, ConsoleColor.Red);
+                            WriteColor("Aborting...", ConsoleColor.Yellow);
+                            return;
+                        }
+                        Flags[flag] = !Flags[flag];
                     }
-                    Flags[flag] = !Flags[flag];
                 }
+                
                 foreach (KeyValuePair<string, bool> p in Flags)
                 {
                     //Console.WriteLine(p);
@@ -151,12 +145,11 @@ namespace PashRuntime
             typeof (stdlib.Standard), typeof(stdlib.Threading)
         };
 
-        private static Stopwatch sw = new Stopwatch();
 
         public static void StartRuntime(string[] code)
         {
             Engine engine = new Engine();
-            engine.setMemory(1024);
+            engine.setMemory(DEFAULT_MEMORY_SIZE_BYTES);
             sw.Reset();
             sw.Start();
             engine.Load(code);
@@ -175,30 +168,6 @@ namespace PashRuntime
             sw.Start();
             engine.Execute();
             sw.Stop();
-        } 
-
-        public static void WriteColor(string text, ConsoleColor color)
-        {
-            ConsoleColor norm = Console.ForegroundColor;
-            Console.ForegroundColor = color;
-            Console.WriteLine(text);
-            Console.ForegroundColor = norm;
-        }
-        
-        private static string CharRepeat(char c, int times) {
-            string ret = "";
-            for (int i = 0; i < times; i++) ret += c;
-            return ret;
-        }
-
-        public static void WriteError(string text)
-        {
-            WriteColor("(ERROR) " + text, ConsoleColor.Red);
-        }
-
-        public static void WriteWarning(string text)
-        {
-            WriteColor("(WARN) " + text, ConsoleColor.Yellow);
         }
     }
 }
