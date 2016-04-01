@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="14.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
@@ -11,9 +11,9 @@
     <AssemblyName>Puffin</AssemblyName>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
+    <BaseDirectory>Test Files</BaseDirectory>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-    <PlatformTarget>AnyCPU</PlatformTarget>
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
@@ -21,6 +21,8 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <Commandlineparameters>/home/daniel/Documents/PashLang/PashLang/Puffin/'Test Files'/test2.puff</Commandlineparameters>
+    <ConsolePause>false</ConsolePause>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <PlatformTarget>AnyCPU</PlatformTarget>
@@ -127,15 +129,15 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\PashRuntime\PashRuntime.csproj">
-      <Project>{9c9bbfea-6730-4fbf-b3ba-50800b8b751a}</Project>
+      <Project>{9C9BBFEA-6730-4FBF-B3BA-50800B8B751A}</Project>
       <Name>PashRuntime</Name>
     </ProjectReference>
     <ProjectReference Include="..\PASM\PASM.csproj">
-      <Project>{3e9f9454-d6ee-4d52-824b-f25fd24f29ec}</Project>
+      <Project>{3E9F9454-D6EE-4D52-824B-F25FD24F29EC}</Project>
       <Name>PASM</Name>
     </ProjectReference>
     <ProjectReference Include="..\stdlib\stdlib.csproj">
-      <Project>{8344bb4f-008f-4c01-828b-14e7b9652fae}</Project>
+      <Project>{8344BB4F-008F-4C01-828B-14E7B9652FAE}</Project>
       <Name>stdlib</Name>
     </ProjectReference>
   </ItemGroup>
