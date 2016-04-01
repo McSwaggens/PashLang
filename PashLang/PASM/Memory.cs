@@ -4,16 +4,16 @@ using System.Collections.Generic;
 namespace PASM
 {
     /// <summary>
-    /// RAM
+    /// Virtual memory container for the PASM engine to allocate data to, and also grab data from an address.
     /// </summary>
     public class Memory
     {
         private List<Part> FreeParts = new List<Part>();
         private List<Part> UsedParts = new List<Part>();
-        public Part[] PartAddressStack;
+		private Part[] PartAddressStack;
         public byte[] Data;
         public uint DataLength;
-
+        
         public Memory(uint size)
         {
             Data = new byte[size];
@@ -24,6 +24,10 @@ namespace PASM
             PartAddressStack[0] = StartBlock;
         }
 
+		/// <summary>
+		/// Allocate the specified size.
+		/// </summary>
+		/// <param name="size">Size.</param>
         public uint Allocate(uint size)
         {
             Part AllocatedPart = getFreeBlock(size);
@@ -45,6 +49,11 @@ namespace PASM
             return AllocatedPart.Address;
         }
 
+		/// <summary>
+		/// Gets the free block.
+		/// </summary>
+		/// <returns>The free block.</returns>
+		/// <param name="requiredSize">Required size.</param>
         private Part getFreeBlock(uint requiredSize)
         {
             foreach (Part p in FreeParts)
@@ -53,6 +62,10 @@ namespace PASM
             throw new MemoryException("Unable to allocate " + requiredSize + " bytes of memory to RAM, Out of memory?");
         }
 
+		/// <summary>
+		/// Free the specified Address.
+		/// </summary>
+		/// <param name="Address">Address.</param>
         public void Free(uint Address)
         {
             Part p = PartAddressStack[Address];
@@ -62,6 +75,10 @@ namespace PASM
             Stitch(Address);
         }
 
+		/// <summary>
+		/// Stitch the specified currentAddress to it's backAddress.
+		/// </summary>
+		/// <param name="currentAddress">Current address.</param>
         private void Stitch(uint currentAddress)
         {
             Part currentBlock = PartAddressStack[currentAddress];
@@ -90,16 +107,29 @@ namespace PASM
             }
         }
 
+
+		/// <summary>
+		/// Gets the next block from the given address.
+		/// </summary>
+		/// <returns>The block.</returns>
+		/// <param name="currentAddress">Current address.</param>
         private uint NextBlock(uint currentAddress) => PartAddressStack[PartAddressStack[currentAddress].getNextAddress()].Address;
 
-
-        //Get the previous block location from another block
+		/// <summary>
+		/// Gets the previous block address from a given address.
+		/// </summary>
+		/// <returns>The block.</returns>
+		/// <param name="currentAddress">Current address.</param>
         private uint PreviousBlock(uint currentAddress)
         {
             return PartAddressStack[currentAddress].BackAddress;
         }
 
-        //Writes & reads
+		/// <summary>
+		/// Write the specified data and address.
+		/// </summary>
+		/// <param name="data">Data.</param>
+		/// <param name="address">Address.</param>
         public void write(byte[] data, uint address)
         {
             for (uint i = 0; i < data.Length; i++)
@@ -108,7 +138,11 @@ namespace PASM
             }
         }
 
-        //Read the data from a given address.
+		/// <summary>
+		/// Read the specified address and size.
+		/// </summary>
+		/// <param name="address">Address.</param>
+		/// <param name="size">Size.</param>
         public byte[] read(uint address, uint size)
         {
             byte[] data = new byte[size];
@@ -118,6 +152,7 @@ namespace PASM
             }
             return data;
         }
+
         //Write the data at the address given to 0 (null)
         public void clean(uint address, uint size)
         {
@@ -139,7 +174,10 @@ namespace PASM
             }
         }
 
-        private class MemoryException : Exception
+		/// <summary>
+		/// Memory extension extends PException (Required for debugging)
+		/// </summary>
+        private class MemoryException : PException
         {
             public MemoryException(string exception) : base(exception) { }
         }

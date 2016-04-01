@@ -1,6 +1,8 @@
 ﻿using System;
 using System.IO;
 using System.Linq;
+using System.Runtime.Hosting;
+using Puffin.Command_Line_Args;
 using Puffin.Frontend;
 using Puffin.Frontend.AST;
 using Puffin.Frontend.AST.Nodes;
@@ -13,9 +15,11 @@ namespace Puffin
         static void Main(string[] args)
         {
             Console.WriteLine("Puffin Compiler");
-            if (args.Length < 1)
+            Console.WriteLine(nameof(Single));
+            CommandLineParser arguments = new CommandLineParser(args);
+            if (!arguments.Start())
             {
-                WriteError("No input file");
+                Logger.WriteError("Invalid Command line arguments");
                 Console.ReadKey();
                 return;
             }
@@ -39,7 +43,7 @@ namespace Puffin
             Parser parse = new Parser(lexical);
             if (!parse.Start())
             {
-                Logger.WriteError("An error occured while parsing");
+                Logger.WriteError("An error occurred while parsing");
                 Console.ReadKey();
                 return;
             }
@@ -50,7 +54,7 @@ namespace Puffin
             parse.PrintSymbols();
             Console.WriteLine("End Symbol output ================");
             Console.WriteLine("Begin Type Checker Output ========");
-            TypeChecker tyChecker = new TypeChecker(parse.Statements.ToList(), parse.SymbolTable, 4);
+            TypeChecker tyChecker = new TypeChecker(parse.Statements.ToList(), parse.SymbolTable, arguments.Strictness);
             if (!tyChecker.Start())
             {
                 Logger.WriteError("Type error occurred");
@@ -62,6 +66,12 @@ namespace Puffin
             Console.WriteLine("Begin AST Output =================");
             ASTParser ast = new ASTParser(parse);
             BaseASTNode node = ast.ParseAST();
+            if (node == null)
+            {
+                Logger.WriteError("null node encountered while parsing AST");
+                Console.ReadKey();
+                return;
+            }
             Console.WriteLine(node.Evaluate(node));
             Console.WriteLine("End AST Output ===================");
             Console.WriteLine("Compilation Complete");

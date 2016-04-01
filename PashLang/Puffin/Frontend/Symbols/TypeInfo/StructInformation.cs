@@ -9,6 +9,8 @@ namespace Puffin.Frontend.Symbols.TypeInfo
         protected bool isPrimitive;
         protected bool isNullable;
         protected List<VariableInformation> definedFields;
+        protected List<MethodInformation> definedMethods;
+        protected List<MethodInformation> inheritedMethods; 
 
         /// <summary>
         /// Constructor for struct information
@@ -26,6 +28,8 @@ namespace Puffin.Frontend.Symbols.TypeInfo
 
             this.modifiers = new List<Modifier>();
             this.definedFields = new List<VariableInformation>();
+            this.definedMethods = new List<MethodInformation>();
+            this.inheritedMethods = new List<MethodInformation>();
         }
 
         /// <summary>
@@ -82,6 +86,16 @@ namespace Puffin.Frontend.Symbols.TypeInfo
         public virtual Scope StructDefinitionScope
         {
             get { return definitionScope; }
+        }
+
+        public List<MethodInformation> DefinedMethods
+        {
+            get { return definedMethods; }
+        }
+
+        public List<MethodInformation> InheritedMethods
+        {
+            get { return inheritedMethods; }
         }
     }
 }

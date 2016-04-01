@@ -6,15 +6,15 @@ using System.Threading.Tasks;
 using Puffin.Frontend.Symbols;
 using Puffin.Frontend.Symbols.TypeInfo;
 
-namespace Puffin.Frontend.AST.Nodes
+namespace Puffin.Frontend.AST.Nodes.Primitives
 {
-    public class ShortASTNode : BaseASTNode
+    public class CharacterASTNode : BaseASTNode
     {
-        public ShortASTNode(VariableSymbol<Information> owner, BaseASTNode parent)
+        public CharacterASTNode(VariableSymbol<Information> owner, BaseASTNode parent)
         {
-            if (owner == null || !owner.TypeInfo.IdentifierType.Name.Equals(nameof(Int16)))
+            if (owner == null || !owner.TypeInfo.IdentifierType.Name.Equals(nameof(Char)))
             {
-                Logger.WriteError("Cannot construct an Short node without a valid symbol");
+                Logger.WriteError("Cannot construct an Char node without a valid symbol");
                 return;
             }
             this.Symbol = owner;
@@ -25,11 +25,11 @@ namespace Puffin.Frontend.AST.Nodes
 
         }
 
-        public ShortASTNode(VariableSymbol<Information> owner, BaseASTNode left, BaseASTNode right, BaseASTNode parent)
+        public CharacterASTNode(VariableSymbol<Information> owner, BaseASTNode left, BaseASTNode right, BaseASTNode parent)
         {
-            if (owner == null || !owner.TypeInfo.IdentifierType.Name.Equals(nameof(Int16)))
+            if (owner == null || !owner.TypeInfo.IdentifierType.Name.Equals(nameof(Char)))
             {
-                Logger.WriteError("Cannot construct an Short node without a valid symbol");
+                Logger.WriteError("Cannot construct an Char node without a valid symbol");
                 return;
             }
             this.Symbol = owner;

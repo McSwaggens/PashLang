@@ -1,3 +1,4 @@
+//compile with test2.puff strict=3 to allow automatic casting between integer types
 
 public static void test()
 {
@@ -12,11 +13,11 @@ public static void main(string[] args, int num1 = 0, long num2 = 0L)
     short srt = 12345S;
     ushort usrt = 12345US;
     uint usint = 1234556UI;
-    ulong uslong = 123456789UL;     
+    ulong uslong = 123456789UL;
     float flt = 1234.567F;
     double doub = 12345678.9012345D;
-    //int error = 12345US; // Uncomment for type error
-
+    int error = 12345US; 
+    
     // //string str = "DEAD"; // Uncomment for redefinition error
     
     for(i = 0; i < 10; i ++)

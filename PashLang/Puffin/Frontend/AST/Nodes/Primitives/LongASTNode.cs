@@ -6,15 +6,15 @@ using System.Threading.Tasks;
 using Puffin.Frontend.Symbols;
 using Puffin.Frontend.Symbols.TypeInfo;
 
-namespace Puffin.Frontend.AST.Nodes
+namespace Puffin.Frontend.AST.Nodes.Primitives
 {
-    public class ByteASTNode : BaseASTNode
+    public class LongASTNode : BaseASTNode
     {
-        public ByteASTNode(VariableSymbol<Information> owner, BaseASTNode parent)
+        public LongASTNode(VariableSymbol<Information> owner, BaseASTNode parent)
         {
-            if (owner == null || !owner.TypeInfo.IdentifierType.Name.Equals(nameof(Byte)))
+            if (owner == null || !owner.TypeInfo.IdentifierType.Name.Equals(nameof(Int64)))
             {
-                Logger.WriteError("Cannot construct an Byte node without a valid symbol");
+                Logger.WriteError("Cannot construct an long node without a valid symbol");
                 return;
             }
             this.Symbol = owner;
@@ -25,11 +25,11 @@ namespace Puffin.Frontend.AST.Nodes
 
         }
 
-        public ByteASTNode(VariableSymbol<Information> owner, BaseASTNode left, BaseASTNode right, BaseASTNode parent)
+        public LongASTNode(VariableSymbol<Information> owner, BaseASTNode left, BaseASTNode right, BaseASTNode parent)
         {
-            if (owner == null || !owner.TypeInfo.IdentifierType.Name.Equals(nameof(Byte)))
+            if (owner == null || !owner.TypeInfo.IdentifierType.Name.Equals(nameof(Int64)))
             {
-                Logger.WriteError("Cannot construct an Byte node without a valid symbol");
+                Logger.WriteError("Cannot construct an long node without a valid symbol");
                 return;
             }
             this.Symbol = owner;

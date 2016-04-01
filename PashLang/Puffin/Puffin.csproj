@@ -44,18 +44,28 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Command Line Args\CommandLineParser.cs" />
     <Compile Include="Frontend\AST\ASTParser.cs" />
     <Compile Include="Frontend\AST\Nodes\BaseASTNode.cs" />
-    <Compile Include="Frontend\AST\Nodes\ByteASTNode.cs" />
-    <Compile Include="Frontend\AST\Nodes\IntegerASTNode.cs" />
-    <Compile Include="Frontend\AST\Nodes\LongASTNode.cs" />
-    <Compile Include="Frontend\AST\Nodes\ShortASTNode.cs" />
-    <Compile Include="Frontend\AST\Nodes\UnsignedLongASTNode.cs" />
+    <Compile Include="Frontend\AST\Nodes\Primitives\ByteASTNode.cs" />
+    <Compile Include="Frontend\AST\Nodes\Primitives\CharacterASTNode.cs" />
+    <Compile Include="Frontend\AST\Nodes\Primitives\DoubleASTNode.cs" />
+    <Compile Include="Frontend\AST\Nodes\Primitives\FloatASTNode.cs" />
+    <Compile Include="Frontend\AST\Nodes\Primitives\IntegerASTNode.cs" />
+    <Compile Include="Frontend\AST\Nodes\Primitives\LongASTNode.cs" />
+    <Compile Include="Frontend\AST\Nodes\Primitives\ObjectASTNode.cs" />
+    <Compile Include="Frontend\AST\Nodes\Primitives\ShortASTNode.cs" />
+    <Compile Include="Frontend\AST\Nodes\Primitives\StringASTNode.cs" />
+    <Compile Include="Frontend\AST\Nodes\Primitives\UnsignedIntegerASTNode.cs" />
+    <Compile Include="Frontend\AST\Nodes\Primitives\UnsignedLongASTNode.cs" />
+    <Compile Include="Frontend\AST\Nodes\Primitives\UnsignedShortASTNode.cs" />
+    <Compile Include="Frontend\AST\Nodes\Primitives\VoidASTNode.cs" />
     <Compile Include="Frontend\AST\TypeChecker.cs" />
     <Compile Include="Frontend\Lexer.cs" />
     <Compile Include="Frontend\Symbols\ArrayParameterSymbol.cs" />
     <Compile Include="Frontend\Symbols\ArraySymbol.cs" />
     <Compile Include="Frontend\Symbols\ClassInfo\Class.cs" />
+    <Compile Include="Frontend\Symbols\ClassInfo\PuffinString.cs" />
     <Compile Include="Frontend\Symbols\ClassSymbol.cs" />
     <Compile Include="Frontend\Symbols\EnumInfo\Enum.cs" />
     <Compile Include="Frontend\Symbols\EnumSymbol.cs" />
