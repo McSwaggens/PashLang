@@ -47,6 +47,7 @@
     <Compile Include="Command Line Args\CommandLineParser.cs" />
     <Compile Include="Frontend\AST\ASTParser.cs" />
     <Compile Include="Frontend\AST\Nodes\BaseASTNode.cs" />
+    <Compile Include="Frontend\AST\Nodes\BaseExpressionASTNode.cs" />
     <Compile Include="Frontend\AST\Nodes\Primitives\ByteASTNode.cs" />
     <Compile Include="Frontend\AST\Nodes\Primitives\CharacterASTNode.cs" />
     <Compile Include="Frontend\AST\Nodes\Primitives\DoubleASTNode.cs" />
@@ -61,6 +62,8 @@
     <Compile Include="Frontend\AST\Nodes\Primitives\UnsignedShortASTNode.cs" />
     <Compile Include="Frontend\AST\Nodes\Primitives\VoidASTNode.cs" />
     <Compile Include="Frontend\AST\TypeChecker.cs" />
+    <Compile Include="Frontend\AST\TypeDecl\TypeDecl.cs" />
+    <Compile Include="Frontend\AST\TypeDecl\EnumDeclType.cs" />
     <Compile Include="Frontend\Lexer.cs" />
     <Compile Include="Frontend\Symbols\ArrayParameterSymbol.cs" />
     <Compile Include="Frontend\Symbols\ArraySymbol.cs" />
@@ -153,6 +156,7 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Backend\" />
+    <Folder Include="Frontend\AST\Nodes\Expressions\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
