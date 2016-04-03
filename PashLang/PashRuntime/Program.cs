@@ -27,7 +27,8 @@ namespace PashRuntime
             {"t",   false},  // Record and print the execution time
             {"p",   false}, //Pause after execution
             {"it", false}, //Initialize time
-            {"nostdlib", false} 
+            {"osi", false}, //OS Information
+            {"nostdlib", false}
         };
         
         private static Dictionary<List<string>, string> TextArguments = new Dictionary<List<string>, string>() {
@@ -89,6 +90,8 @@ Puffin - Development phase
         private static readonly uint DEFAULT_MEMORY_SIZE_BYTES = 1024;
         #endregion 
         
+        private static uint AllocatedMemory = DEFAULT_MEMORY_SIZE_BYTES;
+        
         public static void Main(string[] args)
         {
             //Initialize and load the prarameters from the args array, into the Flags dictionary.
@@ -96,8 +99,8 @@ Puffin - Development phase
             
             if (!DO_EXECUTE) return;
             
-            // -i (Information) argument
-            if (Flags["i"])
+            // -osi (OS Information) argument
+            if (Flags["osi"])
             {
                 Console.WriteLine($"OS_UNIX = {OS_UNIX}");
                 Console.WriteLine($"OS_OSX = {OS_OSX}");
@@ -190,6 +193,13 @@ Puffin - Development phase
                             DO_EXECUTE = false;
                             return;
                         }
+                        else if (flag == "m") {
+                            i++;
+                            uint memory;
+                            bool worked = uint.TryParse(args[i], out memory);
+                            if (worked) AllocatedMemory = memory;
+                            else WriteError("Cannot parse memory flag: Please pass in a number, you entered " + args[i]);
+                        }
                         else
                         if (Flags.ContainsKey(flag))
                             Flags[flag] = !Flags[flag];
@@ -219,7 +229,8 @@ Puffin - Development phase
         public static void StartRuntime(string[] code)
         {
             Engine engine = new Engine();
-            engine.setMemory(DEFAULT_MEMORY_SIZE_BYTES);
+            engine.setMemory(AllocatedMemory);
+            if (Flags["i"]) WriteInfo($"Allocated {AllocatedMemory} bytes of memory.");
             sw.Reset();
             sw.Start();
             engine.Load(code);

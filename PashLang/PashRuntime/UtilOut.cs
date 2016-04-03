@@ -27,5 +27,10 @@ namespace PashRuntime
         {
             WriteColor("(WARN) " + text, ConsoleColor.Yellow);
         }
+        
+        public static void WriteInfo(string text)
+        {
+            Console.WriteLine("(info) " + text);
+        }
     }
 }
