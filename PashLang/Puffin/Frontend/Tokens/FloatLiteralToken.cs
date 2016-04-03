@@ -97,9 +97,6 @@ namespace Puffin.Frontend.Tokens
             catch (DivideByZeroException ex)
             {
                 WriteError("You know you should never divide by zero!!!");
-                Console.ForegroundColor = ConsoleColor.Red;
-                Console.WriteLine("ERROR: You know you should never divide by zero!!!");
-                Console.ResetColor();
                 return null;
             }
         }
