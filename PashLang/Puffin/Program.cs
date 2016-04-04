@@ -1,4 +1,5 @@
 ﻿using System;
+using Puffin;
 using System.IO;
 using System.Linq;
 using System.Runtime.Hosting;
@@ -7,7 +8,6 @@ using Puffin.Frontend;
 using Puffin.Frontend.AST;
 using Puffin.Frontend.AST.Nodes;
 using static Puffin.Logger;
-
 namespace Puffin
 {
     class Program

@@ -131,6 +131,7 @@
     <Compile Include="Frontend\AST\Statement.cs" />
     <Compile Include="Frontend\Parser.cs" />
     <Compile Include="Logger.cs" />
+    <Compile Include="OSInfo.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
