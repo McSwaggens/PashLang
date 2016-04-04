@@ -20,7 +20,8 @@ namespace Puffin
             if (!arguments.Start())
             {
                 Logger.WriteError("Invalid Command line arguments");
-                Console.ReadKey();
+                if (!OSInfo.OS_UNIX)
+                    Console.ReadKey();
                 return;
             }
             string inputString = File.ReadAllText(args[0]);
@@ -28,7 +29,8 @@ namespace Puffin
             if (!lexical.Start())
             {
                 WriteError("Error occurred during lexing");
-                Console.ReadKey();
+                if (!OSInfo.OS_UNIX)
+                    Console.ReadKey();
                 return;
             }
             Console.WriteLine("Begin source input ================");
@@ -44,7 +46,8 @@ namespace Puffin
             if (!parse.Start())
             {
                 Logger.WriteError("An error occurred while parsing");
-                Console.ReadKey();
+                if (!OSInfo.OS_UNIX)
+                    Console.ReadKey();
                 return;
             }
             Console.WriteLine("Begin Statement output ===========");
@@ -58,7 +61,8 @@ namespace Puffin
             if (!tyChecker.Start())
             {
                 Logger.WriteError("Type error occurred");
-                Console.ReadKey();
+                if (!OSInfo.OS_UNIX)
+                    Console.ReadKey();
                 return;
             }
             Console.WriteLine("Type check succeeded");
@@ -69,13 +73,15 @@ namespace Puffin
             if (node == null)
             {
                 Logger.WriteError("null node encountered while parsing AST");
-                Console.ReadKey();
+                if (!OSInfo.OS_UNIX)
+                    Console.ReadKey();
                 return;
             }
             Console.WriteLine(node.Evaluate(node));
             Console.WriteLine("End AST Output ===================");
             Console.WriteLine("Compilation Complete");
-            Console.ReadKey();
+            if (!OSInfo.OS_UNIX)
+                    Console.ReadKey();
         }
     }
 }
