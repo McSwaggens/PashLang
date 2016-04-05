@@ -1,5 +1,4 @@
-﻿using System;
-namespace PASM
+﻿namespace PASM
 {
     /// <summary>
     /// Untra Fast conversion
