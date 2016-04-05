@@ -67,9 +67,9 @@ namespace Puffin.Frontend
             foreach (Token tok in tokens)
             {
                 if(tok.Value.Equals("\n"))
-                    Logger.WriteColor(tok.Type.ToString(),ConsoleColor.Magenta);
+                    WriteColor(tok.Type.ToString(),ConsoleColor.Magenta);
                 else
-                    Logger.WriteColor(tok.ToString(),ConsoleColor.Magenta);
+                    WriteColor(tok.ToString(),ConsoleColor.Magenta);
             }
         }
 
@@ -187,7 +187,7 @@ namespace Puffin.Frontend
                     }
                     if (node == null)
                     {
-                        Logger.WriteError("Unterminated block comment");
+                        WriteError("Unterminated block comment");
                         return null;
                     }
                 }

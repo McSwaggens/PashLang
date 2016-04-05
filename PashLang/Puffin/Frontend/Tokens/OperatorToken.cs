@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Linq;
-
+using static Puffin.Logger;
 namespace Puffin.Frontend.Tokens
 {
     public class OperatorToken : Token
@@ -15,7 +15,7 @@ namespace Puffin.Frontend.Tokens
             {
                 this.type = ResolveOperator();
                 if(this.type.Equals((Enum)EnumOperators.NO_OPERATOR)) 
-                    Logger.WriteError("This token is not an operator: " + this.value);
+                    WriteError("This token is not an operator: " + this.value);
             }
         }
 

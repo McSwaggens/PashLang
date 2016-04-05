@@ -19,7 +19,7 @@ namespace Puffin
             CommandLineParser arguments = new CommandLineParser(args);
             if (!arguments.Start())
             {
-                Logger.WriteError("Invalid Command line arguments");
+                WriteError("Invalid Command line arguments");
                 if (!OSInfo.OS_UNIX)
                     Console.ReadKey();
                 return;
@@ -36,7 +36,7 @@ namespace Puffin
             Console.WriteLine("Begin source input ================");
             for (int i = 0; i < lexical.TokenStrings.Count; i++)
             {
-                Logger.WriteColor(lexical.TokenStrings.ElementAt(i), ConsoleColor.White);
+                WriteColor(lexical.TokenStrings.ElementAt(i), ConsoleColor.White);
             }
             Console.WriteLine("End source input ==================");
            Console.WriteLine("Begin token output =================");
@@ -45,7 +45,7 @@ namespace Puffin
             Parser parse = new Parser(lexical);
             if (!parse.Start())
             {
-                Logger.WriteError("An error occurred while parsing");
+                WriteError("An error occurred while parsing");
                 if (!OSInfo.OS_UNIX)
                     Console.ReadKey();
                 return;
@@ -60,7 +60,7 @@ namespace Puffin
             TypeChecker tyChecker = new TypeChecker(parse.Statements.ToList(), parse.SymbolTable, arguments.Strictness);
             if (!tyChecker.Start())
             {
-                Logger.WriteError("Type error occurred");
+                WriteError("Type error occurred");
                 if (!OSInfo.OS_UNIX)
                     Console.ReadKey();
                 return;
@@ -72,7 +72,7 @@ namespace Puffin
             BaseASTNode node = ast.ParseAST();
             if (node == null)
             {
-                Logger.WriteError("null node encountered while parsing AST");
+                WriteError("null node encountered while parsing AST");
                 if (!OSInfo.OS_UNIX)
                     Console.ReadKey();
                 return;
