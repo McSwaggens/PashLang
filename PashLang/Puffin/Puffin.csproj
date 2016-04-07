@@ -44,6 +44,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Backend\Code Generation\CodeGenerator.cs" />
     <Compile Include="Command Line Args\CommandLineParser.cs" />
     <Compile Include="Frontend\AST\ASTParser.cs" />
     <Compile Include="Frontend\AST\Nodes\BaseASTNode.cs" />
@@ -156,7 +157,6 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="Backend\" />
     <Folder Include="Frontend\AST\Nodes\Expressions\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

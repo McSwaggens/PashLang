@@ -67,18 +67,18 @@ namespace Puffin
             }
             Console.WriteLine("Type check succeeded");
             Console.WriteLine("End Type Checker Output ========");
-            Console.WriteLine("Begin AST Output =================");
-            ASTParser ast = new ASTParser(parse);
-            BaseASTNode node = ast.ParseAST();
-            if (node == null)
-            {
-                WriteError("null node encountered while parsing AST");
-                if (!OSInfo.OS_UNIX)
-                    Console.ReadKey();
-                return;
-            }
-            Console.WriteLine(node.Evaluate(node));
-            Console.WriteLine("End AST Output ===================");
+            //Console.WriteLine("Begin AST Output =================");
+            //ASTParser ast = new ASTParser(parse);
+            //BaseASTNode node = ast.ParseAST();
+            //if (node == null)
+            //{
+            //    WriteError("null node encountered while parsing AST");
+            //    if (!OSInfo.OS_UNIX)
+            //        Console.ReadKey();
+            //    return;
+            //}
+            //Console.WriteLine(node.Evaluate(node));
+            //Console.WriteLine("End AST Output ===================");
             Console.WriteLine("Compilation Complete");
             if (!OSInfo.OS_UNIX)
                     Console.ReadKey();
