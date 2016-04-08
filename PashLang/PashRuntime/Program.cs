@@ -102,10 +102,14 @@ Puffin - Development phase
             // -osi (OS Information) argument
             if (Flags["osi"])
             {
-                Console.WriteLine($"OS_UNIX = {OS_UNIX}");
-                Console.WriteLine($"OS_OSX = {OS_OSX}");
-                Console.WriteLine($"OS_LINUX = {OS_LINUX}");
-                Console.WriteLine($"OS_WINDOWS = {OS_WINDOWS}");
+                if (OS_UNIX)
+                    Console.WriteLine("UNIX BASED √");
+                if (OS_LINUX)
+                    Console.WriteLine("LINUX √");
+                if (OS_OSX)
+                    Console.WriteLine("OSX √");
+                if (OS_WINDOWS)
+                    Console.WriteLine("WINDOWS √");
             }
             
             // -d (Debug) argument
