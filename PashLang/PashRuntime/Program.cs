@@ -65,6 +65,9 @@ Type these in for the desired effect.
     
 -nostdlib (no standard library)
     Disable the standard library from being added in by default.
+    
+--osi (os information)
+    prints out the current OS information collected by PashRuntime.
 
 [Github]
 http://www.Github.com/McSwaggens/PashLang
@@ -115,7 +118,7 @@ Puffin - Development phase
             // -d (Debug) argument
             if (Flags["d"])
             {
-				args = OS_LINUX ? new[] {"/home/" + Environment.UserName + $"/Documents/Scripts/{DEBUG_FILE_NAME}"} : new[] {"/User/" + Environment.UserName + $"/Documents/Scripts/{DEBUG_FILE_NAME}"};
+				args = OS_LINUX ? new[] {"/home/" + Environment.UserName + $"/Documents/Scripts/{DEBUG_FILE_NAME}"} : new[] {"/Users/" + Environment.UserName + $"/Documents/Scripts/{DEBUG_FILE_NAME}"};
 				WriteWarning("Using debug mode");
 			}
             
