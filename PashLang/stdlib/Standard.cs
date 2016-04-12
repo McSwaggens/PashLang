@@ -32,6 +32,26 @@ namespace stdlib
                 }
             }
         }
+        
+        public static void PRINT_MEMORY_DUMP_DATA(Engine engine)
+        {
+            Memory memory = engine.memory;
+            foreach (PASM.Memory.Part part in memory.PartAddressStack)
+            {
+                if (part != null)
+                {
+                    bool used = part.Used;
+                    Console.Write((used ? "USED" : "FREE") + " ADR: " + part.Address + " SIZE: " + part.Size + " DATA: ");
+                    int i = 0;
+                    foreach (byte dat in memory.read(part.Address, part.Size))
+                    {
+                        Console.Write($"[{i}] {dat},");
+                        i++;
+                    }
+                    Console.WriteLine();
+                }
+            }
+        }
 
 		public static void PRINT_MEMORY_DUMP_COMPLEX(Engine engine)
 		{
