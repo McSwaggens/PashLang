@@ -34,7 +34,7 @@ namespace PASM.Handlers
 
         public override void Execute()
         {
-			inst.set(ts_ptr, ts_isMethodPtr, inst.memory.read(inst.GetRaster(cpy_isMethodPtr)[cpy_ptr].address + startingRange, startingRange + endingRange));
+			inst.set(ts_ptr, ts_isMethodPtr, inst.memory.read(inst.GetRaster(cpy_isMethodPtr)[cpy_ptr].address + startingRange, endingRange));
         }
     }
 }
