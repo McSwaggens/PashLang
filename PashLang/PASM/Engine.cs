@@ -151,6 +151,7 @@ namespace PASM
             if (args[2] == "FLOAT"  )   return new set_FLOAT    (args, this);
             if (args[2] == "DOUBLE" )   return new set_DOUBLE   (args, this);
             if (args[2] == "INT64"  )   return new set_INT64     (args, this);
+            if (args[2] == "PARD"   )   return new set_PARD     (args, this);
             if (args[2] == "IP"     )   return new set_IP       (args, this);
             if (args[2] == "ADR"    )   return new set_ADR      (args, this);
             if (args[2] == "VORL"   )   return new set_VORL      (args, this);
