@@ -27,18 +27,19 @@ namespace PASM.Handlers
             dynamic a2 = inst.ResolveNumber(arg2); //
             bool ReturnedValue = false;
             //TODO: Make this faster
-            if (Operator == "=" && a1 == a2) ReturnedValue = true;
+            if (Operator == "=") ReturnedValue = a1 == a2;
             else
-            if (Operator == "!=" && a1 != a2) ReturnedValue = true;
+            if (Operator == "!=") ReturnedValue = a1 != a2;
             else
-            if (Operator == ">" && a1 > a2) ReturnedValue = true;
+            if (Operator == ">") ReturnedValue = a1 > a2;
             else
-            if (Operator == ">=" && a1 >= a2) ReturnedValue = true;
+            if (Operator == ">=") ReturnedValue = a1 >= a2;
             else
-            if (Operator == "<" && a1 < a2) ReturnedValue = true;
+            if (Operator == "<") ReturnedValue =  a1 < a2;
             else
-            if (Operator == "<=" && a1 <= a2) ReturnedValue = true;
-            else throw new PException($"Unknown comparison operator: {Operator}");
+            if (Operator == "<=") ReturnedValue = a1 <= a2;
+            else
+            throw new PException($"Unknown comparison operator: {Operator}");
             if (!ReturnedValue) inst.CurrentLine = jumpln;
         }
     }
