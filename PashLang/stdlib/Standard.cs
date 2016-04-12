@@ -36,10 +36,12 @@ namespace stdlib
         public static void PRINT_MEMORY_DUMP_DATA(Engine engine)
         {
             Memory memory = engine.memory;
-            foreach (PASM.Memory.Part part in memory.PartAddressStack)
+            for (int p = 0; p < memory.PartAddressStack.Length; p++)
             {
+                Memory.Part part = memory.PartAddressStack[p];
                 if (part != null)
                 {
+                    if (part.Size > 100) continue;
                     bool used = part.Used;
                     Console.Write((used ? "USED" : "FREE") + " ADR: " + part.Address + " SIZE: " + part.Size + " DATA: ");
                     int i = 0;
@@ -51,6 +53,10 @@ namespace stdlib
                     Console.WriteLine();
                 }
             }
+        }
+        
+        public static void SEP(Engine engine) {
+            Console.WriteLine("-------------------------");
         }
 
 		public static void PRINT_MEMORY_DUMP_COMPLEX(Engine engine)
