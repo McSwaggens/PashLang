@@ -4,11 +4,11 @@ namespace PASM.Handlers
     /// <summary>
     /// Sets the given register to a 1 byte unsigned integer
     /// </summary>
-    public class st_BYTE : Handler
+    public class set_BYTE : Handler
     {
         byte set;
         string ptr;
-        public st_BYTE(string[] args, Engine inst) : base(inst)
+        public set_BYTE(string[] args, Engine inst) : base(inst)
         {
             ptr = args[1];
             set = byte.Parse(args[3]);
