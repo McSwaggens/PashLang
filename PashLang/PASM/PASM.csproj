@@ -67,6 +67,7 @@
     <Compile Include="Handlers\set_SINT32.cs" />
     <Compile Include="Handlers\set_SINT64.cs" />
     <Compile Include="Handlers\set_PARD.cs"/>
+    <Compile Include="Handlers\set_SIZE.cs"/>
     <Compile Include="Memory.cs" />
     <Compile Include="Handlers\mov.cs" />
     <Compile Include="PException.cs" />

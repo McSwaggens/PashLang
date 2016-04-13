@@ -157,6 +157,7 @@ namespace PASM
             if (args[2] == "VORL"   )   return new set_VORL      (args, this);
             if (args[2] == "PAR"    )   return new set_PAR      (args, this);
             if (args[2] == "PARC"   )   return new set_PAR      (args, this);
+            if (args[2] == "SIZE"   )   return new set_SIZE      (args, this);
             if (args[2] == "VOR"    )   return new set_VOR       (args, this);
             if (args[2] == "VOP"    )   return new set_VOP       (args, this);
             if (args[2] == "PTR"    )   return new set_PTR       (args, this);
