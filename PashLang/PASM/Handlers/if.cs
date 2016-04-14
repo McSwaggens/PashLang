@@ -1,3 +1,5 @@
+using System;
+
 namespace PASM.Handlers
 {
     /// <summary>
@@ -19,28 +21,70 @@ namespace PASM.Handlers
 
         public override void Execute()
         {
-
-            //TODO: Need to move away from dynamic, slow af
-            //Compare the 2 arguements and jump to the next line if true...
-            dynamic a1 = inst.ResolveNumber(arg1); //
-                                                   //  Dynamic a1 and a2 will be resolved at runtime to be either 16, 32 or 64 bit integers.
-            dynamic a2 = inst.ResolveNumber(arg2); //
+            object oNumber1 = inst.ResolveNumber(arg1);
+            object oNumber2 = inst.ResolveNumber(arg2);
             bool ReturnedValue = false;
-            //TODO: Make this faster
-            if (Operator == "=") ReturnedValue = a1 == a2;
-            else
-            if (Operator == "!=") ReturnedValue = a1 != a2;
-            else
-            if (Operator == ">") ReturnedValue = a1 > a2;
-            else
-            if (Operator == ">=") ReturnedValue = a1 >= a2;
-            else
-            if (Operator == "<") ReturnedValue =  a1 < a2;
-            else
-            if (Operator == "<=") ReturnedValue = a1 <= a2;
-            else
-            throw new PException($"Unknown comparison operator: {Operator}");
+            
+            if (isIntBased (oNumber1) && isIntBased(oNumber2)){
+                long a1, a2;
+                
+                if (oNumber1 is long || oNumber1 is ulong)
+                    a1 = (long)oNumber1;
+                else
+                    a1 = Convert.ToInt64(oNumber1);
+                    
+                if (oNumber2 is long || oNumber2 is ulong)
+                    a2 = (long)oNumber2;
+                else
+                    a2 = Convert.ToInt64(oNumber2);
+                
+                if (Operator == "=") ReturnedValue = a1 == a2;
+                else
+                if (Operator == "!=") ReturnedValue = a1 != a2;
+                else
+                if (Operator == ">") ReturnedValue = a1 > a2;
+                else
+                if (Operator == ">=") ReturnedValue = a1 >= a2;
+                else
+                if (Operator == "<") ReturnedValue =  a1 < a2;
+                else
+                if (Operator == "<=") ReturnedValue = a1 <= a2;
+                else
+                throw new PException($"Unknown comparison operator: {Operator}");
+            }
+            else if (isFloatBased(oNumber1) && isFloatBased(oNumber2)) {
+                double a1, a2;
+                
+                if (oNumber1 is double)
+                    a1 = (double)oNumber1;
+                else
+                    a1 = Convert.ToDouble(oNumber1);
+                    
+                if (oNumber2 is double)
+                    a2 = (double)oNumber2;
+                else
+                    a2 = Convert.ToDouble(oNumber2);
+                    
+                    
+                if (Operator == "=") ReturnedValue = a1 == a2;
+                else
+                if (Operator == "!=") ReturnedValue = a1 != a2;
+                else
+                if (Operator == ">") ReturnedValue = a1 > a2;
+                else
+                if (Operator == ">=") ReturnedValue = a1 >= a2;
+                else
+                if (Operator == "<") ReturnedValue =  a1 < a2;
+                else
+                if (Operator == "<=") ReturnedValue = a1 <= a2;
+                else
+                throw new PException($"Unknown comparison operator: {Operator}");
+            }
             if (!ReturnedValue) inst.CurrentLine = jumpln;
         }
+        
+        bool isIntBased(object obj) => obj is byte || obj is sbyte || obj is short || obj is ushort || obj is int || obj is uint || obj is long || obj is ulong;
+        
+        bool isFloatBased(object obj) => obj is float || obj is double;
     }
 }
