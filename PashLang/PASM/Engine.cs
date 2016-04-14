@@ -676,6 +676,24 @@ namespace PASM
             }
             throw new PException("Unknown number length of " + register[reg].size + " bytes, 16bits(2bytes), 32bits(4bytes), 64bits(8bytes)");
         }
+        
+        /// <summary>
+        /// Resolves an integer with an unknown size
+        /// </summary>
+        /// <param name="sptr"></param>
+        /// <returns></returns>
+        public object ResolveNumber (int register, bool isMethodPtr)
+        {
+			Raster raster = isMethodPtr ? Returns.Last().register : this.raster;
+            byte[] data = memory.read(raster[register].address, raster[register].size);
+            switch (raster[register].size)
+            {
+                case 2: return BitConverter.ToInt16(data, 0);
+                case 4: return BitConverter.ToInt32(data, 0);
+                case 8: return BitConverter.ToInt64(data, 0);
+            }
+            throw new PException("Unknown number length of " + raster[register].size + " bytes, 16bits(2bytes), 32bits(4bytes), 64bits(8bytes)");
+        }
 
         /// <summary>
         /// Returns a Pointer from a string 
