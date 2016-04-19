@@ -35,8 +35,8 @@ namespace PASM.Handlers
 
         public override void Execute()
         {
-			Raster.Register cpy_pointer = inst.GetRaster(cpy_isMethodPtr)[cpy_ptr];
-			inst.GetRaster(ts_isMethodPtr)[ts_ptr] = new Raster.Register(cpy_pointer.address + startingRange, endingRange);
+			Register cpy_pointer = inst.GetRaster(cpy_isMethodPtr)[cpy_ptr];
+			inst.GetRaster(ts_isMethodPtr)[ts_ptr] = new Register(cpy_pointer.address + startingRange, endingRange);
         }
     }
 }

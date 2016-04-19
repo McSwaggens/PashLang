@@ -324,7 +324,7 @@ namespace PASM
         /// <param name="Size"></param>
         public void malloc(Raster register, int ptr, uint size)
         {
-            Raster.Register pointer = new Raster.Register(memory.Allocate(size), size);
+            Register pointer = new Register(memory.Allocate(size), size);
             register[ptr] = pointer;
         }
 
@@ -336,7 +336,7 @@ namespace PASM
         /// <param name="Size"></param>
         public void malloc(Raster register, int ptr, int size)
         {
-            Raster.Register pointer = new Raster.Register(memory.Allocate((uint)size), (uint)size);
+            Register pointer = new Register(memory.Allocate((uint)size), (uint)size);
             register[ptr] = pointer;
         }
 
@@ -351,7 +351,7 @@ namespace PASM
 			Raster register = isMethodPtr ? Returns.Last().register : this.raster;
             if (register[ptr] == null)
             {
-                register[ptr] = new Raster.Register();
+                register[ptr] = new Register();
                 malloc(register, ptr, 8);
                 memory.write(Converter.double8(set), register[ptr].address);
             }
@@ -374,7 +374,7 @@ namespace PASM
             Raster register = isMethodPtr ? Returns.Last().register : this.raster;
             if (register[ptr] == null)
             {
-                register[ptr] = new Raster.Register();
+                register[ptr] = new Register();
                 malloc(register, ptr, 4);
                 memory.write(Converter.int32(set), register[ptr].address);
             }
@@ -395,7 +395,7 @@ namespace PASM
 			Raster register = isMethodPtr ? Returns.Last().register : this.raster;
             if (register[ptr] == null)
             {
-                register[ptr] = new Raster.Register();
+                register[ptr] = new Register();
                 malloc(register, ptr, 4);
                 memory.write(Converter.int32(set), register[ptr].address);
             }
@@ -416,7 +416,7 @@ namespace PASM
 			Raster register = isMethodPtr ? Returns.Last().register : this.raster;
             if (register[ptr] == null)
             {
-                register[ptr] = new Raster.Register();
+                register[ptr] = new Register();
                 malloc(register, ptr, 4);
                 memory.write(Converter.float4(set), register[ptr].address);
             }
@@ -437,7 +437,7 @@ namespace PASM
 			Raster register = isMethodPtr ? Returns.Last().register : this.raster;
             if (register[ptr] == null)
             {
-                register[ptr] = new Raster.Register();
+                register[ptr] = new Register();
                 malloc(register, ptr, 8);
                 memory.write(Converter.int64(set), register[ptr].address);
             }
@@ -458,7 +458,7 @@ namespace PASM
 			Raster register = isMethodPtr ? Returns.Last().register : this.raster;
             if (register[ptr] == null)
             {
-                register[ptr] = new Raster.Register();
+                register[ptr] = new Register();
                 malloc(register, ptr, 8);
                 memory.write(Converter.int64(set), register[ptr].address);
             }
@@ -479,7 +479,7 @@ namespace PASM
 			Raster register = isMethodPtr ? Returns.Last().register : this.raster;
             if (register[ptr] == null)
             {
-                register[ptr] = new Raster.Register();
+                register[ptr] = new Register();
                 malloc(register, ptr, 2);
                 memory.write(Converter.int16(set), register[ptr].address);
             }
@@ -500,7 +500,7 @@ namespace PASM
 			Raster register = isMethodPtr ? Returns.Last().register : this.raster;
             if (register[ptr] == null)
             {
-                register[ptr] = new Raster.Register();
+                register[ptr] = new Register();
                 malloc(register, ptr, 2);
                 memory.write(Converter.int16(set), register[ptr].address);
             }
@@ -521,7 +521,7 @@ namespace PASM
 			Raster register = isMethodPtr ? Returns.Last().register : this.raster;
             if (register[ptr] == null)
             {
-                register[ptr] = new Raster.Register();
+                register[ptr] = new Register();
                 malloc(register, ptr, 1);
                 memory.write(new byte[] { set }, register[ptr].address);
             }
@@ -542,7 +542,7 @@ namespace PASM
 			Raster register = isMethodPtr ? Returns.Last().register : this.raster;
             if (register[ptr] == null)
             {
-                register[ptr] = new Raster.Register();
+                register[ptr] = new Register();
                 malloc(register, ptr, (uint)set.Length);
                 memory.write(set, register[ptr].address);
             }
@@ -556,7 +556,7 @@ namespace PASM
         /// Free an address if it's not being used by another register
         /// </summary>
         /// <param name="p"></param>
-        public void TryFreeRaster(Raster.Register p)
+        public void TryFreeRaster(Register p)
         {
 			if (p.ReferenceCount == 0)
 				memory.Free (p.address);
@@ -566,7 +566,7 @@ namespace PASM
         /// Will free the registers address even if the address is being used by another register, try not to use this tho...
         /// </summary>
         /// <param name="p"></param>
-        public void ForceFreeRaster(Raster.Register p)
+        public void ForceFreeRaster(Register p)
         {
             memory.Free(p.address);
         }
@@ -701,7 +701,7 @@ namespace PASM
         /// </summary>
         /// <param name="string"></param>
         /// <returns></returns>
-        public Raster.Register ResolvePointer(string sptr)
+        public Register ResolvePointer(string sptr)
         {
             int reg;
             bool isMethod = isMethodPointer(sptr, out reg);

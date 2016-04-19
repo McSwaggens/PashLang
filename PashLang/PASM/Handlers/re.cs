@@ -16,7 +16,7 @@ namespace PASM.Handlers
 
         public override void Execute()
         {
-			foreach (Raster.Register p in inst.Returns.Last().register.Stack.Where(p => p != null))
+			foreach (Register p in inst.Returns.Last().register.Stack.Where(p => p != null))
 				inst.TryFreeRaster(p);
             if (args.Length > 0)
             {
