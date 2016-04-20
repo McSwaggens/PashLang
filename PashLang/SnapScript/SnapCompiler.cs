@@ -43,6 +43,7 @@ namespace SnapScript
             { "::", OperatorType.StaticReference },
             { "(", OperatorType.OpenBracket },
             { ")", OperatorType.CloseBrakcet },
+            { ".", OperatorType.Dot},
         };
 
         private static VariableType GetTypeFromRaw(string raw)
@@ -73,6 +74,10 @@ namespace SnapScript
         public SnapCompiler(string[] code)
         {
             Code = code;
+        }
+        
+        public SnapCompiler()
+        {
         }
 
 
@@ -195,8 +200,8 @@ namespace SnapScript
 
                     compiledCode.Add($"set {workingVariable.Tag} PTR {setterVariable.Tag}");
                 }
-                else if (token[0].type == TokenType.WORD && token.Length > 0 && token[1].type == TokenType.Operator && ResolveDefinedOperatorType(token[1].Raw) == OperatorType.StaticReference && token[2].type == TokenType.WORD)
-                {
+                else if (token[0].type == TokenType.WORD && token.Length > 0 && token[1].type == TokenType.Operator && ResolveDefinedOperatorType(token[1].Raw) == OperatorType.Dot && token[2].type == TokenType.WORD)
+                {       
                     List<string> paramGroup = new List<string>();
                     string Library = token[0].Raw;
                     string Method = token[2].Raw;
@@ -495,8 +500,9 @@ namespace SnapScript
             Comparison_Smaller,//<
             Comparison_Smaller_Equal,//<=
             StaticReference,//::
-            OpenBracket,
-            CloseBrakcet,
+            OpenBracket,//(
+            CloseBrakcet,//)
+            Dot,//.
         }
 
         public enum TokenType
