@@ -55,6 +55,14 @@ namespace stdlib
             }
         }
         
+        public static void TRUE (Engine engine) {
+            Console.WriteLine("TRUE");
+        }
+        
+        public static void FALSE (Engine engine) {
+            Console.WriteLine("FALSE");
+        }
+        
         public static void SEP(Engine engine) {
             Console.WriteLine("-------------------------");
         }
