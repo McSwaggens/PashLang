@@ -6,6 +6,7 @@ using System.Diagnostics;
 using static PashRuntime.UtilOut;
 using static PashRuntime.OSInfo;
 using System.Reflection;
+using SnapScript;
 
 namespace PashRuntime
 {
@@ -28,7 +29,8 @@ namespace PashRuntime
             {"p",   false}, //Pause after execution
             {"it", false}, //Initialize time
             {"osi", false}, //OS Information
-            {"nostdlib", false}
+            {"nostdlib", false},
+            {"compile-snap", false} //Compile with SnapScript flag
         };
         
         private static Dictionary<List<string>, string> TextArguments = new Dictionary<List<string>, string>() {
@@ -153,8 +155,22 @@ Puffin - Development phase
                 Console.WriteLine($"{wall}[Code]{wall}");
             }
             
-            //Begin the process of executing the code.
-            Execute(code);
+            //Check if the user wants to compile snapscript code
+            if (Flags["compile-snap"])
+            {
+                string[] compiledPASM = SnapCompiler.Compile(code);
+                foreach (string line in compiledPASM)
+                {
+                    Console.WriteLine("> " + line);
+                }
+                
+                Execute(compiledPASM);
+            }
+            else
+            {
+                //Begin the process of executing the code.
+                Execute(code);
+            }
         }
         
         public static void Entry(string[] code, string[] args)

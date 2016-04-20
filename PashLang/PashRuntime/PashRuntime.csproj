@@ -49,6 +49,10 @@
       <Project>{8344BB4F-008F-4C01-828B-14E7B9652FAE}</Project>
       <Name>stdlib</Name>
     </ProjectReference>
+    <ProjectReference Include="..\SnapScript\SnapScript.csproj">
+      <Project>{76664965-73EF-42B6-9B8A-CF6AFA0F9371}</Project>
+      <Name>SnapScript</Name>
+    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />
