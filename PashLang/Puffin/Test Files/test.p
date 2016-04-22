@@ -1,19 +1,22 @@
-set :0 SINT32 0 
+set :0 INT32 0 
 
 
-set :1 SINT64 0 
-set :2 SINT32 0 
+set :1 INT64 0 
+set :2 INT32 0 
 set :3 BYTE 12 
-set :4 SINT16 12345 
-set :5 FLOAT 1234.567F 
-set :6 DOUBLE 12345678.9012345D 
-set :7 QMATH 1 + 1
+set :4 INT16 12345 
+set :5 UINT16 12345 
+set :6 UINT32 1234556 
+set :7 UINT64 123456789 
+set :8 SINGLE 1234.567F 
+set :9 DOUBLE 12345678.9012345D 
+set :10 QMATH 1 + 1
 
 set :2 DOUBLE 0 
 
 
-set :7 SINT32 i 
+set :10 INT32 i 
 
-set :8 SINT32 0 
-set :2 SINT32 10 
+set :11 INT32 0 
+set :2 INT32 10 
 

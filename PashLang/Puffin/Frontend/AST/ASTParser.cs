@@ -70,11 +70,11 @@ namespace Puffin.Frontend.AST
             {
                 case nameof(Byte):
                     return new ByteASTNode((VariableSymbol<Information>)sym, parent);
-                case "S" + nameof(Int16):
+                case nameof(Int16):
                     return new ShortASTNode((VariableSymbol<Information>)sym, parent);
-                case "S" + nameof(Int32):
+                case nameof(Int32):
                     return new IntegerASTNode((VariableSymbol<Information>)sym, parent);
-                case "S" + nameof(Int64):
+                case nameof(Int64):
                     return new LongASTNode((VariableSymbol<Information>)sym, parent);
                 case nameof(UInt16):
                     return new UnsignedShortASTNode((VariableSymbol<Information>)sym, parent);
@@ -82,7 +82,7 @@ namespace Puffin.Frontend.AST
                     return new UnsignedIntegerASTNode((VariableSymbol<Information>)sym, parent);
                 case nameof(UInt64):
                     return new UnsignedLongASTNode((VariableSymbol<Information>)sym, parent);
-                case "Float":
+                case nameof(Single):
                     return new FloatASTNode((VariableSymbol<Information>)sym, parent);
                 case nameof(Double):
                     return new DoubleASTNode((VariableSymbol<Information>)sym, parent);

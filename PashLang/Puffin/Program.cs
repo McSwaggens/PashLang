@@ -17,7 +17,7 @@ namespace Puffin
         static void Main(string[] args)
         {
             Console.WriteLine("Puffin Compiler");
-            Console.WriteLine("Float");
+            Console.WriteLine(nameof(Single));
             CommandLineParser arguments = new CommandLineParser(args);
             if (!arguments.Start())
             {
@@ -93,8 +93,8 @@ namespace Puffin
 
 
             Console.WriteLine("Compilation Complete");
-            Engine engine = new Engine(File.ReadAllLines(arguments.OutputFile),1024U);
-            engine.Execute(0);
+            //Engine engine = new Engine(File.ReadAllLines(arguments.OutputFile),1024U); // Commented out due to missing types in the pasm engine
+            //engine.Execute(0);
             if (!OSInfo.OS_UNIX)
                     Console.ReadKey();
         }

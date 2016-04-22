@@ -9,9 +9,9 @@ public static void main(string[] args, int num1 = 0, long num2 = 0L)
     int i = 0;
     byte byt = 12B;
     short srt = 12345S;
-    //ushort usrt = 12345US;
-    //uint usint = 1234556UI;
-    //ulong uslong = 123456789UL;
+    ushort usrt = 12345US;
+    uint usint = 1234556UI;
+    ulong uslong = 123456789UL;
     float flt = 1234.567F;
     double doub = 12345678.9012345D;
     //int error = 12345US; // Uncomment for type error
