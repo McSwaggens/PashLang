@@ -80,7 +80,10 @@ namespace Puffin.Backend.Code_Generation
                                         writer.Write(smt.TypeInformation.Name.ToUpper() + " ");
                                     else
                                         writer.Write(GetIdentiferType(vars.First(x => x.Item1 == colonCount - 1).Item2) + " ");
-                                    writer.Write(smt.StatementTokens.ElementAt(smt.StatementTokens.IndexOf(tok) + 1).Value + " ");
+                                    if(vars.Any(x => x.Item2.Equals(smt.StatementTokens.ElementAt(smt.StatementTokens.IndexOf(tok) + 1).Value)))
+                                        writer.Write(":" + vars.IndexOf(vars.First(x => x.Item2.Equals(smt.StatementTokens.ElementAt(smt.StatementTokens.IndexOf(tok) + 1).Value))));
+                                    else
+                                        writer.Write(smt.StatementTokens.ElementAt(smt.StatementTokens.IndexOf(tok) + 1).Value + " ");
                                 }
                                 break;
                             case EnumOperators.BINARY_PLUS:

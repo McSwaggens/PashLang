@@ -15,7 +15,7 @@ set :10 QMATH 1 + 1
 set :2 DOUBLE 0 
 
 
-set :10 INT32 i 
+set :10 INT32 :2
 
 set :11 INT32 0 
 set :2 INT32 10 
