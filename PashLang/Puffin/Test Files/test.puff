@@ -5,18 +5,19 @@ public static void test()
 
 public static void main(string[] args, int num1 = 0, long num2 = 0L)
 {
-    string str = "Hello World";
+    //string str = "Hello World"; No string type in PASM ENGINE
     int i = 0;
     byte byt = 12B;
     short srt = 12345S;
-    ushort usrt = 12345US;
-    uint usint = 1234556UI;
-    ulong uslong = 123456789UL;
+    //ushort usrt = 12345US;
+    //uint usint = 1234556UI;
+    //ulong uslong = 123456789UL;
     float flt = 1234.567F;
     double doub = 12345678.9012345D;
     //int error = 12345US; // Uncomment for type error
 
     // //string str = "DEAD"; // Uncomment for redefinition error
+    i = 1 + 1;
     
     for(i = 0; i < 10; i ++) // BUG We should not require a ' ' between i and ++
     {
@@ -28,7 +29,7 @@ public static void main(string[] args, int num1 = 0, long num2 = 0L)
         int k = 0;
         i = 10;
     }
-    int vor = test();
+    //int vor = test();
     //int vor2 = test(num1); // Uncomment for invalid parameters error
 }
 

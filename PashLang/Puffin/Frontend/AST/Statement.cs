@@ -52,16 +52,16 @@ namespace Puffin.Frontend.AST
                     switch (ty)
                     {
                         case EnumKeywords.INT:
-                            typeInformation = new StructInformation(nameof(Int32),0,true,false);
+                            typeInformation = new StructInformation("S" + nameof(Int32),0,true,false);
                             break;
                         case EnumKeywords.BOOLEAN:
                             typeInformation = new StructInformation(nameof(Boolean),false,true,false);
                             break;
                         case EnumKeywords.LONG:
-                            typeInformation = new StructInformation(nameof(Int64),0L,true,false);
+                            typeInformation = new StructInformation("S" + nameof(Int64),0L,true,false);
                             break;
                         case EnumKeywords.SHORT:
-                            typeInformation = new StructInformation(nameof(Int16),(short) 0,true,false);
+                            typeInformation = new StructInformation("S" + nameof(Int16),(short) 0,true,false);
                             break;
                         case EnumKeywords.BYTE:
                             typeInformation = new StructInformation(nameof(Byte),(byte) 0, true,false);
@@ -70,7 +70,7 @@ namespace Puffin.Frontend.AST
                             typeInformation = new StructInformation(nameof(Char),'\0',true,false);
                             break;
                         case EnumKeywords.FLOAT:
-                            typeInformation = new StructInformation(nameof(Single), 0.0f,true,false);
+                            typeInformation = new StructInformation("Float", 0.0f,true,false);
                             break;
                         case EnumKeywords.DOUBLE:
                             typeInformation = new StructInformation(nameof(Double), 0.0, true,false);
@@ -122,6 +122,22 @@ namespace Puffin.Frontend.AST
         /// A string that represents the current object.
         /// </returns>
         public override string ToString()
+        {
+            string str = "Statement: ";
+            foreach (Token tok in this.statementTokens)
+            {
+                str += tok.ToString() + " ";
+            }
+            return str;
+        }
+
+        /// <summary>
+        /// Returns a string that represents the current object.
+        /// </summary>
+        /// <returns>
+        /// A string that represents the current object.
+        /// </returns>
+        public string ToMultilineString()
         {
             string str = "Statement: ";
             foreach (Token tok in this.statementTokens)
