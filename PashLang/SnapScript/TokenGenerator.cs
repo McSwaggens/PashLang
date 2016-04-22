@@ -90,13 +90,20 @@ namespace SnapScript
 							current += c;
 					}
 				}
-				//Word token generation
+				//Word and Keyword token generation
 				else if (char.IsLetter (c) || c == '_') {
 					for (; i < characters.Length; i++) {
 						c = characters [i];
 						if (!char.IsLetter (c) && c != '_') {
-							Word word = new Word (current);
-							tokens.Add (word);
+							
+							if (doesContainKeyword(current)) {
+								Keyword keyword = new Keyword(GetKeyword(current));
+								tokens.Add(keyword);
+							}
+							else {
+								Word word = new Word (current);
+								tokens.Add (word);
+							}
 							current = "";
 							i--;
 							break;
@@ -104,9 +111,40 @@ namespace SnapScript
 							current += c;
 					}
 				}
+				else if (char.IsNumber(c)) {
+					for (; i < characters.Length; i++) {
+						c = characters[i];
+						if (!char.IsNumber(c) && c != '.') {
+							NumberToken number = new NumberToken(current);
+							tokens.Add(number);
+							current = "";
+							i--;
+							break;
+						}
+						else current += c;
+					}
+				}
 			}
 
 			return tokens.ToArray();
+		}
+		
+		static bool doesContainKeyword(string key) {
+			
+			foreach (EnumKeyword keyword in Enum.GetValues(typeof(EnumKeyword)))
+			{
+				if (keyword.ToString().ToLower() == key) return true;
+			}
+			return false;
+		}
+		
+		static EnumKeyword GetKeyword(string key) {
+			
+			foreach (EnumKeyword keyword in Enum.GetValues(typeof(EnumKeyword)))
+			{
+				if (keyword.ToString().ToLower() == key) return keyword;
+			}
+			return EnumKeyword.NO_KEYWORD;
 		}
 	}
 }
