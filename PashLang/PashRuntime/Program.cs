@@ -158,7 +158,8 @@ Puffin - Development phase
             //Check if the user wants to compile snapscript code
             if (Flags["compile-snap"])
             {
-                string[] compiledPASM = SnapCompiler.Compile(code);
+				SnapCompiler compiler = new SnapCompiler ();
+				string[] compiledPASM = compiler.Compile (File.ReadAllText (args [0]));
                 foreach (string line in compiledPASM)
                 {
                     Console.WriteLine("> " + line);
