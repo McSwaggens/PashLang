@@ -25,7 +25,7 @@ namespace SnapScript
 			Console.WriteLine ($"Token generation returned {tokens.Length} tokens.");
 
 			foreach (Token token in tokens) {
-				Console.WriteLine (token);
+				Console.WriteLine (token.GetDefinitionString());
 			}
 
 			//Execute parser with the generated tokens

@@ -8,7 +8,7 @@ namespace SnapScript
 
 		public object raw;
 		
-		public override string ToString ()
+		public string GetDefinitionString()
 		{
 			string ret = $"[{this.GetType().ToString().Substring(11)}]  \t{ToString()}";
 			return ret;

@@ -8,6 +8,11 @@ namespace SnapScript
 		{
 			this.raw = Notation;
 		}
+		
+		public override string ToString ()
+		{
+			return "" + raw;
+		}
 	}
 }
 
