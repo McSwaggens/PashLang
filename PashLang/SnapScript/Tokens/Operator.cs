@@ -9,6 +9,11 @@ namespace SnapScript
 		{
 			this.type = type;
 		}
+		
+		public override string ToString ()
+		{
+			return "" + type.ToString();
+		}
 	}
 }
 

@@ -8,6 +8,11 @@ namespace SnapScript
 		{
 			this.raw = long.Parse (raw);
 		}
+
+		public override string ToString ()
+		{
+			return "" + raw;
+		}
 	}
 }
 

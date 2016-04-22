@@ -14,6 +14,11 @@ namespace SnapScript
 			//Generate new token
 			return null;
 		}
+		
+		public override string ToString ()
+		{
+			return "" + raw;
+		}
 	}
 }
 

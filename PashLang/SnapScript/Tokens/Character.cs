@@ -8,6 +8,11 @@ namespace SnapScript
 		{
 			raw = c [0];
 		}
+		
+		public override string ToString ()
+		{
+			return "" + raw;
+		}
 	}
 }
 

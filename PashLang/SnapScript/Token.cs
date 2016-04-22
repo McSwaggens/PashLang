@@ -10,8 +10,7 @@ namespace SnapScript
 		
 		public override string ToString ()
 		{
-			string ret = $"[{this.GetType()}] {raw}";
-			
+			string ret = $"[{this.GetType().ToString().Substring(11)}]  \t{ToString()}";
 			return ret;
 		}
 	}

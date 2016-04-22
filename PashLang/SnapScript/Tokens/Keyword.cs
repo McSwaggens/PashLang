@@ -10,6 +10,11 @@ namespace SnapScript
 		{
 			this.keyword = keyword;
 		}
+		
+		public override string ToString ()
+		{
+			return "" + keyword.ToString();
+		}
 	}
 }
 
