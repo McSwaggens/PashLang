@@ -131,6 +131,22 @@ namespace Puffin.Frontend.AST
             return str;
         }
 
+        /// <summary>
+        /// Returns a string that represents the current object.
+        /// </summary>
+        /// <returns>
+        /// A string that represents the current object.
+        /// </returns>
+        public string ToMultilineString()
+        {
+            string str = "Statement: ";
+            foreach (Token tok in this.statementTokens)
+            {
+                str += tok.ToString() + " ";
+            }
+            return str;
+        }
+
         public List<Token> StatementTokens
         {
             get { return statementTokens; }

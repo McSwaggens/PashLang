@@ -16,6 +16,8 @@ namespace Puffin.Frontend.AST.Nodes
         private Information data;
         private Symbol<Information> symbol;
 
+        public static readonly BaseASTNode EMPTY = new BaseASTNode();
+
         public BaseASTNode Left
         {
             get { return left; }

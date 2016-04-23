@@ -47,8 +47,13 @@ namespace Puffin.Frontend.AST
                     BaseASTNode node = ParseExpressionNode(smt, sym, root);
                     if (node == null)
                     {
-                        Logger.WriteCritical("null node found when parsing expressions in AST");
-                        return null;
+                        #if DEBUG
+                            Logger.WriteDebug("AST Can not handle " + smt.ToMultilineString() + "\n" + "yet this functionality will be added in a future Release");
+                            return BaseASTNode.EMPTY; // TODO implement all node types
+                        #else
+                            Logger.WriteCritical("null node found when parsing expressions in AST");
+                            return null;
+                        #endif
                     }
                     nodes.AddLast(node);
                 }
