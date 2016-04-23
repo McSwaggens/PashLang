@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace SnapScript
 {
-	public class TokenGenerator
+	public class Lexer
 	{
 		private static List<char> SpecialCharacters = new List<char>("+-!@#$%^&*():;\"',.?/~`\\|=<>{}[]".ToCharArray ());
 

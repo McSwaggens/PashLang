@@ -43,7 +43,6 @@
     <Compile Include="Logger.cs" />
     <Compile Include="SnapCompiler.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="TokenGenerator.cs" />
     <Compile Include="Token.cs" />
     <Compile Include="Tokens\Word.cs" />
     <Compile Include="Tokens\Unknown.cs" />
@@ -55,6 +54,7 @@
     <Compile Include="Tokens\String.cs" />
     <Compile Include="Tokens\Character.cs" />
     <Compile Include="Tokens\NumberToken.cs" />
+    <Compile Include="Lexer.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

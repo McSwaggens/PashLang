@@ -20,7 +20,7 @@ namespace SnapScript
 
 			//Generate tokens
 
-			Token[] tokens = TokenGenerator.GenerateTokens (code);
+			Token[] tokens = Lexer.GenerateTokens (code);
 
 			Console.WriteLine ($"Token generation returned {tokens.Length} tokens.");
 
