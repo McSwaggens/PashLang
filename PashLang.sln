@@ -9,8 +9,6 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PashRuntime", "PashRuntime\
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "stdlib", "stdlib\stdlib.csproj", "{8344BB4F-008F-4C01-828B-14E7B9652FAE}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SnapScript", "SnapScript\SnapScript.csproj", "{76664965-73EF-42B6-9B8A-CF6AFA0F9371}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Puffin", "Puffin\Puffin.csproj", "{69CF5B17-E305-432F-BADC-C47502C4F882}"
 EndProject
 Global
