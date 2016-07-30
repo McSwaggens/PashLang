@@ -80,7 +80,7 @@ namespace PASM.Handlers
                 else
                 throw new PException($"Unknown comparison operator: {Operator}");
             }
-            if (!ReturnedValue) inst.CurrentLine = jumpln;
+            if (!ReturnedValue) inst.currentLine = jumpln;
         }
         
         bool isIntBased(object obj) => obj is byte || obj is sbyte || obj is short || obj is ushort || obj is int || obj is uint || obj is long || obj is ulong;

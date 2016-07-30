@@ -17,10 +17,10 @@ namespace PASM.Handlers
 
         public override void Execute()
         {
-			FunctionInstance func = new FunctionInstance(inst.RasterSize);
+			FunctionInstance func = new FunctionInstance(inst.rasterSize);
             func.doesReturnValue = false;
-            func.ReturnLine = inst.CurrentLine;
-            inst.CurrentLine = inst.points[Converter.ParseStringToInt(args[1])];
+            func.ReturnLine = inst.currentLine;
+            inst.currentLine = inst.points[Converter.ParseStringToInt(args[1])];
 
             if (args.Length > 1)
             {
@@ -31,7 +31,7 @@ namespace PASM.Handlers
                     func.register[g] = inst.ResolvePointer(v[g]);
                 }
             }
-            inst.Returns.Add(func);
+            inst.returns.Add(func);
         }
     }
 }

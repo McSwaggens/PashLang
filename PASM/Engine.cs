@@ -21,11 +21,11 @@ namespace PASM
         public int[] points;
         public Memory memory;
         public Raster raster = new Raster(50);
-        public  List<FunctionInstance> Returns = new List<FunctionInstance>();
-		public List<Type> ReferencedLibraries = new List<Type> ();
-        private Dictionary<string, Type> StaticCache = new Dictionary<string, Type>();
-        public int RasterSize = 60;
-        public int CurrentLine = 0;
+        public  List<FunctionInstance> returns = new List<FunctionInstance>();
+		public List<Type> referencedLibraries = new List<Type> ();
+        private Dictionary<string, Type> staticCache = new Dictionary<string, Type>();
+        public int rasterSize = 60;
+        public int currentLine = 0;
         
 		private Handler[] Code;
 
@@ -48,7 +48,7 @@ namespace PASM
         {
             Load(code);
             setMemory(memory);
-            CurrentLine = startingLine;
+            currentLine = startingLine;
             
         }
 
@@ -62,7 +62,7 @@ namespace PASM
         {
             foreach (string[] cf in code) Load(cf);
             setMemory(memory);
-            CurrentLine = startingLine;
+            currentLine = startingLine;
         }
 
         public void Load(string[][] code)
@@ -129,7 +129,7 @@ namespace PASM
             else {
                 string[] args = line.Split(' ');
                 string g = args[0];
-                foreach (Type t in Handler.Handlers) if (t.Name == g) return (Handler)Activator.CreateInstance(t, args, this);
+                foreach (Type t in Handler.handlers) if (t.Name == g) return (Handler)Activator.CreateInstance(t, args, this);
             }
             return null;
         }
@@ -173,7 +173,7 @@ namespace PASM
         public void ReferenceLibrary(params Type[] t)
         {
             foreach (Type type in t)
-                ReferencedLibraries.Add(type);
+                referencedLibraries.Add(type);
         }
 
         /// <summary>
@@ -182,7 +182,7 @@ namespace PASM
         /// <param name="t"></param>
         public void ImportLibrary(Type t)
         {
-            StaticCache.Add(t.Name, t);
+            staticCache.Add(t.Name, t);
         }
 
 
@@ -234,12 +234,12 @@ namespace PASM
         /// </summary>
         public void Execute()
         {
-            CurrentLine = 0;
-            while (CurrentLine < Code.Length)
+            currentLine = 0;
+            while (currentLine < Code.Length)
             {
-                if (Code[CurrentLine] != null)
-                    Code[CurrentLine].Execute();
-                CurrentLine++;
+                if (Code[currentLine] != null)
+                    Code[currentLine].Execute();
+                currentLine++;
             }
         }
 
@@ -249,11 +249,11 @@ namespace PASM
         /// <param name="Starting line"></param>
         public void Execute(int startingln)
         {
-            CurrentLine = startingln;
-            while (CurrentLine < Code.Length)
+            currentLine = startingln;
+            while (currentLine < Code.Length)
             {
-                Code[CurrentLine].Execute();
-                CurrentLine++;
+                Code[currentLine].Execute();
+                currentLine++;
             }
         }
 
@@ -285,11 +285,11 @@ namespace PASM
                 this.points[pair.Key] = pair.Value;
             }
             Code = new Handler[code.Length];
-            while (CurrentLine < Code.Length)
+            while (currentLine < Code.Length)
             {
-                if (Code[CurrentLine] == null) Code[CurrentLine] = ParseLine(code[CurrentLine]);
-                Code[CurrentLine].Execute();
-                CurrentLine++;
+                if (Code[currentLine] == null) Code[currentLine] = ParseLine(code[currentLine]);
+                Code[currentLine].Execute();
+                currentLine++;
             }
         }
 
@@ -299,16 +299,16 @@ namespace PASM
         /// </summary>
         public void ExecuteDebug() {
             Console.WriteLine("Executing in debug mode, (May not get the best performance.)");
-            while (CurrentLine < Code.Length)
+            while (currentLine < Code.Length)
             {
                 try {
-                    Code[CurrentLine].Execute();
-                    CurrentLine++;
+                    Code[currentLine].Execute();
+                    currentLine++;
                 }
                 catch (PException pe) {
                     ConsoleColor color = Console.ForegroundColor;
                     Console.ForegroundColor = ConsoleColor.Red;
-                    Console.WriteLine($"(ERROR) PASM Exception at line {CurrentLine} while executing {Code[CurrentLine].ToString()} returned Exception Notice: {pe.Message}, Please check code and try again!");
+                    Console.WriteLine($"(ERROR) PASM Exception at line {currentLine} while executing {Code[currentLine].ToString()} returned Exception Notice: {pe.Message}, Please check code and try again!");
                     Console.ForegroundColor = color;
                     break;
                 }
@@ -348,7 +348,7 @@ namespace PASM
         /// <param name="DataSet"></param>
         public void set(int ptr, bool isMethodPtr, double set) //FLOAT
         {
-			Raster register = isMethodPtr ? Returns.Last().register : this.raster;
+			Raster register = isMethodPtr ? returns.Last().register : this.raster;
             if (register[ptr] == null)
             {
                 register[ptr] = new Register();
@@ -371,7 +371,7 @@ namespace PASM
         /// <param name="DataSet"></param>
         public void set(int ptr, bool isMethodPtr, int set) //INT32
         {
-            Raster register = isMethodPtr ? Returns.Last().register : this.raster;
+            Raster register = isMethodPtr ? returns.Last().register : this.raster;
             if (register[ptr] == null)
             {
                 register[ptr] = new Register();
@@ -392,7 +392,7 @@ namespace PASM
         /// <param name="DataSet"></param>
         public void set(int ptr, bool isMethodPtr, uint set) //INT32
         {
-			Raster register = isMethodPtr ? Returns.Last().register : this.raster;
+			Raster register = isMethodPtr ? returns.Last().register : this.raster;
             if (register[ptr] == null)
             {
                 register[ptr] = new Register();
@@ -413,7 +413,7 @@ namespace PASM
         /// <param name="DataSet"></param>
         public void set(int ptr, bool isMethodPtr, float set) //FLOAT
         {
-			Raster register = isMethodPtr ? Returns.Last().register : this.raster;
+			Raster register = isMethodPtr ? returns.Last().register : this.raster;
             if (register[ptr] == null)
             {
                 register[ptr] = new Register();
@@ -434,7 +434,7 @@ namespace PASM
         /// <param name="DataSet"></param>
         public void set(int ptr, bool isMethodPtr, long set) //INT64
         {
-			Raster register = isMethodPtr ? Returns.Last().register : this.raster;
+			Raster register = isMethodPtr ? returns.Last().register : this.raster;
             if (register[ptr] == null)
             {
                 register[ptr] = new Register();
@@ -455,7 +455,7 @@ namespace PASM
         /// <param name="DataSet"></param>
         public void set(int ptr, bool isMethodPtr, ulong set) //INT64
         {
-			Raster register = isMethodPtr ? Returns.Last().register : this.raster;
+			Raster register = isMethodPtr ? returns.Last().register : this.raster;
             if (register[ptr] == null)
             {
                 register[ptr] = new Register();
@@ -476,7 +476,7 @@ namespace PASM
         /// <param name="DataSet"></param>
         public void set(int ptr, bool isMethodPtr, ushort set) //INT16
         {
-			Raster register = isMethodPtr ? Returns.Last().register : this.raster;
+			Raster register = isMethodPtr ? returns.Last().register : this.raster;
             if (register[ptr] == null)
             {
                 register[ptr] = new Register();
@@ -497,7 +497,7 @@ namespace PASM
         /// <param name="DataSet"></param>
         public void set(int ptr, bool isMethodPtr, short set) //INT16
         {
-			Raster register = isMethodPtr ? Returns.Last().register : this.raster;
+			Raster register = isMethodPtr ? returns.Last().register : this.raster;
             if (register[ptr] == null)
             {
                 register[ptr] = new Register();
@@ -518,7 +518,7 @@ namespace PASM
         /// <param name="DataSet"></param>
         public void set(int ptr, bool isMethodPtr, byte set)
         {
-			Raster register = isMethodPtr ? Returns.Last().register : this.raster;
+			Raster register = isMethodPtr ? returns.Last().register : this.raster;
             if (register[ptr] == null)
             {
                 register[ptr] = new Register();
@@ -539,7 +539,7 @@ namespace PASM
         /// <param name="DataSet"></param>
         public void set(int ptr, bool isMethodPtr, byte[] set)
         {
-			Raster register = isMethodPtr ? Returns.Last().register : this.raster;
+			Raster register = isMethodPtr ? returns.Last().register : this.raster;
             if (register[ptr] == null)
             {
                 register[ptr] = new Register();
@@ -576,7 +576,7 @@ namespace PASM
         /// </summary>
         /// <param name="isMethod"></param>
         /// <returns></returns>
-		public Raster GetRaster(bool isMethod) => isMethod ? Returns.Last().register : raster;
+		public Raster GetRaster(bool isMethod) => isMethod ? returns.Last().register : raster;
 
         /// <summary>
         /// Returns a 2 byte integer from a string
@@ -613,7 +613,7 @@ namespace PASM
         {
             int reg;
             bool isMethod = isMethodPointer(sptr, out reg);
-			Raster register = isMethod ? Returns.Last().register : this.raster;
+			Raster register = isMethod ? returns.Last().register : this.raster;
             byte[] data = memory.read(register[reg].address, 8);
             return BitConverter.ToInt64(data, 0);
         }
@@ -626,7 +626,7 @@ namespace PASM
         /// <returns></returns>
         public short ResolveINT16(bool isMethodPtr, int reg)
         {
-			Raster register = isMethodPtr ? Returns.Last().register : this.raster;
+			Raster register = isMethodPtr ? returns.Last().register : this.raster;
             byte[] data = memory.read(register[reg].address, 2);
             return BitConverter.ToInt16(data, 0);
         }
@@ -639,7 +639,7 @@ namespace PASM
         /// <returns></returns>
         public int ResolveINT32(bool isMethodPtr, int reg)
         {
-			Raster register = isMethodPtr ? Returns.Last().register : this.raster;
+			Raster register = isMethodPtr ? returns.Last().register : this.raster;
             byte[] data = memory.read(register[reg].address, 4);
             return BitConverter.ToInt32(data, 0);
         }
@@ -652,7 +652,7 @@ namespace PASM
         /// <returns></returns>
         public long ResolveINT64(bool isMethodPtr, int reg)
         {
-			Raster register = isMethodPtr ? Returns.Last().register : this.raster;
+			Raster register = isMethodPtr ? returns.Last().register : this.raster;
             byte[] data = memory.read(register[reg].address, 8);
             return BitConverter.ToInt64(data, 0);
         }
@@ -666,7 +666,7 @@ namespace PASM
         {
             int reg;
             bool isMethod = isMethodPointer(sptr, out reg);
-			Raster register = isMethod ? Returns.Last().register : this.raster;
+			Raster register = isMethod ? returns.Last().register : this.raster;
             byte[] data = memory.read(register[reg].address, register[reg].size);
             switch (register[reg].size)
             {
@@ -684,7 +684,7 @@ namespace PASM
         /// <returns></returns>
         public object ResolveNumber (int register, bool isMethodPtr)
         {
-			Raster raster = isMethodPtr ? Returns.Last().register : this.raster;
+			Raster raster = isMethodPtr ? returns.Last().register : this.raster;
             byte[] data = memory.read(raster[register].address, raster[register].size);
             switch (raster[register].size)
             {
@@ -705,7 +705,7 @@ namespace PASM
         {
             int reg;
             bool isMethod = isMethodPointer(sptr, out reg);
-			return isMethod ? Returns.Last().register[reg] : raster[reg];
+			return isMethod ? returns.Last().register[reg] : raster[reg];
         }
 
         /// <summary>
@@ -717,7 +717,7 @@ namespace PASM
         {
             int reg;
             bool isMethod = isMethodPointer(sptr, out reg);
-			Raster register = isMethod ? Returns.Last().register : this.raster;
+			Raster register = isMethod ? returns.Last().register : this.raster;
             return memory.read(register[reg].address, register[reg].size);
         }
 
@@ -728,7 +728,7 @@ namespace PASM
         /// <returns></returns>
         public byte[] ResolveData(int ptr, bool isMethodPtr)
         {
-			Raster register = isMethodPtr ? Returns.Last().register : this.raster;
+			Raster register = isMethodPtr ? returns.Last().register : this.raster;
             return memory.read(register[ptr].address, register[ptr].size);
         }
 
@@ -744,7 +744,7 @@ namespace PASM
             object[] Objects = new object[Params.Length + 1];
             Objects[0] = this;
             for (int i = 0; i < Params.Length; i++) Objects[i + 1] = Params[i];
-            foreach (KeyValuePair<string, Type> i in StaticCache.Where(i => i.Key == @class))
+            foreach (KeyValuePair<string, Type> i in staticCache.Where(i => i.Key == @class))
                 return (byte[])(i.Value.GetMethod(method, BindingFlags.Static | BindingFlags.Public).Invoke(i.Value, Objects));
             return null;
         }

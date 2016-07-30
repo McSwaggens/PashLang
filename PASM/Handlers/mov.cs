@@ -13,7 +13,7 @@ namespace PASM.Handlers
 
         public override void Execute()
         {
-            inst.CurrentLine = Line;
+            inst.currentLine = Line;
         }
     }
 }

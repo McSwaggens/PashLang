@@ -14,7 +14,7 @@ namespace PASM.Handlers
 
         public override void Execute()
         {
-            foreach (Type t in inst.ReferencedLibraries)
+            foreach (Type t in inst.referencedLibraries)
                 if (t.Name == lib)
                 {
                     inst.ImportLibrary(t);
