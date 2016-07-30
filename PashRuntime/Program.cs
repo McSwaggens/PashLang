@@ -6,7 +6,6 @@ using System.Diagnostics;
 using static PashRuntime.UtilOut;
 using static PashRuntime.OSInfo;
 using System.Reflection;
-using SnapScript;
 
 namespace PashRuntime
 {
@@ -156,22 +155,8 @@ Puffin - Development phase
             }
             
             //Check if the user wants to compile snapscript code
-            if (Flags["compile-snap"])
-            {
-				SnapCompiler compiler = new SnapCompiler ();
-				string[] compiledPASM = compiler.Compile (File.ReadAllText (args [0]));
-                foreach (string line in compiledPASM)
-                {
-                    Console.WriteLine("> " + line);
-                }
-                
-                Execute(compiledPASM);
-            }
-            else
-            {
-                //Begin the process of executing the code.
-                Execute(code);
-            }
+            //Begin the process of executing the code.
+            Execute(code);
         }
         
         public static void Entry(string[] code, string[] args)
