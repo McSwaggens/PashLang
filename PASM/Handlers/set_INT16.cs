@@ -19,7 +19,7 @@ namespace PASM.Handlers
         {
             int reg;
             bool isMethod = isMethodPointer(ptr, out reg);
-            inst.set(reg, isMethod, set);
+            inst.Set(reg, isMethod, set);
         }
     }
 }

@@ -32,7 +32,7 @@ namespace PASM.Handlers
             }
             byte[] returnData = inst.CallStaticMethod(args[3], args[4], Params);
             if (returnData != null)
-                inst.set(ptr, isMethod, returnData);
+                inst.Set(ptr, isMethod, returnData);
         }
     }
 }

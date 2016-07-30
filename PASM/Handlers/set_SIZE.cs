@@ -19,7 +19,7 @@ namespace PASM.Handlers {
         
         override public void Execute() {
             Register cpy_register = inst.GetRaster(cpy_isMethodPtr)[cpy_Ptr];
-            inst.set(setter_Ptr, setter_isMethodPtr, cpy_register.size);
+            inst.Set(setter_Ptr, setter_isMethodPtr, cpy_register.size);
         }
     }
 }

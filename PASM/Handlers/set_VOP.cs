@@ -20,7 +20,7 @@ namespace PASM.Handlers
             int setterPtr;
             bool isMethodPtr_Setter = isMethodPointer(worker, out setterPtr);
 
-            inst.set(setterPtr, isMethodPtr_Setter, inst.ResolveData(setter));
+            inst.Set(setterPtr, isMethodPtr_Setter, inst.ResolveData(setter));
         }
     }
 }

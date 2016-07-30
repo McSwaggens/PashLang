@@ -42,9 +42,9 @@ namespace PASM.Handlers
             if (Operator == '%') result = (a1 % a2);
             else throw new PException("Unknown QMATH operator: " + Operator);
 
-            if (arg1 is long || arg2 is long) inst.set(reg, isMethod, result);
-            else if (arg1 is int || arg2 is long) inst.set(reg, isMethod, (int)result);
-            else if (arg1 is short || arg2 is short) inst.set(reg, isMethod, (short)result);
+            if (arg1 is long || arg2 is long) inst.Set(reg, isMethod, result);
+            else if (arg1 is int || arg2 is long) inst.Set(reg, isMethod, (int)result);
+            else if (arg1 is short || arg2 is short) inst.Set(reg, isMethod, (short)result);
         }
 
         public void SeperateEquasion(string equasion, out object arg1, out object arg2, out char Operator)
