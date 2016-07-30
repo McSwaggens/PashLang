@@ -23,7 +23,7 @@ namespace PASM.Handlers
 			Raster setterRegister = inst.GetRaster(isMethodPointer(setter, out setterPtr));
 
             workerRegister[workerPtr] = setterRegister[setterPtr];
-            setterRegister[setterPtr].ReferenceCount++;
+            setterRegister[setterPtr].referenceCount++;
         }
     }
 }

@@ -5,7 +5,7 @@ namespace PASM
     public class Raster
     {
         private Register[] registers;
-        public Register[] Stack => registers;
+        public Register[] stack => registers;
 
         public Raster(int size)
         {

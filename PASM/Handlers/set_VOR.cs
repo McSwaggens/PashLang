@@ -20,7 +20,7 @@ namespace PASM.Handlers
         public override void Execute()
         {
 			FunctionInstance func = new FunctionInstance(inst.rasterSize);
-            func.ReturnLine = inst.currentLine;
+            func.returnLine = inst.currentLine;
             if (args.Length > 3)
             {
                 List<string> v = args.ToList();
@@ -35,12 +35,12 @@ namespace PASM.Handlers
             if (args[1].ToCharArray()[0] == ':')
             {
                 p = Converter.ParseStringToInt(args[1].Substring(1));
-                func.MethodVariable = true;
+                func.methodVariable = true;
             }
             else p = Converter.ParseStringToInt(args[1]);
 
 
-            func.ReturnVariablePos = p;
+            func.returnVariablePos = p;
 
             inst.returns.Add(func);
             inst.currentLine = inst.points[Converter.ParseStringToInt(args[3])];

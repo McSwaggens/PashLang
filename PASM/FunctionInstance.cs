@@ -11,18 +11,18 @@ namespace PASM
 		/// <summary>
 		/// The line to return to when re is hit.
 		/// </summary>
-        public int ReturnLine;
+        public int returnLine;
 
 		/// <summary>
 		/// The register to return the data to upon completion.
 		/// </summary>
-		public int ReturnVariablePos;
+		public int returnVariablePos;
 
 		/// <summary>
 		/// Restricted for returns
 		/// Flagged if the returning variable is in the method context.
 		/// </summary>
-		public bool MethodVariable = false;
+		public bool methodVariable = false;
 
 		/// <summary>
 		/// The register context for the method.

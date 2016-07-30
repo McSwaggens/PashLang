@@ -558,7 +558,7 @@ namespace PASM
         /// <param name="p"></param>
         public void TryFreeRegister(Register p)
         {
-			if (p.ReferenceCount == 0)
+			if (p.referenceCount == 0)
 				memory.Free (p.address);
         }
 
@@ -737,13 +737,13 @@ namespace PASM
         /// </summary>
         /// <param name="Class"></param>
         /// <param name="Method"></param>
-        /// <param name="Params"></param>
+        /// <param name="params"></param>
         /// <returns></returns>
-        public byte[] CallStaticMethod(string @class, string method, byte[][] Params)
+        public byte[] CallStaticMethod(string @class, string method, byte[][] @params)
         {
-            object[] Objects = new object[Params.Length + 1];
+            object[] Objects = new object[@params.Length + 1];
             Objects[0] = this;
-            for (int i = 0; i < Params.Length; i++) Objects[i + 1] = Params[i];
+            for (int i = 0; i < @params.Length; i++) Objects[i + 1] = @params[i];
             foreach (KeyValuePair<string, Type> i in staticCache.Where(i => i.Key == @class))
                 return (byte[])(i.Value.GetMethod(method, BindingFlags.Static | BindingFlags.Public).Invoke(i.Value, Objects));
             return null;

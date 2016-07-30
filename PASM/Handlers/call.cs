@@ -19,7 +19,7 @@ namespace PASM.Handlers
         {
 			FunctionInstance func = new FunctionInstance(inst.rasterSize);
             func.doesReturnValue = false;
-            func.ReturnLine = inst.currentLine;
+            func.returnLine = inst.currentLine;
             inst.currentLine = inst.points[Converter.ParseStringToInt(args[1])];
 
             if (args.Length > 1)
