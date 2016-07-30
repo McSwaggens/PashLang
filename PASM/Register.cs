@@ -1,5 +1,3 @@
-using System;
-
 namespace PASM {
     public class Register {
         public int referenceCount = 1;

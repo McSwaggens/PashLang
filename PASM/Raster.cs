@@ -1,6 +1,4 @@
-﻿using PASM;
-
-namespace PASM
+﻿namespace PASM
 {
     public class Raster
     {
