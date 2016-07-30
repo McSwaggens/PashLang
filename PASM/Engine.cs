@@ -556,7 +556,7 @@ namespace PASM
         /// Free an address if it's not being used by another register
         /// </summary>
         /// <param name="p"></param>
-        public void TryFreeRaster(Register p)
+        public void TryFreeRegister(Register p)
         {
 			if (p.ReferenceCount == 0)
 				memory.Free (p.address);
@@ -566,7 +566,7 @@ namespace PASM
         /// Will free the registers address even if the address is being used by another register, try not to use this tho...
         /// </summary>
         /// <param name="p"></param>
-        public void ForceFreeRaster(Register p)
+        public void ForceFreeRegister(Register p)
         {
             memory.Free(p.address);
         }

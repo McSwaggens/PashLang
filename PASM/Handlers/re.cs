@@ -17,7 +17,7 @@ namespace PASM.Handlers
         public override void Execute()
         {
 			foreach (Register p in inst.Returns.Last().register.Stack.Where(p => p != null))
-				inst.TryFreeRaster(p);
+				inst.TryFreeRegister(p);
             if (args.Length > 0)
             {
                 FunctionInstance func = inst.Returns.Last();
