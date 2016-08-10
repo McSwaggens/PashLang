@@ -238,7 +238,7 @@ Puffin - Development phase
         public static void StartRuntime(string[] code)
         {
             Engine engine = new Engine();
-            engine.setMemory(AllocatedMemory);
+            engine.SetMemory(AllocatedMemory);
             if (Flags["i"]) WriteInfo($"Allocated {AllocatedMemory} bytes of memory.");
             sw.Reset();
             sw.Start();
